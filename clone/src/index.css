@@ -1,0 +1,549 @@
+@import "tailwindcss";
+
+/* =========================================================
+   Theme tokens (Light + Dark)
+   ========================================================= */
+:root{
+  --app-bg: radial-gradient(1200px 800px at 20% 10%, rgba(124,58,237,.18), transparent 55%),
+            radial-gradient(900px 700px at 80% 20%, rgba(236,72,153,.12), transparent 55%),
+            linear-gradient(180deg, #f7f7fb 0%, #f1f5f9 45%, #ffffff 100%);
+  --panel: rgba(255,255,255,.75);
+  --panel-soft: rgba(255,255,255,.55);
+  --border: rgba(2,6,23,.10);
+  --text: #0f172a;
+  --muted: rgba(15,23,42,.65);
+  --accent-1: #7c3aed; /* violet */
+  --accent-2: #ec4899; /* fuchsia */
+  --shadow: 0 18px 50px rgba(2,6,23,.12);
+
+  /* CMS dashboard tokens (light) */
+  --dash-bg: radial-gradient(1200px 900px at 22% 10%, rgba(124,58,237,.14), transparent 55%),
+             radial-gradient(900px 700px at 80% 20%, rgba(236,72,153,.10), transparent 55%),
+             linear-gradient(180deg, #f7f7fb 0%, #eef2ff 45%, #ffffff 100%);
+  --dash-card: rgba(255,255,255,.78);
+  --dash-card-soft: rgba(255,255,255,.60);
+  --dash-border: rgba(2,6,23,.10);
+  --dash-text: #0b1220;
+  --dash-muted: rgba(2,6,23,.62);
+  --dash-accent: #50163f; /* neon green */
+  --dash-accent-2: #ec4899;; /* lime */
+}
+
+.dark{
+  /* Dark mode should read as truly black while keeping subtle neon atmosphere */
+  --app-bg: radial-gradient(1200px 800px at 20% 10%, rgba(124,58,237,.30), transparent 55%),
+            radial-gradient(900px 700px at 80% 20%, rgba(236,72,153,.18), transparent 55%),
+            radial-gradient(1000px 700px at 50% 120%, rgba(59,130,246,.08), transparent 60%),
+            linear-gradient(180deg, #000000 0%, #040012 45%, #000000 100%);
+  --panel: rgba(255,255,255,.06);
+  --panel-soft: rgba(255,255,255,.04);
+  --border: rgba(255,255,255,.10);
+  --text: rgba(255,255,255,.92);
+  --muted: rgba(255,255,255,.65);
+  --accent-1: #8b5cf6;
+  --accent-2: #f472b6;
+  --shadow: 0 24px 70px rgba(0,0,0,.55);
+
+  /* CMS dashboard tokens (dark) */
+  --dash-bg: radial-gradient(900px 700px at 18% 12%, rgba(34,197,94,.16), transparent 60%),
+             radial-gradient(900px 700px at 70% 20%, rgba(124,58,237,.20), transparent 60%),
+             linear-gradient(180deg, #05060b 0%, #070a14 45%, #05060b 100%);
+  --dash-card: rgba(255,255,255,.06);
+  --dash-card-soft: rgba(255,255,255,.04);
+  --dash-border: rgba(255,255,255,.10);
+  --dash-text: rgba(255,255,255,.92);
+  --dash-muted: rgba(255,255,255,.62);
+  --dash-accent: #1713cf;
+  --dash-accent-2: #ce0dbe;
+}
+
+/* ---------------------------
+   Base layer (global styles)
+   --------------------------- */
+@layer base {
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--app-bg);
+    color: var(--text);
+    @apply antialiased transition-colors duration-300 min-h-screen;
+  }
+
+  h1, h2, h3, h4, h5, h6 { @apply font-sans; }
+}
+
+/* ---------------------------
+   Component helpers
+   --------------------------- */
+@layer components {
+  .container-page { @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8; }
+
+  .glass{
+    background: var(--panel);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 20px;
+  }
+
+  .glass-soft{
+    background: var(--panel-soft);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 20px;
+  }
+
+  .text-neon{
+    background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .btn-primary{
+    @apply inline-flex items-center justify-center font-medium rounded-full px-5 py-2.5 transition-all duration-200;
+    background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+    color: white;
+    box-shadow: 0 18px 40px rgba(124,58,237,.22);
+  }
+  .btn-primary:hover{ transform: translateY(-1px); filter: brightness(1.05); }
+
+  .btn-ghost{
+    @apply inline-flex items-center justify-center font-medium rounded-full px-5 py-2.5 transition-colors duration-200;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .btn-ghost:hover{ background: rgba(255,255,255,.08); }
+
+  .input-ui{
+    @apply w-full rounded-xl px-4 py-3 outline-none transition-colors duration-200;
+    background: rgba(255,255,255,.75);
+    border: 1px solid rgba(2,6,23,.12);
+    color: #0f172a;
+  }
+  .dark .input-ui{
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.12);
+    color: rgba(255,255,255,.92);
+  }
+
+  .section-title{ @apply text-3xl md:text-4xl font-semibold tracking-tight; }
+
+  /* ===== CMS Dashboard building blocks ===== */
+  .dash-shell{ background: var(--dash-bg); min-height: 100vh; }
+  .dash-card{ background: var(--dash-card); border: 1px solid var(--dash-border); box-shadow: 0 18px 60px rgba(0,0,0,.16); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border-radius: 18px; }
+  .dash-card-soft{ background: var(--dash-card-soft); border: 1px solid var(--dash-border); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 18px; }
+  .dash-text{ color: var(--dash-text); }
+  .dash-muted{ color: var(--dash-muted); }
+  .dash-accent{ color: var(--dash-accent); }
+  .dash-accent-bg{ background: linear-gradient(90deg, var(--dash-accent), var(--dash-accent-2)); }
+  .dash-input{
+    @apply w-full rounded-xl px-4 py-3 outline-none transition-colors duration-200;
+    background: rgba(255,255,255,.78);
+    border: 1px solid rgba(2,6,23,.12);
+    color: #0b1220;
+  }
+  .dark .dash-input{
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.12);
+    color: rgba(255,255,255,.92);
+  }
+  .dash-chip{ border: 1px solid var(--dash-border); background: rgba(255,255,255,.06); }
+  .dash-nav-active{ background: rgba(34,197,94,.16); border: 1px solid rgba(34,197,94,.26); }
+}
+
+/* ---------------------------
+   Existing animations/utilities
+   --------------------------- */
+@layer utilities {
+  /* Marquee viewport (safe on mobile) */
+  .marquee-viewport { @apply overflow-hidden; }
+
+  /* In light theme, give the marquee container a tiny tint so white logos remain readable */
+  .marquee-shell{
+    background: rgba(2,6,23,.035);
+    border: 1px solid rgba(2,6,23,.08);
+  }
+
+  /* Marquee animation (replaces missing Tailwind animate-marquee) */
+  .marquee-track{
+    display: flex;
+    width: max-content;
+    gap: 2.25rem;
+    animation: marquee 28s linear infinite;
+    will-change: transform;
+  }
+  .marquee-item{ display:flex; align-items:center; justify-content:center; }
+  /* Make logos visible in BOTH themes */
+  .marquee-img{ max-height: 26px; width:auto; opacity: .95; filter: grayscale(2) brightness(.28) contrast(1.55); }
+  .dark .marquee-img{ filter: invert(1) brightness(2.05) contrast(1.35) grayscale(1); opacity: .98; }
+  .marquee-track:hover{ animation-play-state: paused; }
+}
+
+@keyframes marquee{
+  0%{ transform: translateX(0); }
+  100%{ transform: translateX(-50%); }
+}
+
+/* Keep parallax/wave animations if used in components */
+.parallax > use {
+  animation: move-forever 25s cubic-bezier(.55,.5,.45,.5) infinite;
+}
+.parallax > use:nth-child(1) { animation-delay: -2s; animation-duration: 7s; }
+.parallax > use:nth-child(2) { animation-delay: -3s; animation-duration: 10s; }
+.parallax > use:nth-child(3) { animation-delay: -4s; animation-duration: 13s; }
+.parallax > use:nth-child(4) { animation-delay: -5s; animation-duration: 20s; }
+
+@keyframes move-forever {
+  0% { transform: translate3d(-90px,0,0); }
+  100% { transform: translate3d(85px,0,0); }
+}
+
+/* =====================
+   CMS / Dashboard UI
+   ===================== */
+.dash-shell{
+  background:
+    radial-gradient(1000px 520px at 18% 10%, rgba(94, 17, 104, 0.18), transparent 60%),
+    radial-gradient(900px 520px at 70% 5%, rgba(124,58,237,.18), transparent 60%),
+    radial-gradient(900px 520px at 90% 60%, rgba(63, 6, 35, 0.1), transparent 60%),
+    var(--bg);
+}
+
+.dash-scope{
+  --dash-accent: #591869;
+  --dash-accent-2: #4d0e2b;
+}
+
+.dash-sidebar{
+  background: rgba(255,255,255,.68);
+  border-right: 1px solid rgba(0,0,0,.08);
+  backdrop-filter: blur(16px);
+}
+.dark .dash-sidebar{
+  background: rgba(2,6,23,.82);
+  border-right: 1px solid rgba(255,255,255,.10);
+}
+
+.dash-sidebar .dash-brand{
+  letter-spacing: .04em;
+}
+
+.dash-search{
+  background: rgba(0,0,0,.04);
+  border: 1px solid rgba(0,0,0,.10);
+}
+.dark .dash-search{
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.12);
+}
+
+.dash-nav-section{
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.dash-nav-link{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  color: var(--text);
+  transition: all .2s ease;
+  border: 1px solid transparent;
+}
+.dash-nav-link:hover{
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.10);
+}
+.dash-nav-link.active{
+  background: rgba(163,255,18,.12);
+  border-color: rgba(163,255,18,.22);
+  box-shadow: 0 10px 30px rgba(0,0,0,.22);
+}
+
+.dash-pill{
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+}
+
+.dash-btn-primary{
+  background: linear-gradient(90deg, var(--dash-accent), var(--dash-accent-2));
+  color: #04110a;
+  border: 1px solid rgba(255,255,255,.12);
+  box-shadow: 0 18px 45px rgba(0,0,0,.22);
+}
+
+.dash-card{
+  background: rgba(255,255,255,.72);
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 18px;
+  box-shadow: 0 18px 50px rgba(2,6,23,.10);
+}
+.dark .dash-card{
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.10);
+  box-shadow: 0 22px 60px rgba(0,0,0,.55);
+}
+
+.dash-input{
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,.12);
+  background: rgba(255,255,255,.70);
+  color: var(--text);
+  outline: none;
+  transition: box-shadow .2s ease, border-color .2s ease, transform .2s ease;
+}
+.dash-input:focus{
+  border-color: rgba(88, 34, 79, 0.45);
+  box-shadow: 0 0 0 4px rgba(163,255,18,.15);
+}
+.dark .dash-input{
+  border-color: rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.92);
+}
+.dark .dash-input:focus{
+  box-shadow: 0 0 0 4px rgba(163,255,18,.12);
+}
+.dash-btn-primary:hover{
+  filter: brightness(1.02);
+}
+.dash-header{
+  background: rgba(2,6,23,.55);
+  border-bottom: 1px solid rgba(255,255,255,.10);
+  backdrop-filter: blur(14px);
+}
+.dark .dash-header{
+  background: rgba(2,6,23,.75);
+}
+.dash-icon-btn{
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.06);
+  color: var(--text);
+}
+.dash-icon-btn:hover{
+  background: rgba(255,255,255,.10);
+}
+.dash-page{
+  padding: 18px;
+}
+.dash-card{
+  background: rgba(255,255,255,.07);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 20px 60px rgba(0,0,0,.18);
+}
+.dash-card-soft{
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 18px;
+  backdrop-filter: blur(14px);
+}
+.dash-input,
+.dash-select,
+.dash-textarea{
+  width: 100%;
+  background: rgba(0,0,0,.10);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 10px 12px;
+  outline: none;
+}
+.dash-input:focus,
+.dash-select:focus,
+.dash-textarea:focus{
+  border-color: rgba(168,85,247,.55);
+  box-shadow: 0 0 0 4px rgba(168,85,247,.15);
+}
+.dash-table{
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.dash-table th,
+.dash-table td{
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.dash-table th{
+  text-align: left;
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.dash-form input,
+.dash-form select,
+.dash-form textarea{
+  width: 100%;
+  background: rgba(255,255,255,.06);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  color: var(--text);
+  outline: none;
+}
+.dash-form input::placeholder,
+.dash-form textarea::placeholder{
+  color: var(--muted);
+}
+.dash-form input:focus,
+.dash-form select:focus,
+.dash-form textarea:focus{
+  box-shadow: 0 0 0 3px rgba(124,58,237,.22);
+  border-color: rgba(124,58,237,.45);
+}
+.dash-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  color: var(--text);
+  font-size: 12px;
+}
+
+.dash-page{
+  padding: 22px;
+}
+.dash-page-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  flex-wrap:wrap;
+  margin-bottom: 18px;
+}
+
+.dash-input{
+  width:100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(148,163,184,.25);
+  background: white;
+  color: var(--text);
+  outline:none;
+}
+.dark .dash-input{
+  background: white;
+  border: 1px solid white;
+}
+.dash-input:focus{
+  box-shadow: 0 0 0 3px rgba(163,255,18,.18);
+  border-color: rgba(255, 18, 109, 0.45);
+}
+
+.dash-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(7, 5, 138, 0.35);
+  background: linear-gradient(90deg, rgba(157, 4, 177, 0.95), rgba(99,102,241,.90));
+  color: #04110a;
+  font-weight: 700;
+}
+.dark .dash-btn{ color:#04110a; }
+.dash-btn-secondary{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(148,163,184,.25);
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--text);
+}
+.dark .dash-btn-secondary{ background: rgba(255,255,255,.06); }
+ 
+/* ================= LIGHT DASHBOARD OVERRIDE ================= */
+html:not(.dark) .dash-shell {
+  background: #ffffff !important;
+}
+
+html:not(.dark) .dash-sidebar {
+  background: #ffffff !important;
+  border-right: 1px solid #00000020 !important;
+}
+
+html:not(.dark) .dash-header {
+  background: #ffffff !important;
+  border-bottom: 1px solid #00000020 !important;
+}
+
+html:not(.dark) .dash-card,
+html:not(.dark) .dash-card-soft {
+  background: #ffffff !important;
+  border: 1px solid #00000015 !important;
+  box-shadow: 0 8px 20px rgba(0,0,0,.05) !important;
+}
+
+html:not(.dark) .dash-input,
+html:not(.dark) .dash-select,
+html:not(.dark) .dash-textarea {
+  background: #ffffff !important;
+  border: 1px solid #00000030 !important;
+  color: #000000 !important;
+}
+
+html:not(.dark) .dash-input::placeholder {
+  color: #555 !important;
+}
+
+html:not(.dark) .dash-btn {
+  background: linear-gradient(90deg, #6a11cb, #ff4ecd) !important;
+  color: white !important;
+  border: none !important;
+}
+main {
+  padding-top: 50px; /* prevents overlap under sticky header */
+}
+.dash-header {
+  height: 72px;
+}
+
+
+
+/* Light Theme (default) */
+:root {
+  --dropdown-bg: #ffffff;
+  --dropdown-text: #111111;
+  --dropdown-hover-bg: #f2f2f2;
+  --dropdown-hover-text: #000000;
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  --dropdown-bg: #1e1e1e;
+  --dropdown-text: #f5f5f5;
+  --dropdown-hover-bg: #333333;
+  --dropdown-hover-text: #ffffff;
+}
+
+/* Global dropdown class */
+.drop-down {
+  background-color: var(--dropdown-bg);
+  color: var(--dropdown-text);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.drop-down:hover {
+  background-color: var(--dropdown-hover-bg);
+  color: var(--dropdown-hover-text);
+}
