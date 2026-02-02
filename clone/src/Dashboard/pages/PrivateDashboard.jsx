@@ -4,22 +4,13 @@ import {
   Area,
   XAxis,
   YAxis,
-  CartesianGrid,
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import {Link} from "react-router"
+import { Link } from "react-router";
 
 export default function PrivateDashboard() {
-  const [userName] = useState("User");
-
-  const stats = {
-    netRevenue: "$0",
-    arr: "$0",
-    newOrders: 0,
-    releases: 0,
-    artists: 0,
-  };
+  const [darkMode, setDarkMode] = useState(false);
 
   const earningData = [
     { name: "Jan", amount: 0 },
@@ -37,190 +28,174 @@ export default function PrivateDashboard() {
     { name: "Others", pct: 12 },
   ];
 
-  const topMixes = [
-    {
-      title: "Main Jahan Rahoon",
-      artist: "Yasser Desai",
-      cover:
-        "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=200&h=200&fit=crop",
-    },
-    {
-      title: "Samastipur Jila Ke",
-      artist: "Pyare Arjun, Sapna Raj",
-      cover:
-        "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=200&h=200&fit=crop",
-    },
-  ];
-
   const notifications = [
-    { title: "New users registered", meta: "Today" },
-    { title: "Orders processed", meta: "This week" },
-    { title: "Payout requested", meta: "Pending" },
-    { title: "Unresolved support tickets", meta: "2 open" },
+    { title: "🎵 New release approved", meta: "Just now" },
+    { title: "💰 Payout requested", meta: "Today" },
+    { title: "🎉 Holiday: Office closed", meta: "26 Jan" },
+    { title: "📈 Streams increased", meta: "This week" },
   ];
 
   return (
-<div className="dash-page mt-0 mb-1">
-      <div className="dash-page-head">
-        <div>
-          <div className="text-xs uppercase dash-nav-label mb-1 tracking-widest" style={{ color: "var(--muted)" }}>
-            Overview
+    <div className={darkMode ? "dark" : ""}>
+      <div className="min-h-screen bg-[#f6f7fb] dark:bg-[#0b0b14] p-6 transition-colors">
+
+        {/* 🔔 STICKY NOTIFICATION BAR */}
+        <div className="sticky top-4 z-40 mb-6">
+          <div className="overflow-hidden rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg">
+            <div className="flex gap-10 px-6 py-3 animate-notify">
+              {notifications.slice(0, 3).map((n, i) => (
+                <div key={i} className="flex items-center gap-3 whitespace-nowrap">
+                  <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
+                  <span className="text-sm font-medium">{n.title}</span>
+                  <span className="text-xs opacity-80">• {n.meta}</span>
+                </div>
+              ))}
+            </div>
           </div>
-          <h1 className="text-2xl md:text-3xl font-semibold">Welcome back, {userName}</h1>
-          <p className="mt-1 text-sm" style={{ color: "var(--muted)" }}>
-            Track releases, royalties, and activity across your catalog.
-          </p>
         </div>
-        <div className="flex items-center gap-3">
-          <Link to="/cms/create-release" className="dash-btn">
-            + Upload New Track
-          </Link>
+
+        {/* HEADER */}
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <p className="text-xs uppercase text-gray-500">Dashboard</p>
+            <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
+              Welcome back
+            </h1>
+          </div>
+
+          <div className="flex gap-3">
+            <button
+              onClick={() => setDarkMode(!darkMode)}
+              className="px-3 py-2 rounded-md text-sm
+              bg-gray-200 dark:bg-white/10
+              text-gray-900 dark:text-gray-200"
+            >
+              {darkMode ? "" : ""}
+            </button>
+
+            <Link
+              to="/cms/create-release"
+              className="px-4 py-2 rounded-md text-sm font-medium text-white bg-purple-600 hover:bg-purple-700"
+            >
+              + Upload Track
+            </Link>
+          </div>
         </div>
-      </div>
 
-      <div className="grid gap-6 xl:grid-cols-[1fr_360px]">
-        {/* MAIN */}
-        <div className="space-y-6">
-          {/* KPI ROW */}
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="dash-card p-5">
-              <div className="text-xs" style={{ color: "var(--muted)" }}>Net revenue</div>
-              <div className="mt-2 text-2xl font-semibold">{stats.netRevenue}</div>
-              <div className="mt-2 text-xs" style={{ color: "var(--muted)" }}>0% vs last month</div>
-            </div>
-            <div className="dash-card p-5">
-              <div className="text-xs" style={{ color: "var(--muted)" }}>ARR</div>
-              <div className="mt-2 text-2xl font-semibold">{stats.arr}</div>
-              <div className="mt-2 text-xs" style={{ color: "var(--muted)" }}>—</div>
-            </div>
-            <div className="dash-card p-5">
-              <div className="text-xs" style={{ color: "var(--muted)" }}>Releases</div>
-              <div className="mt-2 text-2xl font-semibold">{stats.releases}</div>
-              <div className="mt-2 text-xs" style={{ color: "var(--muted)" }}>Catalog items</div>
-            </div>
-            <div className="dash-card p-5">
-              <div className="text-xs" style={{ color: "var(--muted)" }}>Artists</div>
-              <div className="mt-2 text-2xl font-semibold">{stats.artists}</div>
-              <div className="mt-2 text-xs" style={{ color: "var(--muted)" }}>Workspaces</div>
-            </div>
-          </div>
+        {/* MAIN GRID */}
+        <div className="grid lg:grid-cols-[1fr_360px] gap-6">
 
-          {/* PERFORMANCE SNAPSHOT */}
-          <div className="dash-card p-6">
-            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-              <div>
-                <h2 className="text-lg font-semibold">Performance snapshot</h2>
-                <p className="mt-1 text-sm" style={{ color: "var(--muted)" }}>
-                  Earnings pulse + platform split (demo)
-                </p>
-              </div>
-              <div className="flex items-center gap-3 w-full lg:w-auto">
-                <input type="date" className="dash-input w-full lg:w-[180px]" />
-                <input type="date" className="dash-input w-full lg:w-[180px]" />
-              </div>
-            </div>
+          {/* LEFT */}
+          <div className="space-y-6">
+            
 
-            <div className="mt-6 grid lg:grid-cols-[1fr_260px] gap-6">
-              <div className="h-72 dash-card p-4">
-                <div className="text-sm font-semibold">Earnings pulse</div>
-                <div className="mt-3 h-56">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={earningData}>
-                      <defs>
-                        <linearGradient id="earnFill" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="var(--dash-accent)" stopOpacity={0.35} />
-                          <stop offset="95%" stopColor="var(--dash-accent)" stopOpacity={0.02} />
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,.16)" />
-                      <XAxis dataKey="name" stroke="rgba(148,163,184,.75)" />
-                      <YAxis stroke="rgba(148,163,184,.75)" />
-                      <Tooltip />
-                      <Area
-                        type="monotone"
-                        dataKey="amount"
-                        stroke="var(--dash-accent)"
-                        strokeWidth={2}
-                        fill="url(#earnFill)"
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
+            {/* EARNINGS */}
+            <div className="rounded-2xl p-6 bg-gradient-to-br from-purple-600/10 to-indigo-600/10 border border-white/10">
+              <div className="flex justify-between mb-4">
+                <div>
+                  <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
+                    Earnings Pulse
+                  </h2>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Last 6 months
+                  </p>
                 </div>
+                <span className="text-xs px-3 py-1 rounded-full bg-purple-600/10 text-purple-600 dark:text-purple-400">
+                  Live
+                </span>
               </div>
 
-              <div className="dash-card p-4">
-                <div className="text-sm font-semibold">Platform split</div>
-                <div className="mt-4 space-y-3">
-                  {platformSplit.map((p) => (
-                    <div key={p.name}>
-                      <div className="flex items-center justify-between text-xs" style={{ color: "var(--muted)" }}>
-                        <span>{p.name}</span>
-                        <span>{p.pct}%</span>
-                      </div>
-                      <div className="mt-2 h-2 rounded-full" style={{ background: "rgba(255,255,255,.06)" }}>
-                        <div
-                          className="h-2 rounded-full"
-                          style={{ width: `${p.pct}%`, background: "linear-gradient(90deg,var(--accent-1),var(--accent-2))" }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-5 text-xs" style={{ color: "var(--muted)" }}>
-                  Tip: Connect stores to see real numbers here.
-                </div>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={earningData}>
+                    <defs>
+                      <linearGradient id="earnUnique" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#7c3aed" stopOpacity={0.4} />
+                        <stop offset="100%" stopColor="#7c3aed" stopOpacity={0.05} />
+                      </linearGradient>
+                    </defs>
+                    <XAxis dataKey="name" />
+                    <YAxis hide />
+                    <Tooltip />
+                    <Area
+                      dataKey="amount"
+                      stroke="#7c3aed"
+                      strokeWidth={3}
+                      fill="url(#earnUnique)"
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
               </div>
             </div>
-          </div>
 
-          {/* CUSTOMER / TOP MIXES */}
-          <div className="dash-card p-6">
-            <div className="flex items-center justify-between gap-4 flex-wrap">
-              <h2 className="text-lg font-semibold">Recent catalog highlights</h2>
-              <a href="/cms/release-music" className="dash-btn-secondary">View all</a>
-            </div>
-            <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-              {topMixes.map((mix, index) => (
-                <div key={index} className="dash-card p-0 overflow-hidden">
-                  <img src={mix.cover} alt={mix.title} className="w-full aspect-square object-cover" />
-                  <div className="p-3">
-                    <div className="text-sm font-semibold truncate">{mix.title}</div>
-                    <div className="text-xs truncate" style={{ color: "var(--muted)" }}>{mix.artist}</div>
+            {/* PLATFORM SPLIT */}
+            <div className="bg-white dark:bg-[#111827] rounded-2xl p-6 border border-gray-200 dark:border-white/10">
+              <h2 className="text-sm font-semibold text-gray-900 dark:text-white mb-5">
+                Revenue by Platform
+              </h2>
+
+              {platformSplit.map((p) => (
+                <div key={p.name} className="mb-4">
+                  <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
+                    <span>{p.name}</span>
+                    <span>{p.pct}%</span>
+                  </div>
+                  <div className="h-3 rounded-full bg-gray-200 dark:bg-white/10">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-purple-600 to-indigo-600"
+                      style={{ width: `${p.pct}%` }}
+                    />
                   </div>
                 </div>
               ))}
             </div>
           </div>
-        </div>
 
-        {/* RIGHT SIDEBAR */}
-        <aside className="space-y-6">
-          <div className="dash-card p-6">
-            <h3 className="text-base font-semibold">Notifications</h3>
-            <div className="mt-4 space-y-3">
-              {notifications.map((n) => (
-                <div key={n.title} className="dash-card p-4">
-                  <div className="text-sm font-semibold">{n.title}</div>
-                  <div className="text-xs mt-1" style={{ color: "var(--muted)" }}>{n.meta}</div>
+          {/* RIGHT */}
+          <aside className="space-y-6">
+
+            
+
+            {/* ACTIVITY */}
+            <div className="bg-white dark:bg-[#111827] rounded-2xl p-6 border border-gray-200 dark:border-white/10">
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-5">
+                Recent Activity
+              </h3>
+
+              {notifications.map((n, i) => (
+                <div key={i} className="flex gap-3 mb-4">
+                  <div className="w-2 h-2 mt-2 rounded-full bg-purple-600" />
+                  <div>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                      {n.title}
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      {n.meta}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
-          </div>
+            
 
-
-          <div className="dash-card p-6">
-            <h3 className="text-base font-semibold">Quick actions</h3>
-            <div className="mt-4 grid gap-3">
-              <Link to="/cms/create-release" className="dash-btn w-full text-center">
-                Upload track
+            {/* QUICK ACTIONS */}
+            <div className="grid grid-cols-2 gap-4">
+              <Link
+                to="/cms/create-release"
+                className="rounded-xl p-4 text-center bg-gradient-to-br from-purple-600 to-indigo-600 text-white font-medium"
+              >
+                ⬆ Upload
               </Link>
-              <Link to={"/cms/user-profile" } className="dash-btn-secondary w-full text-center">
-                Update profile
+
+              <Link
+                to="/cms/user-profile"
+                className="rounded-xl p-4 text-center bg-gray-100 dark:bg-white/10 text-gray-900 dark:text-white font-medium"
+              >
+                ⚙ Profile
               </Link>
             </div>
-          </div>
-        </aside>
+          </aside>
+        </div>
       </div>
     </div>
   );

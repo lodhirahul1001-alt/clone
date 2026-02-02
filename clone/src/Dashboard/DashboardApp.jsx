@@ -12,25 +12,18 @@ import NotificationsDrawer from "./components/NotificationsDrawer";
 import ThemeToggle from "../components/ThemeToggle";
 
 import {
-  Youtube,
   Music,
-  HelpCircle,
   FileText,
   Users,
   Tags,
   DollarSign,
   User as UserIcon,
-  Save,
   Bell,
   LayoutDashboard,
   Plus,
   LogOut,
-  Search,
 } from "lucide-react";
 
-// IMPORTANT: ThemeProvider already wraps the whole app in src/main.jsx.
-// Nesting another provider here would desync light/dark between public pages and /cms.
-import { useTheme } from "../context/ThemeContext";
 import { FormStorageManager } from "./components/FormStorageManager";
 
 import PrivateDashboard from "./pages/PrivateDashboard";
@@ -52,7 +45,8 @@ import AdminUsers from "./pages/AdminUsers";
 import { useSelector, useDispatch } from "react-redux";
 import { removeUser } from "../features/reducers/AuthSlice";
 import { logOutUserApi } from "../features/actions/AuthAction";
-// ================= DASH NAV LINK (ADDED FIX) =================
+
+// ================= DASH NAV LINK =================
 function DashNavLink({ to, icon: Icon, children, active, onClick }) {
   return (
     <Link
@@ -68,9 +62,7 @@ function DashNavLink({ to, icon: Icon, children, active, onClick }) {
   );
 }
 
-
-// ================= THEME TOGGLE (optional) =================
-// ================= SIDEBAR (RESPONSIVE) =================
+// ================= SIDEBAR =================
 function Sidebar({ isOpen, onClose }) {
   const location = useLocation();
   const navigate = useNavigate();
@@ -78,151 +70,105 @@ function Sidebar({ isOpen, onClose }) {
   const [showFormManager, setShowFormManager] = useState(false);
 
   const { user } = useSelector((state) => state.auth);
-  const profilePhoto = user?.dp;
-  const initials =
-    (user?.fullName && user.fullName[0]) ||
-    (user?.email && user.email[0]) ||
-    "U";
 
   const isActive = (path) => location.pathname === path;
 
-const menuItems = [
-  { name: "Dashboard", path: "/cms", icon: LayoutDashboard },
-
-  { name: "Release Music", path: "/cms/release-music", icon: Music },
-  { name: "Labels", path: "/cms/labels", icon: Tags },
-  // ✅ Sub Labels
-  { name: "Sub Labels", path: "/cms/sub-labels", icon: Tags },
-  { name: "My Artists", path: "/cms/my-artists", icon: Users },
-
-  // ✅ ADDED
-  { name: "Finance", path: "/cms/finance", icon: DollarSign },
-
-  { name: "User Profile", path: "/cms/user-profile", icon: UserIcon },
-
-  // ✅ ADMIN (rendered only if role=admin)
-  { name: "Admin Tracks", path: "/cms/admin/tracks", icon: FileText, adminOnly: true },
-  { name: "Admin Users", path: "/cms/admin/users", icon: Users, adminOnly: true },
-];
-
+  const menuItems = [
+    { name: "Dashboard", path: "/cms", icon: LayoutDashboard },
+    { name: "Release Music", path: "/cms/release-music", icon: Music },
+    { name: "Labels", path: "/cms/labels", icon: Tags },
+    { name: "Sub Labels", path: "/cms/sub-labels", icon: Tags },
+    { name: "My Artists", path: "/cms/my-artists", icon: Users },
+    { name: "Finance", path: "/cms/finance", icon: DollarSign },
+    { name: "User Profile", path: "/cms/user-profile", icon: UserIcon },
+    { name: "Admin Tracks", path: "/cms/admin/tracks", icon: FileText, adminOnly: true },
+    { name: "Admin Users", path: "/cms/admin/users", icon: Users, adminOnly: true },
+  ];
 
   const handleCreate = () => {
     navigate("/cms/create-release");
     onClose?.();
   };
 
- const handleLogout = async () => {
-  try {
-    await dispatch(logOutUserApi());  // call API first
-    dispatch(removeUser(null));       // then clear redux
-    navigate("/");
-  } catch (e) {
-    console.log("logout error", e);
-  }
-};
-
+  const handleLogout = async () => {
+    try {
+      await dispatch(logOutUserApi());
+      dispatch(removeUser(null));
+      navigate("/");
+    } catch (e) {
+      console.log("logout error", e);
+    }
+  };
 
   return (
     <>
       {/* Mobile backdrop */}
       <div
         className={`fixed inset-0 z-50 md:hidden transition-opacity ${
-          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         style={{ background: "rgba(0,0,0,.55)" }}
         onClick={onClose}
       />
 
-      {/* Sidebar drawer */}
+      {/* Sidebar */}
       <aside
-        className={`dash-sidebar fixed left-0 top-0 z-40 h-full w-[280px] md:w-[300px] p-5 transform transition-transform duration-200 md:translate-x-0 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`dash-sidebar fixed left-0 top-0 z-40 h-full w-64 p-5
+        transform transition-transform duration-200
+        md:translate-x-0 ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
-        {/* Brand + user */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-2xl grid place-items-center dash-badge">
-              <Music className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="text-sm font-semibold">PR DIGITAL CMS</div>
-              <div className="text-xs" style={{ color: "var(--muted)" }}>Artist Console</div>
-            </div>
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-10 rounded-2xl grid place-items-center dash-badge">
+            <Music className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="text-sm font-semibold">PR DIGITAL CMS</div>
+            <div className="text-xs text-muted">Artist Console</div>
           </div>
         </div>
 
-        <div className="mt-5 flex items-center gap-3 rounded-2xl p-3 dash-card">
-          {profilePhoto ? (
-            <img
-              src={profilePhoto}
-              alt={user?.fullName || "Profile"}
-              className="w-10 h-10 rounded-xl object-cover"
-              style={{ border: "1px solid var(--dash-border)" }}
-            />
-          ) : (
-            <div className="w-10 h-10 rounded-xl grid place-items-center dash-badge font-semibold">
-              {initials.toUpperCase()}
-            </div>
-          )}
-          <div className="min-w-0">
-            <div className="text-sm font-semibold truncate">{user?.fullName || "User"}</div>
-            <div className="text-xs truncate" style={{ color: "var(--muted)" }}>{user?.email || ""}</div>
-          </div>
-        </div>
-
-        {/* Search
-        <div className="mt-4 relative">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "var(--muted)" }} />
-          <input
-            className="dash-input w-full pl-9"
-            placeholder="Search..."
-            aria-label="Search"
-          />
-        </div> */}
-
-        {/* Create */}
         <button
           onClick={handleCreate}
           className="mt-4 w-full dash-btn dash-btn-primary"
-          type="button"
         >
           <Plus className="w-4 h-4" />
           Create Release
         </button>
 
-        {/* Nav */}
         <nav className="mt-6 space-y-1">
           <div className="dash-nav-label">OVERVIEW</div>
-          <DashNavLink to="/cms" active={isActive("/cms") || location.pathname === "/cms"} onClick={onClose} icon={LayoutDashboard}>
+          <DashNavLink
+            to="/cms"
+            icon={LayoutDashboard}
+            active={isActive("/cms")}
+            onClick={onClose}
+          >
             Dashboard
           </DashNavLink>
 
-         <div className="dash-nav-label mt-5">CATALOG</div>
-{menuItems
-  .filter((m) =>
-    [
-      "/cms/release-music",
-      "/cms/labels",
-      "/cms/sub-labels",
-      "/cms/my-artists",
-      "/cms/finance",
-    ].includes(m.path)
-  )
-  .map((item) => (
-    <DashNavLink
-      key={item.path}
-      to={item.path}
-      active={isActive(item.path)}
-      onClick={onClose}
-      icon={item.icon}
-    >
-      {item.name}
-    </DashNavLink>
-  ))}
+          <div className="dash-nav-label mt-5">CATALOG</div>
+          {menuItems
+            .filter((m) =>
+              [
+                "/cms/release-music",
+                "/cms/labels",
+                "/cms/sub-labels",
+                "/cms/my-artists",
+                "/cms/finance",
+              ].includes(m.path)
+            )
+            .map((item) => (
+              <DashNavLink
+                key={item.path}
+                to={item.path}
+                icon={item.icon}
+                active={isActive(item.path)}
+                onClick={onClose}
+              >
+                {item.name}
+              </DashNavLink>
+            ))}
 
-
-          {/* ADMIN */}
           {user?.role === "admin" && (
             <>
               <div className="dash-nav-label mt-5">ADMIN</div>
@@ -232,9 +178,9 @@ const menuItems = [
                   <DashNavLink
                     key={item.path}
                     to={item.path}
+                    icon={item.icon}
                     active={isActive(item.path)}
                     onClick={onClose}
-                    icon={item.icon}
                   >
                     {item.name}
                   </DashNavLink>
@@ -242,25 +188,9 @@ const menuItems = [
             </>
           )}
 
-          <div className="dash-nav-label mt-5">ACCOUNT</div>
-          {menuItems
-            .filter((m) => m.path === "/cms/user-profile")
-            .map((item) => (
-              <DashNavLink
-                key={item.name}
-                to={item.path}
-                active={isActive(item.path)}
-                onClick={onClose}
-                icon={item.icon}
-              >
-                {item.name}
-              </DashNavLink>
-            ))}
-
           <button
             onClick={handleLogout}
             className="mt-6 w-full dash-btn dash-btn-danger"
-            type="button"
           >
             <LogOut className="w-4 h-4" />
             Logout
@@ -268,7 +198,6 @@ const menuItems = [
         </nav>
       </aside>
 
-      {/* Form manager (agar use karna ho) */}
       <FormStorageManager
         isOpen={showFormManager}
         onClose={() => setShowFormManager(false)}
@@ -277,105 +206,103 @@ const menuItems = [
   );
 }
 
-// ================= MAIN DASHBOARD APP =================
+// ================= MAIN DASHBOARD =================
 function DashboardApp() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
 
-  return (
-      <div className="dash-shell dash-scope min-h-screen flex text-[color:var(--text)]">
-        {/* Sidebar (mobile + desktop) */}
-        <Sidebar
-          isOpen={sidebarOpen}
-          onClose={() => setSidebarOpen(false)}
-        />
+  // ✅ FIX: user now exists here
+  const { user } = useSelector((state) => state.auth);
 
-        <NotificationsDrawer open={notifOpen} onClose={() => setNotifOpen(false)} />
-        {/* Right side content */}
-        <div className="flex-1 flex flex-col min-h-screen md:ml-64 ml-0 mt-1">
-          {/* Top bar */}
-          <header className="dash-header sticky top-0 z-20 flex items-center justify-between px-3 sm:px-6 py-3">
-            {/* Hamburger only on mobile */}
-              <button
-                className="md:hidden inline-flex items-center justify-center p-2 rounded-md border"
-              onClick={() => setSidebarOpen(true)}
+  const profilePhoto = user?.dp;
+  const initials =
+    (user?.fullName && user.fullName[0]) ||
+    (user?.email && user.email[0]) ||
+    "U";
+
+  return (
+    <div className="dash-shell min-h-screen flex">
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+      <NotificationsDrawer open={notifOpen} onClose={() => setNotifOpen(false)} />
+
+      <div className="flex-1 flex flex-col md:ml-64">
+        {/* Header */}
+        <header className="dash-header sticky top-0 z-20 flex items-center justify-between px-4 py-3">
+          <button
+            className="md:hidden inline-flex items-center justify-center p-2 rounded-md border"
+            onClick={() => setSidebarOpen(true)}
+          >
+            <div className="space-y-1">
+              <span className="block h-0.5 w-5 bg-current" />
+              <span className="block h-0.5 w-5 bg-current" />
+              <span className="block h-0.5 w-5 bg-current" />
+            </div>
+          </button>
+
+          <h1 className="text-sm sm:text-base font-semibold">Dashboard</h1>
+
+          {/* RIGHT SIDE FIXED */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setNotifOpen(true)}
+              className="h-9 w-9 rounded-full grid place-items-center dash-icon-btn"
             >
-              <span className="sr-only">Open sidebar</span>
-              <div className="space-y-1">
-                <span className="block h-0.5 w-5" style={{ background: "var(--text)" }} />
-                <span className="block h-0.5 w-5" style={{ background: "var(--text)" }} />
-                <span className="block h-0.5 w-5" style={{ background: "var(--text)" }} />
-              </div>
+              <Bell className="h-5 w-5" />
             </button>
 
-            <h1 className="text-sm ml-5 sm:text-base font-semibold dash-nav-label mb-1">Dashboard</h1>
+            <ThemeToggle />
 
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={() => setNotifOpen(true)}
-                className="h-10 w-10 rounded-full grid place-items-center dash-icon-btn"
-                aria-label="Open notifications"
-              >
-                <Bell className="h-5 w-5" />
-              </button>
-              <ThemeToggle />
-            </div>
-          </header>
-
-          {/* Main content */}
-          <main className="flex-1 px-3 sm:px-6 py-1 sm:py-1 overflow-y-auto">
-            {/* Yaha /cms/* ke nested routes */}
-            <Routes>
-              {/* /cms */}
-              <Route index element={<PrivateDashboard />} />
-              {/* /cms/support */}
-              <Route path="support" element={<Support />} />
-              {/* /cms/legal */}
-              <Route path="legal" element={<Legal />} />
-              {/* /cms/my-artists */}
-              <Route path="my-artists" element={<MyArtists />} />
-
-              {/* /cms/sub-labels */}
-              <Route path="sub-labels" element={<SubLabels />} />
-              {/* /cms/labels */}
-              <Route path="labels" element={<Labels />} />
-              {/* /cms/caller-tune */}
-              <Route path="caller-tune" element={<CallerTune />} />
-              {/* /cms/release-video */}
-              <Route path="release-video" element={<ReleaseVideo />} />
-              {/* /cms/release-music */}
-              <Route path="release-music" element={<ReleaseMusic />} />
-              {/* /cms/create-release */}
-              <Route path="create-release" element={<CreateRelease />} />
-              {/* /cms/finance */}
-              <Route path="finance" element={<Finance />} />
-              {/* /cms/user-profile */}
-              <Route path="user-profile" element={<UserProfile />} />
-
-              {/* /cms/admin/tracks */}
-              <Route
-                path="admin/tracks"
-                element={
-                  <AdminRoute>
-                    <AdminTracks />
-                  </AdminRoute>
-                }
+            {profilePhoto ? (
+              <img
+                src={profilePhoto}
+                alt="profile"
+                className="h-9 w-9 rounded-full object-cover border"
               />
+            ) : (
+              <div className="h-9 w-9 rounded-full grid place-items-center dash-badge font-semibold">
+                {initials}
+              </div>
+            )}
+          </div>
+        </header>
 
-              {/* /cms/admin/users */}
-              <Route
-                path="admin/users"
-                element={
-                  <AdminRoute>
-                    <AdminUsers />
-                  </AdminRoute>
-                }
-              />
-            </Routes>
-          </main>
-        </div>
+        {/* Pages */}
+        <main className="flex-1 px-4 py-3 overflow-y-auto">
+          <Routes>
+            <Route index element={<PrivateDashboard />} />
+            <Route path="support" element={<Support />} />
+            <Route path="legal" element={<Legal />} />
+            <Route path="my-artists" element={<MyArtists />} />
+            <Route path="sub-labels" element={<SubLabels />} />
+            <Route path="labels" element={<Labels />} />
+            <Route path="caller-tune" element={<CallerTune />} />
+            <Route path="release-video" element={<ReleaseVideo />} />
+            <Route path="release-music" element={<ReleaseMusic />} />
+            <Route path="create-release" element={<CreateRelease />} />
+            <Route path="finance" element={<Finance />} />
+            <Route path="user-profile" element={<UserProfile />} />
+
+            <Route
+              path="admin/tracks"
+              element={
+                <AdminRoute>
+                  <AdminTracks />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="admin/users"
+              element={
+                <AdminRoute>
+                  <AdminUsers />
+                </AdminRoute>
+              }
+            />
+          </Routes>
+        </main>
       </div>
+    </div>
   );
 }
 
