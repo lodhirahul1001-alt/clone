@@ -34,7 +34,7 @@ const About = () => {
           PR DIGITAL CMS is the leading independent development partner for
           content creators, helping build audiences and careers through
           technology and services across distribution, publishing
-          administration, and promotional services .
+          administration, and promotional services.
         </motion.p>
       </div>
 
