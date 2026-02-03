@@ -12,11 +12,9 @@ const About = () => {
     <div className="min-h-screen">
       {/* Toggle Button */}
 
-
       {/* Hero Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-16">
         <motion.h1
-
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}

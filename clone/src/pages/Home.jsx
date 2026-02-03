@@ -41,6 +41,7 @@ function Section({ id, title, subtitle, children }) {
 export default function Home() {
   const [featureTab, setFeatureTab] = useState("analytics");
   const [testimonialIndex, setTestimonialIndex] = useState(0);
+  const [activeInsight, setActiveInsight] = useState(null);
 
   const stats = useMemo(
     () => [
@@ -199,8 +200,9 @@ export default function Home() {
       {/* HERO */}
       <Hero />
 
+
       {/* SHOWCASE MARQUEE (fixed) */}
-      <Marquee />
+      {/* <Marquee /> */}
 
       {/* JOIN THOUSANDS */}
       <Section
@@ -450,6 +452,7 @@ export default function Home() {
                 </p>
                 <button type="button" className="mt-4 inline-flex items-center gap-2 text-sm"
                   style={{ color: "var(--accent-1)" }}
+                  onClick={() => setActiveInsight(a)}
                 >
                   Read More <ArrowRight className="w-4 h-4" />
                 </button>
@@ -461,6 +464,36 @@ export default function Home() {
 
       {/* Footer video section (kept) */}
       <VideoFooter />
+
+      {/* Insight reader modal */}
+      {activeInsight && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center px-4" role="dialog" aria-modal="true">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setActiveInsight(null)} />
+          <div className="relative glass w-full max-w-2xl p-6 md:p-8">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <div className="text-xs" style={{ color: "var(--muted)" }}>
+                  {activeInsight.tag} • {activeInsight.date} • {activeInsight.read}
+                </div>
+                <h3 className="mt-2 text-2xl font-semibold">{activeInsight.title}</h3>
+              </div>
+              <button type="button" className="btn-ghost" onClick={() => setActiveInsight(null)}>
+                Close
+              </button>
+            </div>
+
+            <div className="mt-5 text-lg leading-relaxed" style={{ color: "var(--text)" }}>
+              {/* simple readable body (can be replaced with real content later) */}
+              <p>
+                {activeInsight.desc}
+              </p>
+              <p className="mt-4" style={{ color: "var(--muted)" }}>
+                Tip: Set a realistic release date, prepare your artwork + metadata early, and promote consistently for 2–3 weeks after release.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

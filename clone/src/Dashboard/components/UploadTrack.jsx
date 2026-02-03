@@ -75,6 +75,32 @@ const [serverPublicId, setServerPublicId] = useState("");
     coverArt: null,
     agreeToTerms: false,
   });
+
+  const blankForm = {
+    title: '',
+    label: '',
+    upcEan: '',
+    primaryArtist: '',
+    featuring: '',
+    lyricist: '',
+    composer: '',
+    arranger: '',
+    producer: '',
+    genre: '',
+    lyricsLanguage: '',
+    pLine: '',
+    cLine: '',
+    titleLanguage: '',
+    productionYear: '',
+    releaseDate: '',
+    instrumental: false,
+    parentalAdvisory: false,
+    isrcGeneration: false,
+    crbtCut: false,
+    audioFile: null,
+    coverArt: null,
+    agreeToTerms: false,
+  };
 // (removed duplicate navigate/exit handler)
 
   useEffect(() => {
@@ -258,10 +284,20 @@ const [serverPublicId, setServerPublicId] = useState("");
         onSuccess(track);
       }
   
+      // In page view: reset form so user can submit a new track.
+      // In modal view: close after success.
       setTimeout(() => {
         setSubmitSuccess(false);
-        onClose && onClose();
-      }, 2000);
+        if (view === "page") {
+          setFormData(blankForm);
+          setExistingCoverUrl("");
+          setServerPublicId("");
+          setErrors({});
+          setHasUnsavedChanges(false);
+        } else {
+          onClose && onClose();
+        }
+      }, 1500);
     } catch (error) {
       console.error("Submission error:", error);
       const message =
@@ -287,14 +323,24 @@ const [serverPublicId, setServerPublicId] = useState("");
   ];
 
   if (submitSuccess) {
-    return (
+    return view === "page" ? (
+      <div className="dash-card p-8 rounded-2xl">
+        <div className="text-center">
+          <Check className="w-16 h-16 text-green-600 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-green-800 dark:text-green-400 mb-2">Upload Successful!</h2>
+          <p className="text-green-700 dark:text-green-300">
+            Your track has been submitted successfully. The form will reset so you can upload a new track.
+          </p>
+        </div>
+      </div>
+    ) : (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div className="bg-transparent rounded-lg p-8 max-w-md w-full mx-4">
           <div className="text-center">
             <Check className="w-16 h-16 text-green-600 mx-auto mb-4" />
             <h2 className="text-2xl font-bold text-green-800 dark:text-green-400 mb-2">Upload Successful!</h2>
             <p className="text-green-700 dark:text-green-300">
-              Your track has been submitted successfully and all data has been saved to your form manager. We'll review it and distribute it to all major platforms.
+              Your track has been submitted successfully. We'll review it and distribute it to all major platforms.
             </p>
           </div>
         </div>
@@ -316,12 +362,20 @@ const [serverPublicId, setServerPublicId] = useState("");
         onClick={(e) => e.stopPropagation()}
         className={
           (isModal ? "relative h-full w-full overflow-y-auto " : "") +
-          "dash-card rounded-lg w-full max-w-6xl mx-auto my-6"
+          (isModal
+            ? "dash-card rounded-lg w-full max-w-6xl mx-auto my-6"
+            : "dash-card rounded-2xl w-full max-w-none mx-0 my-0")
         }
         style={isModal ? { maxWidth: "100%", margin: 0, borderRadius: 0, height: "100%" } : undefined}
       >
         
-        {/* Header */}  <div className="sm:sticky sm:top-0 z-50 bg-grey color-white border-b border-black/10 flex items-center justify-between gap-3 py-3">
+        {/* Header */}
+        <div
+          className={
+            (isModal ? "sticky top-0 z-50 " : "") +
+            "dash-card-soft border-b border-black/10 flex items-center justify-between gap-3 py-3 px-4"
+          }
+        >
 
 
 

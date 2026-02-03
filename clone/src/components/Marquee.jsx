@@ -15,26 +15,26 @@ const logos = [
 ];
 
 export default function Marquee() {
-  return (
-    <div className="marquee-viewport">
-      <div className="container-page py-6">
-        <div className="glass-soft marquee-shell px-6 py-4">
-          <div className="marquee-track" aria-hidden="true">
-            {/* Duplicate list for seamless loop */}
-            {[...logos, ...logos].map((logo, i) => (
-              <div className="marquee-item" key={i}>
-                <img
-                  src={logo.src}
-                  alt={logo.name}
-                  className="marquee-img"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-            ))}
-          </div>
+ return (
+  <div className="marquee-viewport w-screen overflow-hidden">
+    <div className="w-screen py-6">
+      <div className="glass-soft marquee-shell px-6 py-4">
+        <div className="marquee-track flex" aria-hidden="true">
+          {[...logos, ...logos].map((logo, i) => (
+            <div className="marquee-item flex-shrink-0" key={i}>
+              <img
+                src={logo.src}
+                alt={logo.name}
+                className="marquee-img"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          ))}
         </div>
       </div>
     </div>
-  );
+  </div>
+);
+
 }

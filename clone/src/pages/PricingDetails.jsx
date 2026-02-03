@@ -39,6 +39,8 @@ export default function PricingDetails() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [showForm, setShowForm] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -76,11 +78,9 @@ export default function PricingDetails() {
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
-            <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">
-              Payment Details – <span className="text-neon">{plan}</span>
-            </h1>
+            <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">Secure Checkout</h1>
             <p className="mt-2 text-[color:var(--muted)]">
-              Pay via UPI and upload your screenshot + transaction id to verify.
+              Complete your purchase to enroll in this plan.
             </p>
           </div>
           <Link to="/pricing" className="btn-ghost">
@@ -89,56 +89,94 @@ export default function PricingDetails() {
         </div>
 
         <div className="mt-10 grid lg:grid-cols-2 gap-6 items-start">
-          {/* LEFT: QR + UPI */}
+          {/* LEFT: choose payment method */}
           <div className="glass p-6">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="text-sm font-semibold">Scan & Pay</div>
-                <div className="mt-1 text-sm text-[color:var(--muted)]">
-                  Amount: <span className="text-[color:var(--text)] font-semibold">₹ {amount}</span>
-                  <span className="ml-2 text-xs px-2 py-1 rounded-full bg-black/5 dark:bg-white/10">
-                    {billing}
-                  </span>
-                </div>
-                <div className="mt-3 text-sm">
-                  UPI ID: <span className="text-neon font-semibold">{UPI.id}</span>
-                </div>
-              </div>
+            <h2 className="text-lg font-semibold">Choose Payment Method</h2>
+            <p className="mt-1 text-sm text-[color:var(--muted)]">
+              Plan: <span className="text-neon font-semibold">{plan}</span>
+              <span className="ml-2 text-xs px-2 py-1 rounded-full bg-black/5 dark:bg-white/10">{billing}</span>
+              <span className="ml-2 text-xs px-2 py-1 rounded-full bg-black/5 dark:bg-white/10">₹ {amount}</span>
+            </p>
 
-              <a
-                className="btn-primary whitespace-nowrap"
-                href={upiUrl}
-                target="_blank"
-                rel="noreferrer"
-                title="Open UPI payment"
-              >
-                Pay via UPI
-              </a>
-            </div>
-
-            <div className="mt-6 flex justify-center">
-              <div className="glass-soft p-4 rounded-3xl">
-                <img
-                  src={qrSrc}
-                  alt="UPI QR"
-                  className="w-[260px] h-[260px] rounded-2xl"
-                  loading="lazy"
-                />
+            <div className="mt-6 glass-soft p-4 rounded-3xl">
+              <div className="text-sm font-semibold">UPI Payment</div>
+              <div className="mt-2 flex items-center justify-between gap-3 flex-wrap">
+                <div className="text-sm" style={{ color: "var(--muted)" }}>
+                  Google Pay, PhonePe, Paytm, BHIM
+                </div>
+                <a className="btn-primary" href={upiUrl} target="_blank" rel="noreferrer">
+                  Proceed to Pay
+                </a>
               </div>
             </div>
 
-            <div className="mt-4 text-xs text-[color:var(--muted)] leading-relaxed">
-              After payment, fill the verification form on the right. Our team will approve your plan and
-              activate it.
+            <div className="mt-6 text-xs text-[color:var(--muted)] leading-relaxed">
+              100% secure manual verification • Once done, click <span className="text-[color:var(--text)] font-semibold">I have completed payment</span> to submit details.
             </div>
           </div>
 
-          {/* RIGHT: verification form */}
+          {/* RIGHT: UPI modal style + confirmation form */}
           <div className="glass p-6">
-            <h2 className="text-lg font-semibold">Payment Verification</h2>
-            <p className="mt-1 text-sm text-[color:var(--muted)]">
-              Upload payment screenshot and transaction id.
-            </p>
+            {!showForm ? (
+              <>
+                <div className="text-lg font-semibold">UPI Payment</div>
+
+                <div className="mt-4 flex justify-center">
+                  <div className="glass-soft p-4 rounded-3xl">
+                    <img
+                      src={qrSrc}
+                      alt="UPI QR"
+                      className="w-[240px] h-[240px] rounded-2xl"
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-4 flex items-center gap-2">
+                  <input
+                    readOnly
+                    value={UPI.id}
+                    className="dash-input flex-1 font-mono tracking-wide"
+                    aria-label="UPI ID"
+                  />
+                  <button
+                    type="button"
+                    className="btn-primary"
+                    onClick={async () => {
+                      try {
+                        await navigator.clipboard.writeText(UPI.id);
+                        setCopied(true);
+                        setTimeout(() => setCopied(false), 1200);
+                      } catch {
+                        /* ignore */
+                      }
+                    }}
+                  >
+                    {copied ? "Copied" : "Copy"}
+                  </button>
+                </div>
+
+                <button
+                  type="button"
+                  className="btn-ghost w-full mt-4"
+                  onClick={() => setShowForm(true)}
+                >
+                  I have completed payment
+                </button>
+
+                <Link
+                  to="/support"
+                  className="btn-ghost w-full mt-2 text-center"
+                >
+                  Raise a ticket
+                </Link>
+              </>
+            ) : (
+              <>
+                <h2 className="text-lg font-semibold">Payment Confirmation</h2>
+                <p className="mt-1 text-sm text-[color:var(--muted)]">
+                  Fill your details and upload payment screenshot for verification.
+                </p>
 
             {error && (
               <div className="mt-4 glass-soft p-3 rounded-2xl text-sm" style={{ border: "1px solid rgba(239,68,68,.35)" }}>
@@ -176,9 +214,24 @@ export default function PricingDetails() {
                   className="dash-input"
                 />
                 <input
+                  name="whatsapp"
+                  required
+                  placeholder="WhatsApp no"
+                  className="dash-input"
+                />
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-4">
+                <input
                   name="transactionId"
                   required
                   placeholder="Transaction ID"
+                  className="dash-input"
+                />
+                <input
+                  name="upiId"
+                  defaultValue={UPI.id}
+                  placeholder="Your UPI ID (optional)"
                   className="dash-input"
                 />
               </div>
@@ -203,11 +256,21 @@ export default function PricingDetails() {
               >
                 {loading ? "Submitting..." : "Submit verification"}
               </button>
+
+              <button
+                type="button"
+                className="btn-ghost w-full"
+                onClick={() => setShowForm(false)}
+              >
+                Back
+              </button>
             </form>
 
             <div className="mt-4 text-xs text-[color:var(--muted)]">
               By submitting, you confirm that the payment details are correct.
             </div>
+              </>
+            )}
           </div>
         </div>
       </div>

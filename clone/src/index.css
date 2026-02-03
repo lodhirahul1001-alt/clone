@@ -62,6 +62,9 @@
    --------------------------- */
 @layer base {
   html { scroll-behavior: smooth; }
+  /* Ensure native form controls (datetime/select) match theme */
+  :root { color-scheme: light; }
+  .dark { color-scheme: dark; }
   body {
     background: var(--app-bg);
     color: var(--text);
@@ -102,7 +105,7 @@
   }
 
   .btn-primary{
-    @apply inline-flex items-center justify-center font-medium rounded-full px-5 py-2.5 transition-all duration-200;
+    @apply inline-flex items-center justify-center font-medium rounded-full px-5 py-2.5 transition-all duration-200 cursor-pointer;
     background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
     color: white;
     box-shadow: 0 18px 40px rgba(124,58,237,.22);
@@ -110,7 +113,7 @@
   .btn-primary:hover{ transform: translateY(-1px); filter: brightness(1.05); }
 
   .btn-ghost{
-    @apply inline-flex items-center justify-center font-medium rounded-full px-5 py-2.5 transition-colors duration-200;
+    @apply inline-flex items-center justify-center font-medium rounded-full px-5 py-2.5 transition-colors duration-200 cursor-pointer;
     background: transparent;
     border: 1px solid var(--border);
     color: var(--text);
@@ -177,7 +180,7 @@
   }
   .marquee-item{ display:flex; align-items:center; justify-content:center; }
   /* Make logos visible in BOTH themes */
-  .marquee-img{ max-height: 26px; width:auto; opacity: .95; filter: grayscale(2) brightness(.28) contrast(1.55); }
+  .marquee-img{ max-height: 26px; width:auto; opacity: .95; filter: grayscale(1.5) brightness(.42) contrast(1.45); }
   .dark .marquee-img{ filter: invert(1) brightness(2.05) contrast(1.35) grayscale(1); opacity: .98; }
   .marquee-track:hover{ animation-play-state: paused; }
 }
@@ -471,6 +474,96 @@
   color: var(--text);
 }
 .dark .dash-btn-secondary{ background: rgba(255,255,255,.06); }
+
+/* Dashboard: colored metric cards + tables (UT-style) */
+.dash-stat{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+}
+.dash-stat .dash-stat-ico{
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: rgba(0,0,0,.04);
+  border: 1px solid rgba(0,0,0,.08);
+}
+html.dark .dash-stat .dash-stat-ico{
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.10);
+}
+
+.dash-grad{
+  position:relative;
+  overflow:hidden;
+  border-radius:18px;
+  padding: 18px;
+  color: #ffffff;
+  border: none;
+}
+.dash-grad:after{
+  content:"";
+  position:absolute;
+  right:-40px;
+  top:-40px;
+  width: 180px;
+  height: 180px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.18);
+  filter: blur(0.5px);
+}
+.dash-grad .dash-grad-ico{
+  width:40px;
+  height:40px;
+  border-radius: 14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: rgba(255,255,255,.22);
+}
+.dash-grad .dash-grad-title{ opacity:.92; font-weight:700; }
+.dash-grad .dash-grad-val{ font-size: 32px; font-weight: 800; letter-spacing: -0.02em; }
+
+.dash-grad.g-teal{ background: linear-gradient(135deg, #26d0ce, #1a86d6); }
+.dash-grad.g-coral{ background: linear-gradient(135deg, #ff7a7a, #ffb36a); }
+.dash-grad.g-purple{ background: linear-gradient(135deg, #a855f7, #6366f1); }
+.dash-grad.g-yellow{ background: linear-gradient(135deg, #facc15, #f59e0b); }
+
+.dash-table{
+  width:100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.dash-table th{
+  text-align:left;
+  font-size: 12px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: rgba(100,116,139,.9);
+  padding: 12px 8px;
+  border-bottom: 1px solid rgba(0,0,0,.10);
+}
+html.dark .dash-table th{ color: rgba(148,163,184,.85); border-bottom: 1px solid rgba(255,255,255,.10); }
+.dash-table td{
+  padding: 12px 8px;
+  border-bottom: 1px solid rgba(0,0,0,.06);
+}
+html.dark .dash-table td{ border-bottom: 1px solid rgba(255,255,255,.08); }
+.dash-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,.10);
+  background: rgba(0,0,0,.04);
+  font-size: 12px;
+}
+html.dark .dash-pill{ border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.06); }
  
 /* ================= LIGHT DASHBOARD OVERRIDE ================= */
 html:not(.dark) .dash-shell {
@@ -547,4 +640,3 @@ main {
   background-color: var(--dropdown-hover-bg);
   color: var(--dropdown-hover-text);
 }
-

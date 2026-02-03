@@ -71,7 +71,7 @@ export default function CallbackModal({ open, onClose }) {
           </button>
 
           <h3 className="text-2xl font-semibold">Request a callback</h3>
-          <p className="mt-1 text-sm text-[color:var(--muted)]">
+          <p className="mt-1 text-sm" style={{ color: "var(--muted)" }}>
             Fill the form below and our team will contact you.
           </p>
 
@@ -88,7 +88,7 @@ export default function CallbackModal({ open, onClose }) {
 
           <form className="mt-6 grid gap-4" onSubmit={handleSubmit}>
             <div>
-              <label className="text-sm" style={{ color: "var(--muted)" }}>
+              <label className="text-sm text-gray-700 dark:text-gray-300">
                 Name
               </label>
               <input
@@ -100,7 +100,7 @@ export default function CallbackModal({ open, onClose }) {
             </div>
 
             <div>
-              <label className="text-sm" style={{ color: "var(--muted)" }}>
+              <label className="text-sm text-gray-700 dark:text-gray-300">
                 Phone
               </label>
               <input
@@ -112,7 +112,7 @@ export default function CallbackModal({ open, onClose }) {
             </div>
 
             <div>
-              <label className="text-sm" style={{ color: "var(--muted)" }}>
+              <label className="text-sm text-gray-700 dark:text-gray-300">
                 When should we call you?
               </label>
               <input
@@ -124,7 +124,7 @@ export default function CallbackModal({ open, onClose }) {
             </div>
 
             <div>
-              <label className="text-sm" style={{ color: "var(--muted)" }}>
+              <label className="text-sm text-gray-700 dark:text-gray-300">
                 Enquiry For
               </label>
               <select name="enquiry" className="dash-input mt-2" defaultValue="Online Courses (Website)">
