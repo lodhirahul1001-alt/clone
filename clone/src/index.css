@@ -10,8 +10,8 @@
   --panel: rgba(255,255,255,.75);
   --panel-soft: rgba(255,255,255,.55);
   --border: rgba(2,6,23,.10);
-  --text: #0f172a;
-  --muted: rgba(15,23,42,.65);
+  --text: #07080f;
+  --muted: rgba(7,8,15,.78);
   --accent-1: #7c3aed; /* violet */
   --accent-2: #ec4899; /* fuchsia */
   --shadow: 0 18px 50px rgba(2,6,23,.12);
@@ -23,8 +23,8 @@
   --dash-card: rgba(255,255,255,.78);
   --dash-card-soft: rgba(255,255,255,.60);
   --dash-border: rgba(2,6,23,.10);
-  --dash-text: #0b1220;
-  --dash-muted: rgba(2,6,23,.62);
+  --dash-text: #05060c;
+  --dash-muted: rgba(5,6,12,.75);
   --dash-accent: #50163f; /* neon green */
   --dash-accent-2: #ec4899;; /* lime */
 }
@@ -38,8 +38,8 @@
   --panel: rgba(255,255,255,.06);
   --panel-soft: rgba(255,255,255,.04);
   --border: rgba(255,255,255,.10);
-  --text: rgba(255,255,255,.92);
-  --muted: rgba(255,255,255,.65);
+  --text: #ffffff;
+  --muted: rgba(255,255,255,.78);
   --accent-1: #8b5cf6;
   --accent-2: #f472b6;
   --shadow: 0 24px 70px rgba(0,0,0,.55);
@@ -51,8 +51,8 @@
   --dash-card: rgba(255,255,255,.06);
   --dash-card-soft: rgba(255,255,255,.04);
   --dash-border: rgba(255,255,255,.10);
-  --dash-text: rgba(255,255,255,.92);
-  --dash-muted: rgba(255,255,255,.62);
+  --dash-text: #ffffff;
+  --dash-muted: rgba(255,255,255,.78);
   --dash-accent: #1713cf;
   --dash-accent-2: #ce0dbe;
 }
@@ -132,6 +132,18 @@
     color: rgba(255,255,255,.92);
   }
 
+  .input{
+    @apply w-full rounded-xl px-4 py-3 outline-none transition-colors duration-200;
+    background: rgba(255,255,255,.75);
+    border: 1px solid rgba(2,6,23,.12);
+    color: #0f172a;
+  }
+  .dark .input{
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.12);
+    color: rgba(255,255,255,.92);
+  }
+
   .section-title{ @apply text-3xl md:text-4xl font-semibold tracking-tight; }
 
   /* ===== CMS Dashboard building blocks ===== */
@@ -162,12 +174,17 @@
    --------------------------- */
 @layer utilities {
   /* Marquee viewport (safe on mobile) */
-  .marquee-viewport { @apply overflow-hidden; }
+  .marquee-viewport { @apply overflow-hidden w-full; }
 
   /* In light theme, give the marquee container a tiny tint so white logos remain readable */
   .marquee-shell{
     background: rgba(2,6,23,.035);
     border: 1px solid rgba(2,6,23,.08);
+  }
+
+  .dark .marquee-shell{
+    background: rgba(0,0,0,.55);
+    border: 1px solid rgba(255,255,255,.12);
   }
 
   /* Marquee animation (replaces missing Tailwind animate-marquee) */
@@ -180,8 +197,16 @@
   }
   .marquee-item{ display:flex; align-items:center; justify-content:center; }
   /* Make logos visible in BOTH themes */
-  .marquee-img{ max-height: 26px; width:auto; opacity: .95; filter: grayscale(1.5) brightness(.42) contrast(1.45); }
-  .dark .marquee-img{ filter: invert(1) brightness(2.05) contrast(1.35) grayscale(1); opacity: .98; }
+  .marquee-img{
+    max-height: 30px;
+    width: auto;
+    opacity: 0.98;
+    filter: grayscale(0.15) brightness(0.95) contrast(1.1);
+  }
+  .dark .marquee-img{
+    filter: brightness(1.12) contrast(1.1) saturate(1.2);
+    opacity: 1;
+  }
   .marquee-track:hover{ animation-play-state: paused; }
 }
 
@@ -436,13 +461,14 @@
   padding: 10px 12px;
   border-radius: 12px;
   border: 1px solid rgba(148,163,184,.25);
-  background: white;
-  color: var(--text);
+  background: rgba(255,255,255,.85);
+  color: #0b1220;
   outline:none;
 }
 .dark .dash-input{
-  background: white;
-  border: 1px solid white;
+  background: rgba(15,23,42,.35);
+  border: 1px solid rgba(255,255,255,.18);
+  color: rgba(255,255,255,.92);
 }
 .dash-input:focus{
   box-shadow: 0 0 0 3px rgba(163,255,18,.18);

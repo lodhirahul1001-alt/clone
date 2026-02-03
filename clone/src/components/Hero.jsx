@@ -196,7 +196,7 @@ function HeroLight() {
           </motion.div>
         </div>
 
-        <div className="mt-12">
+        <div className="mt-16 lg:mt-20">
           <Marquee />
         </div>
       </div>
@@ -378,7 +378,7 @@ function HeroDark() {
           </motion.div>
         </div>
 
-        <div className="mt-15 w-screen" >
+        <div className="mt-16 lg:mt-20">
           <Marquee />
         </div>
       </div>
