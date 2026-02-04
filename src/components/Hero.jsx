@@ -32,11 +32,7 @@ function EqualizerOverlay() {
 export default function Hero() {
   // Free stock video (Pexels). If it ever fails, the UI still looks good without it.
   const videoSrc =
-<<<<<<< HEAD
     "https://videos.pexels.com/video-files/6945625/6945625-hd_1920_1080_30fps.mp4";
-=======
-    "https://pin.it/3Z27zbYCg";
->>>>>>> 649e8b6 (fix all)
 
   return (
     <section className="relative overflow-hidden">
@@ -61,7 +57,7 @@ export default function Hero() {
 
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
         <div className="grid lg:grid-cols-2 gap-10 items-center">
-<<<<<<< HEAD
+
           {/* LEFT: VIDEO */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -111,10 +107,6 @@ export default function Hero() {
 
           {/* RIGHT: CONTENT + ANIMATED CARDS */}
           <div className="space-y-6">
-=======
-          {/* LEFT: CONTENT */}
-          <div className="space-y-6 order-2 lg:order-1">
->>>>>>> 649e8b6 (fix all)
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -138,11 +130,8 @@ export default function Hero() {
             >
               <span className="block">Unlimited</span>
               <span className="block text-neon">Music Distribution</span>
-<<<<<<< HEAD
+
               <span className="block">in one dashboard.</span>
-=======
-              <span className="block ">In One Dashboard.</span>
->>>>>>> 649e8b6 (fix all)
             </motion.h1>
 
             <motion.p
@@ -261,66 +250,13 @@ export default function Hero() {
               </div>
             </motion.div>
           </div>
-<<<<<<< HEAD
-=======
-
-          {/* RIGHT: VIDEO */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="relative order-1 lg:order-2"
-          >
-            <div className="glass p-3 sm:p-4 rounded-3xl overflow-hidden relative">
-              <div className="relative rounded-2xl overflow-hidden">
-                <video
-                  className="w-full aspect-[16/10] object-cover"
-                  src={videoSrc}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-
-                {/* Tiny "now playing" chip */}
-                <div className="absolute top-3 left-3 inline-flex items-center gap-2 px-3 py-1 rounded-full glass-soft text-xs">
-                  <span
-                    className="h-1.5 w-1.5 rounded-full animate-pulse"
-                    style={{ background: "var(--accent-2)" }}
-                  />
-                  Now distributing
-                </div>
-
-                <EqualizerOverlay />
-              </div>
-
-              {/* mini platform chips */}
-              <div className="mt-4 flex flex-wrap gap-2">
-                {["Spotify", "Apple Music", "JioSaavn", "Gaana", "YouTube Music"].map((p) => (
-                  <span
-                    key={p}
-                    className="px-3 py-1 rounded-full text-[11px] glass"
-                    style={{ border: "1px solid var(--dash-border)" }}
-                  >
-                    {p}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-
->>>>>>> 649e8b6 (fix all)
         </div>
 
         {/* Logo marquee */}
         <div className="mt-12">
-<<<<<<< HEAD
+
           <Marquee />
-=======
           {/* <Marquee /> */}
->>>>>>> 649e8b6 (fix all)
         </div>
       </div>
     </section>

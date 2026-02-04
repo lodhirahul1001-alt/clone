@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Youtube, Music, Instagram } from "lucide-react";
 
 export default function MyArtists() {
-  const [artists, setArtists] = useState([]);
+  const [artists] = useState([]);
 
 
   // const fetchArtists = async () => {

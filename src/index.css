@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
-/* =========================================================
-   Theme tokens (Light + Dark)
+/* ==================================================   Theme tokens (Light + Dark)
    ========================================================= */
 :root{
   --app-bg: radial-gradient(1200px 800px at 20% 10%, rgba(124,58,237,.18), transparent 55%),
@@ -75,11 +74,9 @@
    Component helpers
    --------------------------- */
 @layer components {
-<<<<<<< HEAD
+
   .container-page { @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8; }
-=======
   .container-page { @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-2; }
->>>>>>> 649e8b6 (fix all)
 
   .glass{
     background: var(--panel);
@@ -127,23 +124,19 @@
     border: 1px solid rgba(2,6,23,.12);
     color: #0f172a;
   }
-<<<<<<< HEAD
-=======
+
   .input-ui::placeholder{
     color: var(--muted);
   }
->>>>>>> 649e8b6 (fix all)
   .dark .input-ui{
     background: rgba(255,255,255,.06);
     border: 1px solid rgba(255,255,255,.12);
     color: rgba(255,255,255,.92);
   }
-<<<<<<< HEAD
-=======
+
   .dark .input-ui::placeholder{
     color: rgba(255,255,255,.6);
   }
->>>>>>> 649e8b6 (fix all)
 
   .section-title{ @apply text-3xl md:text-4xl font-semibold tracking-tight; }
 
@@ -217,8 +210,7 @@
   100% { transform: translate3d(85px,0,0); }
 }
 
-/* =====================
-   CMS / Dashboard UI
+/* ==============   CMS / Dashboard UI
    ===================== */
 .dash-shell{
   background:
@@ -449,23 +441,19 @@
   padding: 10px 12px;
   border-radius: 12px;
   border: 1px solid rgba(148,163,184,.25);
-<<<<<<< HEAD
+
   background: white;
-=======
   background: rgba(255,255,255,.78);
->>>>>>> 649e8b6 (fix all)
   color: var(--text);
   outline:none;
 }
 .dark .dash-input{
-<<<<<<< HEAD
+
   background: white;
   border: 1px solid white;
-=======
   background: rgba(255,255,255,.06);
   border: 1px solid rgba(255,255,255,.12);
   color: rgba(255,255,255,.92);
->>>>>>> 649e8b6 (fix all)
 }
 .dash-input:focus{
   box-shadow: 0 0 0 3px rgba(163,255,18,.18);
@@ -634,8 +622,7 @@ main {
   height: 72px;
 }
 
-<<<<<<< HEAD
-=======
+
 .app-shell {
   padding-top: 96px;
 }
@@ -646,7 +633,6 @@ main {
   }
 }
 
->>>>>>> 649e8b6 (fix all)
 
 
 /* Light Theme (default) */

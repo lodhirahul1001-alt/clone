@@ -1,3 +1,5 @@
+
+
 import js from '@eslint/js'
 import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
@@ -23,7 +25,15 @@ export default defineConfig([
       },
     },
     rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      'no-unused-vars': [
+        'error',
+        {
+          varsIgnorePattern: '^(motion|[A-Z_])',
+          argsIgnorePattern: '^[_A-Z]',
+          ignoreRestSiblings: true,
+        },
+      ],
+      'react-refresh/only-export-components': 'off',
     },
   },
 ])

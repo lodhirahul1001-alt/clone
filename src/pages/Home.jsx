@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";
-import { motion } from "framer-motion";
 import {
   ArrowRight,
   BarChart3,
@@ -42,16 +41,6 @@ export default function Home() {
   const [featureTab, setFeatureTab] = useState("analytics");
   const [testimonialIndex, setTestimonialIndex] = useState(0);
   const [activeInsight, setActiveInsight] = useState(null);
-
-  const stats = useMemo(
-    () => [
-      { value: "10k+", label: "Active Artists" },
-      { value: "500+", label: "Labels & Partners" },
-      { value: "99.9%", label: "Delivery Success" },
-      { value: "24/7", label: "Dedicated Support" },
-    ],
-    []
-  );
 
   const steps = useMemo(
     () => [
@@ -204,11 +193,8 @@ export default function Home() {
       <Marquee />
 
       {/* JOIN THOUSANDS */}
-<<<<<<< HEAD
-      <Section
-=======
+
       {/* <Section
->>>>>>> 649e8b6 (fix all)
         id="trust"
         title="Join thousands of satisfied customers"
         subtitle="Trusted by artists, labels and studios across regions."
@@ -248,11 +234,7 @@ export default function Home() {
             Get Started <ArrowRight className="w-4 h-4 ml-2" />
           </a>
         </div>
-<<<<<<< HEAD
-      </Section>
-=======
       </Section> */}
->>>>>>> 649e8b6 (fix all)
 
       {/* HOW IT WORKS */}
       <Section id="how" title="How It Works" subtitle="Simple four‑step process">

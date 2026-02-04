@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Upload, Music, Image, Check, AlertCircle, X } from 'lucide-react';
 import Marquee from '../../components/Marquee';
 import { useFormStorage } from '../hooks/useFormStorage';
-import { AutoFillButton } from './AutoFillButton';
-import { FormSaveIndicator } from './FormSaveIndicator';
+// import { AutoFillButton } from './AutoFillButton';
+// import { FormSaveIndicator } from './FormSaveIndicator';
 import { uploadTrackApi, updateTrackApi } from "../../apis/TrackApis";
 import { useNavigate } from "react-router";
 
@@ -45,8 +45,7 @@ export function UploadTrack({
   }, [isModal]);
 
   const { saveFormData, submitForm, getAutoFillData } = useFormStorage('upload-track');
-  const [existingCoverUrl, setExistingCoverUrl] = useState("");
-const [serverPublicId, setServerPublicId] = useState("");
+  const [serverPublicId, setServerPublicId] = useState("");
 
 
 
@@ -132,7 +131,6 @@ const [serverPublicId, setServerPublicId] = useState("");
         audioFile: null, // cannot edit
         coverArt: null,
       }));
-      setExistingCoverUrl(initialTrack.coverArtUrl || "");
       setServerPublicId(initialTrack.publicId || "");
     }
   }, [mode, initialTrack]);
@@ -196,10 +194,10 @@ const [serverPublicId, setServerPublicId] = useState("");
     }
   };
 
-  const handleAutoFill = (autoFillData) => {
-    setFormData((prev) => ({ ...prev, ...autoFillData }));
-    setHasUnsavedChanges(true);
-  };
+  // const handleAutoFill = (autoFillData) => {
+  //   setFormData((prev) => ({ ...prev, ...autoFillData }));
+  //   setHasUnsavedChanges(true);
+  // };
 
   const validateForm = () => {
     const newErrors = {};
@@ -290,7 +288,6 @@ const [serverPublicId, setServerPublicId] = useState("");
         setSubmitSuccess(false);
         if (view === "page") {
           setFormData(blankForm);
-          setExistingCoverUrl("");
           setServerPublicId("");
           setErrors({});
           setHasUnsavedChanges(false);

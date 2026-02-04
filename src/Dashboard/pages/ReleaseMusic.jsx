@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { fetchTracksApi } from "../../apis/TrackApis";
 import { UploadTrack } from "../components/UploadTrack";
-import { Eye, Edit2, Search } from "lucide-react";
+import { Edit2, Search } from "lucide-react";
 
 const statusOptions = [
   { value: "all", label: "All Status" },
@@ -32,10 +32,7 @@ const ReleaseMusic = () => {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("createdAt_desc");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
   const [editTrack, setEditTrack] = useState(null);
-  const [viewTrack, setViewTrack] = useState(null);
   const [showUploadModal, setShowUploadModal] = useState(false);
 
   const { sortBy, sortOrder } = useMemo(() => {
@@ -46,7 +43,6 @@ const ReleaseMusic = () => {
   const loadTracks = async () => {
     try {
       setLoading(true);
-      setError("");
       const res = await fetchTracksApi({
         page: pagination.page,
         limit: pagination.limit,
@@ -59,7 +55,7 @@ const ReleaseMusic = () => {
       setTracks(res?.tracks || []);
       setPagination((p) => ({ ...p, ...res.pagination }));
     } catch (err) {
-      setError("Failed to load tracks");
+      // keep UI clean; handle errors silently for now
     } finally {
       setLoading(false);
     }
@@ -173,12 +169,6 @@ const ReleaseMusic = () => {
                       {formatDate(track.createdAt)}
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <button
-                        onClick={() => setViewTrack(track)}
-                        className="p-2 border rounded-lg mr-2"
-                      >
-                        <Eye size={16} />
-                      </button>
                       <button
                         onClick={() => {
                           setEditTrack(track);

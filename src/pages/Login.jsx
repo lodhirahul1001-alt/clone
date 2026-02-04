@@ -28,11 +28,7 @@ export default function Login() {
   };
 
   return (
-<<<<<<< HEAD
-    <div className="min-h-screen flex items-center justify-center px-4 py-10">
-=======
     <div className="min-h-screen flex items-center justify-center px-4 py-10 app-shell">
->>>>>>> 649e8b6 (fix all)
       <div className="container-page">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
           {/* Left welcome */}
@@ -89,15 +85,11 @@ export default function Login() {
                     className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10"
                     aria-label={showPassword ? "Hide password" : "Show password"}
                   >
-<<<<<<< HEAD
-                    {showPassword ? <EyeOff className="h-4 w-4 opacity-70" /> : <Eye className="h-4 w-4 opacity-70" />}
-=======
                     {showPassword ? (
                       <EyeOff className="h-4 w-4 text-[color:var(--text)] opacity-80" />
                     ) : (
                       <Eye className="h-4 w-4 text-[color:var(--text)] opacity-80" />
                     )}
->>>>>>> 649e8b6 (fix all)
                   </button>
                 </div>
                 {errors.password && (

@@ -832,7 +832,7 @@ export default function Support() {
                     <button
                       type="button"
                       onClick={() => setShowTicketModal(false)}
-                      className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                      className="px-4 py-2 rounded-md border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
                       Cancel
                     </button>

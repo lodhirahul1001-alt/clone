@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Plus, Search, Trash2, Pencil, Building2, X } from "lucide-react";
 import toast from "react-hot-toast";
+import { AxiosIntance } from "../../config/Axios.Intance";
 
 
 const emptyForm = {
@@ -35,7 +36,7 @@ export default function SubLabels() {
   const load = async () => {
     setLoading(true);
     try {
-      const { data } = await axiosInstance.get("/sublabels");
+      const { data } = await AxiosIntance.get("/sublabels");
       setItems(Array.isArray(data?.data) ? data.data : Array.isArray(data) ? data : []);
     } catch (e) {
       toast.error(e?.response?.data?.message || "Failed to load sub labels");
@@ -82,10 +83,10 @@ export default function SubLabels() {
       if (!form.name.trim()) return toast.error("Sub label name is required");
 
       if (editing?._id) {
-        await axiosInstance.put(`/sublabels/${editing._id}`, form);
+        await AxiosIntance.put(`/sublabels/${editing._id}`, form);
         toast.success("Sub label updated");
       } else {
-        await axiosInstance.post("/sublabels", form);
+        await AxiosIntance.post("/sublabels", form);
         toast.success("Sub label created");
       }
 
@@ -99,7 +100,7 @@ export default function SubLabels() {
   const remove = async (id) => {
     if (!window.confirm("Delete this sub label?")) return;
     try {
-      await axiosInstance.delete(`/sublabels/${id}`);
+      await AxiosIntance.delete(`/sublabels/${id}`);
       toast.success("Deleted");
       await load();
     } catch (e) {

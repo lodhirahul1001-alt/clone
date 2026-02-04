@@ -1,4 +1,4 @@
-import  { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, BarChart3, Globe, Megaphone, Rocket, Shield, Users } from 'lucide-react';
 import OurServices from './OurServices';
@@ -43,13 +43,13 @@ const services = [
 ];
 
 export default function Services() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode] = useState(false);
 
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add('dark');
     } else {
-      document.documentElement.classList.remove('light');
+      document.documentElement.classList.remove('dark');
     }
   }, [darkMode]);
 

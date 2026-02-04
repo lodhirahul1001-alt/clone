@@ -12,25 +12,21 @@ import NotificationsDrawer from "./components/NotificationsDrawer";
 import ThemeToggle from "../components/ThemeToggle";
 
 import {
-  Youtube,
   Music,
-  HelpCircle,
   FileText,
   Users,
   Tags,
   DollarSign,
   User as UserIcon,
-  Save,
   Bell,
   LayoutDashboard,
   Plus,
   LogOut,
-  Search,
 } from "lucide-react";
 
 // IMPORTANT: ThemeProvider already wraps the whole app in src/main.jsx.
 // Nesting another provider here would desync light/dark between public pages and /cms.
-import { useTheme } from "../context/ThemeContext";
+// ThemeProvider is already applied in src/main.jsx
 import { FormStorageManager } from "./components/FormStorageManager";
 
 import PrivateDashboard from "./pages/PrivateDashboard";
@@ -70,6 +66,7 @@ function DashNavLink({ to, icon: Icon, children, active, onClick }) {
 
 
 // ================= THEME TOGGLE (optional) =================
+
 // ================= SIDEBAR (RESPONSIVE) =================
 function Sidebar({ isOpen, onClose }) {
   const location = useLocation();

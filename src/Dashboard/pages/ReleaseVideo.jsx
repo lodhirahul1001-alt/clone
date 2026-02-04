@@ -74,11 +74,8 @@ export default function ReleaseVideo() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-<<<<<<< HEAD
-                  className="px-4 py-2 text-gray-700 hover:text-gray-900"
-=======
+
                   className="px-4 py-2 text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-white"
->>>>>>> 649e8b6 (fix all)
                 >
                   Cancel
                 </button>

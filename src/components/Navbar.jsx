@@ -10,8 +10,7 @@ import CallbackModal from "./CallbackModal";
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [callbackOpen, setCallbackOpen] = useState(false);
-  const { isLoggedIn,user } = useSelector((s) => s.auth);
-  console.log("user chahiye" ,user);
+  const { isLoggedIn, user } = useSelector((s) => s.auth);
   
   
   const dispatch = useDispatch();
@@ -33,13 +32,8 @@ export default function Navbar() {
   };
 
   return (
-<<<<<<< HEAD
-    <header className="sticky top-0 z-50">
-      <div className="container-page pt-4">
-=======
-<header className="fixed top-0 left-0 w-full z-50 ">
-      <div className="container-page">
->>>>>>> 649e8b6 (fix all)
+    <header className="fixed top-0 left-0 right-0 z-50">
+      <div className="container-page py-4">
         <div className="glass flex items-center justify-between px-4 py-3">
           <Link to="/" className="flex items-center gap-2">
             <div className="h-9 w-9 rounded-full grid place-items-center border border-white/10 bg-white/5">
@@ -149,7 +143,7 @@ export default function Navbar() {
               </NavLink>
 
               <div className="mt-3 flex gap-2">
-                {isLoggedIn && user? (
+                {isLoggedIn && user ? (
                   <>
                     <Link to="/user-dashboard" className="btn-primary flex-1" onClick={() => setOpen(false)}>
                       Dashboard

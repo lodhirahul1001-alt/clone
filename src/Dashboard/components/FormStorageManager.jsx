@@ -99,7 +99,9 @@ export function FormStorageManager({ isOpen, onClose }) {
   const copyToClipboard = (data) => {
     try {
       navigator.clipboard.writeText(JSON.stringify(data, null, 2));
-    } catch {}
+    } catch {
+      // no-op
+    }
   };
 
   const formTypes = [...new Set(allSubmissions.map((s) => s.formType))];
