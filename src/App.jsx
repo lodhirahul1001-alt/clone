@@ -50,7 +50,11 @@ function App() {
     location.pathname.startsWith("/cms");
 
   return (
+<<<<<<< HEAD
     <div className="min-h-screen">
+=======
+    <div className={`min-h-screen ${hideNavbarFooter ? "" : "app-shell"}`.trim()}>
+>>>>>>> 649e8b6 (fix all)
       {/* 👇 Conditionally render Navbar */}
       {!hideNavbarFooter && <Navbar />}
 

@@ -204,7 +204,11 @@ export default function Home() {
       <Marquee />
 
       {/* JOIN THOUSANDS */}
+<<<<<<< HEAD
       <Section
+=======
+      {/* <Section
+>>>>>>> 649e8b6 (fix all)
         id="trust"
         title="Join thousands of satisfied customers"
         subtitle="Trusted by artists, labels and studios across regions."
@@ -244,7 +248,11 @@ export default function Home() {
             Get Started <ArrowRight className="w-4 h-4 ml-2" />
           </a>
         </div>
+<<<<<<< HEAD
       </Section>
+=======
+      </Section> */}
+>>>>>>> 649e8b6 (fix all)
 
       {/* HOW IT WORKS */}
       <Section id="how" title="How It Works" subtitle="Simple four‑step process">

@@ -54,7 +54,11 @@ export default function CallbackModal({ open, onClose }) {
       onClose={onClose}
     >
       <div
+<<<<<<< HEAD
         className="fixed inset-0 bg-black/60"
+=======
+        className="fixed inset-0 bg-pink/60"
+>>>>>>> 649e8b6 (fix all)
         onClick={onClose}
         aria-hidden="true"
       />
@@ -64,14 +68,23 @@ export default function CallbackModal({ open, onClose }) {
           <button
             type="button"
             onClick={onClose}
+<<<<<<< HEAD
             className="absolute right-4 top-4 h-9 w-9 rounded-full grid place-items-center bg-black/5 dark:bg-white/10"
+=======
+            className="absolute right-4 top-4 h-9 w-9 rounded-full grid place-items-center bg-black bg-white dark:bg-white/10"
+>>>>>>> 649e8b6 (fix all)
             aria-label="Close"
           >
             ✕
           </button>
 
+<<<<<<< HEAD
           <h3 className="text-2xl font-semibold">Request a callback</h3>
           <p className="mt-1 text-sm text-[color:var(--muted)]">
+=======
+          <h3 className="text-2xl font-semibold text-pink-500">Request a callback</h3>
+          <p className="mt-1 text-sm  text-[color:white ? to-black]">
+>>>>>>> 649e8b6 (fix all)
             Fill the form below and our team will contact you.
           </p>
 
@@ -119,7 +132,11 @@ export default function CallbackModal({ open, onClose }) {
                 name="time"
                 type="datetime-local"
                 required
+<<<<<<< HEAD
                 className="dash-input mt-2"
+=======
+                className="dash-input mt-2 bg-white ? bg-black "
+>>>>>>> 649e8b6 (fix all)
               />
             </div>
 

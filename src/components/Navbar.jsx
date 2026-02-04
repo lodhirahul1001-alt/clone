@@ -33,8 +33,13 @@ export default function Navbar() {
   };
 
   return (
+<<<<<<< HEAD
     <header className="sticky top-0 z-50">
       <div className="container-page pt-4">
+=======
+<header className="fixed top-0 left-0 w-full z-50 ">
+      <div className="container-page">
+>>>>>>> 649e8b6 (fix all)
         <div className="glass flex items-center justify-between px-4 py-3">
           <Link to="/" className="flex items-center gap-2">
             <div className="h-9 w-9 rounded-full grid place-items-center border border-white/10 bg-white/5">

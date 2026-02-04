@@ -28,7 +28,11 @@ export default function Signup() {
   };
 
   return (
+<<<<<<< HEAD
     <div className="min-h-screen flex items-center justify-center px-4 py-10">
+=======
+    <div className="min-h-screen flex items-center justify-center px-4 py-10 app-shell">
+>>>>>>> 649e8b6 (fix all)
       <div className="container-page">
         <div className="glass p-8 md:p-10 max-w-2xl mx-auto">
           <h1 className="text-3xl md:text-4xl font-semibold">
@@ -79,7 +83,15 @@ export default function Signup() {
                   className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
+<<<<<<< HEAD
                   {showPassword ? <EyeOff className="h-4 w-4 opacity-70" /> : <Eye className="h-4 w-4 opacity-70" />}
+=======
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4 text-[color:var(--text)] opacity-80" />
+                  ) : (
+                    <Eye className="h-4 w-4 text-[color:var(--text)] opacity-80" />
+                  )}
+>>>>>>> 649e8b6 (fix all)
                 </button>
               </div>
               {errors.password && <p className="mt-1 text-sm text-red-400">{errors.password.message}</p>}
