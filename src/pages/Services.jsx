@@ -84,7 +84,7 @@ export default function Services() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="bg-gradient-to-r from-blue-500 to-blue-700 text-white px-8 py-4 rounded-full font-medium inline-flex items-center gap-2 hover:opacity-90 transition-opacity"
+          className="bg-gradient-to-r from-blue-500 to-blue-700 text-[color:var(--text)] px-8 py-4 rounded-full font-medium inline-flex items-center gap-2 hover:opacity-90 transition-opacity"
         >
           HERE'S HOW IT WORKS
           <ArrowRight className="w-5 h-5" />
@@ -103,7 +103,7 @@ export default function Services() {
               className="bg-gray-100 dark:bg-gray-900 rounded-2xl p-8 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"
             >
               <div className={`bg-gradient-to-r ${service.color} w-12 h-12 rounded-lg flex items-center justify-center mb-6`}>
-                <service.icon className="w-6 h-6 text-white" />
+                <service.icon className="w-6 h-6 text-[color:var(--text)]" />
               </div>
               <h3 className="text-xl font-bold mb-4">{service.title}</h3>
               <p className="text-gray-700 dark:text-gray-400">{service.description}</p>

@@ -110,12 +110,12 @@ export default function OurServices() {
               return (
                 <div
                   key={index}
-                  className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-transform hover:scale-[1.02]"
+                  className="glass-soft rounded-2xl p-6 shadow-sm hover:shadow-md transition-transform hover:scale-[1.02]"
                 >
                   <div
                     className={`bg-gradient-to-r ${feature.color} w-12 h-12 rounded-lg flex items-center justify-center mb-6`}
                   >
-                    {IconComponent && <IconComponent className="w-6 h-6 text-white" />}
+                    {IconComponent && <IconComponent className="w-6 h-6 text-[color:var(--text)]" />}
                   </div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-2">
                     {feature.title}

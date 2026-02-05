@@ -113,7 +113,7 @@ export default function SubLabels() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-[color:var(--text)] flex items-center gap-2">
             <Building2 className="w-6 ml-8 h-6 text-primary" />
             Sub Labels
           </h1>
@@ -124,7 +124,7 @@ export default function SubLabels() {
 
         <button
           onClick={onCreate}
-          className="inline-flex ml-8 items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-primary to-purple-600 text-white shadow hover:opacity-95"
+          className="inline-flex ml-8 items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-primary to-purple-600 text-[color:var(--text)] shadow hover:opacity-95"
         >
           <Plus className="w-4 ml-8 h-4" />
           New Sub Label
@@ -139,7 +139,7 @@ export default function SubLabels() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search sub labels..."
-            className="w-full pl-9 pr-3  py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-800/50 text-gray-900 dark:text-white"
+            className="w-full pl-9 pr-3  py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-800/50 text-gray-900 dark:text-[color:var(--text)]"
           />
         </div>
       </div>
@@ -175,7 +175,7 @@ export default function SubLabels() {
               ) : (
                 filtered.map((row) => (
                   <tr key={row._id} className="border-t border-gray-100 dark:border-gray-800">
-                    <td className="px-4 py-3 text-gray-900 dark:text-white font-medium">{row.name}</td>
+                    <td className="px-4 py-3 text-gray-900 dark:text-[color:var(--text)] font-medium">{row.name}</td>
                     <td className="px-4 py-3 text-gray-700 dark:text-gray-200">{row.email || "—"}</td>
                     <td className="px-4 py-3 text-gray-700 dark:text-gray-200">{row.phone || "—"}</td>
                     <td className="px-4 py-3 text-gray-700 dark:text-gray-200">{row.city || "—"}</td>
@@ -213,7 +213,7 @@ export default function SubLabels() {
 
           <div className="relative w-full max-w-xl rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-xl overflow-hidden">
             <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
-              <h2 className="font-semibold text-gray-900 dark:text-white">
+              <h2 className="font-semibold text-gray-900 dark:text-[color:var(--text)]">
                 {editing?._id ? "Edit Sub Label" : "Create Sub Label"}
               </h2>
               <button
@@ -232,7 +232,7 @@ export default function SubLabels() {
                   <input
                     value={form.name}
                     onChange={(e) => onChange("name", e.target.value)}
-                    className="mt-1 w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/50 text-gray-900 dark:text-white"
+                    className="mt-1 w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/50 text-gray-900 dark:text-[color:var(--text)]"
                     placeholder="Sub label name"
                   />
                 </div>
@@ -242,7 +242,7 @@ export default function SubLabels() {
                   <input
                     value={form.email}
                     onChange={(e) => onChange("email", e.target.value)}
-                    className="mt-1 w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/50 text-gray-900 dark:text-white"
+                    className="mt-1 w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/50 text-gray-900 dark:text-[color:var(--text)]"
                     placeholder="email@domain.com"
                   />
                 </div>
@@ -252,7 +252,7 @@ export default function SubLabels() {
                   <input
                     value={form.phone}
                     onChange={(e) => onChange("phone", e.target.value)}
-                    className="mt-1 w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/50 text-gray-900 dark:text-white"
+                    className="mt-1 w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/50 text-gray-900 dark:text-[color:var(--text)]"
                     placeholder="+91..."
                   />
                 </div>
@@ -262,7 +262,7 @@ export default function SubLabels() {
                   <input
                     value={form.website}
                     onChange={(e) => onChange("website", e.target.value)}
-                    className="mt-1 w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/50 text-gray-900 dark:text-white"
+                    className="mt-1 w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/50 text-gray-900 dark:text-[color:var(--text)]"
                     placeholder="https://"
                   />
                 </div>
@@ -272,7 +272,7 @@ export default function SubLabels() {
                   <input
                     value={form.city}
                     onChange={(e) => onChange("city", e.target.value)}
-                    className="mt-1 w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/50 text-gray-900 dark:text-white"
+                    className="mt-1 w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/50 text-gray-900 dark:text-[color:var(--text)]"
                     placeholder="City"
                   />
                 </div>
@@ -282,7 +282,7 @@ export default function SubLabels() {
                   <input
                     value={form.state}
                     onChange={(e) => onChange("state", e.target.value)}
-                    className="mt-1 w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/50 text-gray-900 dark:text-white"
+                    className="mt-1 w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/50 text-gray-900 dark:text-[color:var(--text)]"
                     placeholder="State"
                   />
                 </div>
@@ -299,7 +299,7 @@ export default function SubLabels() {
 
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-primary to-purple-600 text-white shadow hover:opacity-95"
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-primary to-purple-600 text-[color:var(--text)] shadow hover:opacity-95"
                 >
                   {editing?._id ? "Update" : "Create"}
                 </button>

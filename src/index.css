@@ -3,6 +3,13 @@
 /* ==================================================   Theme tokens (Light + Dark)
    ========================================================= */
 :root{
+  /* Hero overlays (light theme) */
+  --heroShadeTop: rgba(255,255,255,0.55);
+  --heroShadeMid: rgba(255,255,255,0.15);
+  --heroShadeBottom: rgba(15,23,42,0.08);
+  --heroShadeTop2: rgba(255,255,255,0.35);
+  --heroShadeMid2: rgba(255,255,255,0.08);
+
   --app-bg: radial-gradient(1200px 800px at 20% 10%, rgba(124,58,237,.18), transparent 55%),
             radial-gradient(900px 700px at 80% 20%, rgba(236,72,153,.12), transparent 55%),
             linear-gradient(180deg, #f7f7fb 0%, #f1f5f9 45%, #ffffff 100%);
@@ -29,6 +36,13 @@
 }
 
 .dark{
+  /* Hero overlays (dark theme) */
+  --heroShadeTop: rgba(0,0,0,0.15);
+  --heroShadeMid: rgba(0,0,0,0.38);
+  --heroShadeBottom: rgba(0,0,0,0.72);
+  --heroShadeTop2: rgba(0,0,0,0.60);
+  --heroShadeMid2: rgba(0,0,0,0.18);
+
   /* Dark mode should read as truly black while keeping subtle neon atmosphere */
   --app-bg: radial-gradient(1200px 800px at 20% 10%, rgba(124,58,237,.30), transparent 55%),
             radial-gradient(900px 700px at 80% 20%, rgba(236,72,153,.18), transparent 55%),
@@ -68,6 +82,70 @@
   }
 
   h1, h2, h3, h4, h5, h6 { @apply font-sans; }
+}
+/* FULL WIDTH STRIP */
+.marquee-strip {
+  position: relative;
+  width: 100%;
+  padding: 16px 0;
+  border-top: px solid rgba(122, 118, 118, 0.1);
+  border-bottom: 1px solid rgba(34, 31, 31, 0.1);
+  background: linear-gradient(
+    90deg,
+    rgba(101, 16, 247, 0.22),
+    rgba(236,72,153,.14),
+    rgba(143, 9, 65, 0.14)
+  );
+  box-shadow: 0 30px 90px rgba(0,0,0,.55);
+}
+
+/* Fade edges so it looks premium */
+.marquee-edge-fade {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: rgba(0,0,0,.25);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 10%,
+    black 90%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 10%,
+    black 90%,
+    transparent
+  );
+}
+
+/* Make sure track above fade */
+.marquee-track {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  gap: 50px;
+  align-items: center;
+}
+
+/* logo sizing */
+.marquee-img {
+  height: 26px;
+  width: auto;
+}
+
+/* ✅ FORCE LOGOS CLEAR ON DARK */
+.marquee-img-white {
+  opacity: 0.95;
+  filter: brightness(2.5) contrast(1.2);
+}
+
+/* If SVG is black, this makes it white-ish */
+.marquee-img-white {
+  mix-blend-mode: screen;
 }
 
 /* ---------------------------

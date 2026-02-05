@@ -169,15 +169,15 @@ export default function Support() {
   const getPriorityColor = (priority) => {
     switch (priority) {
       case 'Critical':
-        return 'bg-red-500 text-white';
+        return 'bg-red-500 text-[color:var(--text)]';
       case 'High':
-        return 'bg-orange-500 text-white';
+        return 'bg-orange-500 text-[color:var(--text)]';
       case 'Medium':
-        return 'bg-blue-500 text-white';
+        return 'bg-blue-500 text-[color:var(--text)]';
       case 'Low':
-        return 'bg-green-500 text-white';
+        return 'bg-green-500 text-[color:var(--text)]';
       default:
-        return 'bg-gray-500 text-white';
+        return 'bg-gray-500 text-[color:var(--text)]';
     }
   };
 
@@ -198,7 +198,7 @@ export default function Support() {
           className="flex justify-between items-center mb-8"
         >
           <div>
-            <h1 className="text-3xl font-bold dark:text-white mb-2">Help & Support Center</h1>
+            <h1 className="text-3xl font-bold dark:text-[color:var(--text)] mb-2">Help & Support Center</h1>
             <p className="text-gray-600 dark:text-gray-300">
               Get help, find answers, and connect with our support team
             </p>
@@ -207,7 +207,7 @@ export default function Support() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setShowTicketModal(true)}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 flex items-center gap-2 shadow-lg"
+            className="bg-gradient-to-r from-blue-600 to-purple-600 text-[color:var(--text)] px-6 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 flex items-center gap-2 shadow-lg"
           >
             <Plus className="w-5 h-5" />
             Create Ticket
@@ -230,7 +230,7 @@ export default function Support() {
               className={`flex items-center gap-2 px-6 py-3 rounded-lg transition-all duration-200 flex-1 justify-center ${
                 activeTab === tab.id
                   ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-md'
-                  : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'
+                  : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-[color:var(--text)]'
               }`}
             >
               <tab.icon className="w-5 h-5" />
@@ -250,7 +250,7 @@ export default function Support() {
                 onClick={handlePhoneCall}
               >
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-blue-600 text-white rounded-full">
+                  <div className="p-3 bg-blue-600 text-[color:var(--text)] rounded-full">
                     <Phone className="w-6 h-6" />
                   </div>
                   <div>
@@ -267,7 +267,7 @@ export default function Support() {
                 onClick={handleWhatsAppClick}
               >
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-green-600 text-white rounded-full">
+                  <div className="p-3 bg-green-600 text-[color:var(--text)] rounded-full">
                     <MessageCircle className="w-6 h-6" />
                   </div>
                   <div>
@@ -284,7 +284,7 @@ export default function Support() {
                 onClick={handleEmailClick}
               >
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-purple-600 text-white rounded-full">
+                  <div className="p-3 bg-purple-600 text-[color:var(--text)] rounded-full">
                     <Mail className="w-6 h-6" />
                   </div>
                   <div>
@@ -361,7 +361,7 @@ export default function Support() {
 
             {/* Popular Resources */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-              <h2 className="text-xl font-semibold mb-6 dark:text-white">Popular Resources</h2>
+              <h2 className="text-xl font-semibold mb-6 dark:text-[color:var(--text)]">Popular Resources</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {[
                   { title: 'Getting Started Guide', icon: BookOpen, color: 'blue' },
@@ -383,7 +383,7 @@ export default function Support() {
                     <div className={`p-2 rounded-lg bg-${resource.color}-100 dark:bg-${resource.color}-900/20`}>
                       <resource.icon className={`w-5 h-5 text-${resource.color}-600 dark:text-${resource.color}-400`} />
                     </div>
-                    <span className="font-medium dark:text-white">{resource.title}</span>
+                    <span className="font-medium dark:text-[color:var(--text)]">{resource.title}</span>
                     <ExternalLink className="w-4 h-4 text-gray-400 ml-auto" />
                   </motion.div>
                 ))}
@@ -405,13 +405,13 @@ export default function Support() {
                     placeholder="Search tickets..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
                   />
                 </div>
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
                 >
                   {categories.map((category) => (
                     <option key={category} value={category}>
@@ -420,7 +420,7 @@ export default function Support() {
                   ))}
                 </select>
               </div>
-              <button className="flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+              <button className="flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-[color:var(--text)]">
                 <Download className="w-4 h-4" />
                 Export
               </button>
@@ -454,7 +454,7 @@ export default function Support() {
                         </td>
                         <td className="p-4">
                           <div>
-                            <p className="font-medium dark:text-white">{ticket.subject}</p>
+                            <p className="font-medium dark:text-[color:var(--text)]">{ticket.subject}</p>
                             <p className="text-sm text-gray-600 dark:text-gray-400 truncate max-w-xs">
                               {ticket.description}
                             </p>
@@ -497,13 +497,13 @@ export default function Support() {
                   placeholder="Search FAQs..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
                 />
               </div>
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
               >
                 {categories.map((category) => (
                   <option key={category} value={category}>
@@ -528,7 +528,7 @@ export default function Support() {
                     className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
                   >
                     <div className="flex-1">
-                      <h3 className="font-medium text-gray-900 dark:text-white mb-1">{faq.question}</h3>
+                      <h3 className="font-medium text-gray-900 dark:text-[color:var(--text)] mb-1">{faq.question}</h3>
                       <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
                         <span className="bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-400 px-2 py-1 rounded">
                           {faq.category}
@@ -590,7 +590,7 @@ export default function Support() {
             {/* Contact Information */}
             <div className="space-y-6">
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                <h2 className="text-xl font-semibold mb-6 dark:text-white">Get in Touch</h2>
+                <h2 className="text-xl font-semibold mb-6 dark:text-[color:var(--text)]">Get in Touch</h2>
 
                 <div className="space-y-4">
                   <motion.div
@@ -598,11 +598,11 @@ export default function Support() {
                     onClick={handlePhoneCall}
                     className="flex items-center gap-4 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 cursor-pointer transition-all duration-200"
                   >
-                    <div className="p-3 bg-blue-600 text-white rounded-full">
+                    <div className="p-3 bg-blue-600 text-[color:var(--text)] rounded-full">
                       <Phone className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="font-medium dark:text-white">Phone Support</h3>
+                      <h3 className="font-medium dark:text-[color:var(--text)]">Phone Support</h3>
                       <p className="text-blue-600 dark:text-blue-400 font-medium">+91 73660 42410</p>
                       <p className="text-sm text-gray-600 dark:text-gray-400">Available 24/7</p>
                     </div>
@@ -613,11 +613,11 @@ export default function Support() {
                     onClick={handleWhatsAppClick}
                     className="flex items-center gap-4 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-green-50 dark:hover:bg-green-900/20 cursor-pointer transition-all duration-200"
                   >
-                    <div className="p-3 bg-green-600 text-white rounded-full">
+                    <div className="p-3 bg-green-600 text-[color:var(--text)] rounded-full">
                       <MessageCircle className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="font-medium dark:text-white">WhatsApp Community</h3>
+                      <h3 className="font-medium dark:text-[color:var(--text)]">WhatsApp Community</h3>
                       <p className="text-green-600 dark:text-green-400 font-medium">PrDigital Support</p>
                       <p className="text-sm text-gray-600 dark:text-gray-400">Join our community for instant help</p>
                     </div>
@@ -628,11 +628,11 @@ export default function Support() {
                     onClick={handleEmailClick}
                     className="flex items-center gap-4 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-purple-50 dark:hover:bg-purple-900/20 cursor-pointer transition-all duration-200"
                   >
-                    <div className="p-3 bg-purple-600 text-white rounded-full">
+                    <div className="p-3 bg-purple-600 text-[color:var(--text)] rounded-full">
                       <Mail className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="font-medium dark:text-white">Email Support</h3>
+                      <h3 className="font-medium dark:text-[color:var(--text)]">Email Support</h3>
                       <p className="text-purple-600 dark:text-purple-400 font-medium">prdigitalcms@gmail.com</p>
                       <p className="text-sm text-gray-600 dark:text-gray-400">Response within 2-4 hours</p>
                     </div>
@@ -642,18 +642,18 @@ export default function Support() {
 
               {/* Office Hours */}
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                <h3 className="font-semibold mb-4 dark:text-white flex items-center gap-2">
+                <h3 className="font-semibold mb-4 dark:text-[color:var(--text)] flex items-center gap-2">
                   <Clock className="w-5 h-5" />
                   Support Hours
                 </h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-gray-600 dark:text-gray-400">Monday - Friday</span>
-                    <span className="dark:text-white">9:00 AM - 6:00 PM IST</span>
+                    <span className="dark:text-[color:var(--text)]">9:00 AM - 6:00 PM IST</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600 dark:text-gray-400">Saturday</span>
-                    <span className="dark:text-white">10:00 AM - 4:00 PM IST</span>
+                    <span className="dark:text-[color:var(--text)]">10:00 AM - 4:00 PM IST</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600 dark:text-gray-400">Sunday</span>
@@ -671,14 +671,14 @@ export default function Support() {
 
             {/* Quick Contact Form */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-              <h2 className="text-xl font-semibold mb-6 dark:text-white">Quick Message</h2>
+              <h2 className="text-xl font-semibold mb-6 dark:text-[color:var(--text)]">Quick Message</h2>
 
               <form className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Your Name</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
                     placeholder="Enter your name"
                   />
                 </div>
@@ -687,7 +687,7 @@ export default function Support() {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
                   <input
                     type="email"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
                     placeholder="Enter your email"
                   />
                 </div>
@@ -696,7 +696,7 @@ export default function Support() {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Subject</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
                     placeholder="What can we help you with?"
                   />
                 </div>
@@ -705,7 +705,7 @@ export default function Support() {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Message</label>
                   <textarea
                     rows="4"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
                     placeholder="Describe your issue or question..."
                   />
                 </div>
@@ -714,7 +714,7 @@ export default function Support() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   type="submit"
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 flex items-center justify-center gap-2"
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-[color:var(--text)] py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 flex items-center justify-center gap-2"
                 >
                   <Send className="w-4 h-4" />
                   Send Message
@@ -740,7 +740,7 @@ export default function Support() {
                 className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto"
               >
                 <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                  <h2 className="text-xl font-semibold dark:text-white">Create Support Ticket</h2>
+                  <h2 className="text-xl font-semibold dark:text-[color:var(--text)]">Create Support Ticket</h2>
                   <button
                     onClick={() => setShowTicketModal(false)}
                     className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
@@ -759,7 +759,7 @@ export default function Support() {
                       required
                       value={newTicket.subject}
                       onChange={(e) => setNewTicket({ ...newTicket, subject: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
                       placeholder="Brief description of your issue"
                     />
                   </div>
@@ -773,7 +773,7 @@ export default function Support() {
                         required
                         value={newTicket.category}
                         onChange={(e) => setNewTicket({ ...newTicket, category: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
                       >
                         {categories.slice(1).map((category) => (
                           <option key={category} value={category}>
@@ -791,7 +791,7 @@ export default function Support() {
                         required
                         value={newTicket.priority}
                         onChange={(e) => setNewTicket({ ...newTicket, priority: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
                       >
                         <option value="Low">Low</option>
                         <option value="Medium">Medium</option>
@@ -810,7 +810,7 @@ export default function Support() {
                       rows="4"
                       value={newTicket.description}
                       onChange={(e) => setNewTicket({ ...newTicket, description: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
                       placeholder="Provide detailed information about your issue..."
                     />
                   </div>
@@ -821,7 +821,7 @@ export default function Support() {
                       type="file"
                       multiple
                       onChange={(e) => setNewTicket({ ...newTicket, files: e.target.files || undefined })}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
                     />
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                       Max: 5 files, 10MB each. Supported: JPG, PNG, PDF, DOC, TXT
@@ -832,7 +832,7 @@ export default function Support() {
                     <button
                       type="button"
                       onClick={() => setShowTicketModal(false)}
-                      className="px-4 py-2 rounded-md border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                      className="px-4 py-2 rounded-md border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-[color:var(--text)] hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
                       Cancel
                     </button>
@@ -840,7 +840,7 @@ export default function Support() {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       type="submit"
-                      className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200"
+                      className="bg-gradient-to-r from-blue-600 to-purple-600 text-[color:var(--text)] px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200"
                     >
                       Create Ticket
                     </motion.button>

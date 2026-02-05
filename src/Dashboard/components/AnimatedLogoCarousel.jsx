@@ -49,7 +49,7 @@ export function AnimatedLogoCarousel() {
     <div className="w-full overflow-hidden bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 py-12">
       {/* Header */}
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
+        <h2 className="text-3xl font-bold text-gray-800 dark:text-[color:var(--text)] mb-2">
           Distribute to All Major Platforms
         </h2>
         <p className="text-gray-600 dark:text-gray-300">
@@ -88,7 +88,7 @@ export function AnimatedLogoCarousel() {
                   className="w-16 h-16 rounded-xl object-cover filter brightness-0 invert opacity-90 group-hover:opacity-100 transition-opacity duration-300"
                 />
               </div>
-              <p className="text-center text-sm font-medium text-gray-700 dark:text-gray-300 mt-2 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
+              <p className="text-center text-sm font-medium text-gray-700 dark:text-gray-300 mt-2 group-hover:text-gray-900 dark:group-hover:text-[color:var(--text)] transition-colors">
                 {logo.name}
               </p>
             </motion.div>
@@ -125,7 +125,7 @@ export function AnimatedLogoCarousel() {
                   className="w-16 h-16 rounded-xl object-cover filter brightness-0 invert opacity-90 group-hover:opacity-100 transition-opacity duration-300"
                 />
               </div>
-              <p className="text-center text-sm font-medium text-gray-700 dark:text-gray-300 mt-2 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
+              <p className="text-center text-sm font-medium text-gray-700 dark:text-gray-300 mt-2 group-hover:text-gray-900 dark:group-hover:text-[color:var(--text)] transition-colors">
                 {logo.name}
               </p>
             </motion.div>

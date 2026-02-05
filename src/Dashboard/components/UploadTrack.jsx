@@ -358,12 +358,12 @@ export function UploadTrack({
       <div
         onClick={(e) => e.stopPropagation()}
         className={
-          (isModal ? "relative h-full w-full overflow-y-auto " : "") +
+          (isModal ? "relative h-[100dvh] w-full overflow-y-auto " : "w-full overflow-x-hidden ") +
           (isModal
-            ? "dash-card rounded-lg w-full max-w-6xl mx-auto my-6"
-            : "dash-card rounded-2xl w-full max-w-none mx-0 my-0")
+            ? "dash-card rounded-none w-full max-w-none mx-0 my-0"
+            : "dash-card rounded-2xl w-full max-w-6xl mx-auto my-6")
         }
-        style={isModal ? { maxWidth: "100%", margin: 0, borderRadius: 0, height: "100%" } : undefined}
+        style={isModal ? { maxWidth: "100%", margin: 0, borderRadius: 0, height: "100dvh" } : undefined}
       >
         
         {/* Header */}
@@ -380,8 +380,8 @@ export function UploadTrack({
             
             <Music className="w-8 h-8 text-blue-600" />
             <div>
-              <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Upload New Track</h1>
-              <p className="text-gray-600 dark:text-gray-300">
+              <h1 className="text-2xl font-bold text-[color:var(--text)]">Upload New Track</h1>
+              <p className="text-[color:var(--muted)] text-[color:var(--muted)]">
                 Distribute your music to all major platforms - All data automatically saved
               </p>
             </div>
@@ -396,7 +396,7 @@ export function UploadTrack({
             <AutoFillButton onAutoFill={handleAutoFill} formType="upload-track" /> */}
             {/* <button
               onClick={onClose}
-              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              className="text-[color:var(--muted)] hover:text-[color:var(--text)] text-[color:var(--muted)] dark:hover:text-gray-200 p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 dark:hover:bg-white/5 transition-colors"
             >
               <X className="w-6 h-6" />
             </button> */}
@@ -413,11 +413,11 @@ export function UploadTrack({
     p-2 sm:p-3
     rounded-full
     bg-transparent/90 dark:bg-gray-800
-    text-gray-600 dark:text-gray-200
-    border border-gray-300 dark:border-gray-600
+    text-[color:var(--muted)] text-[color:var(--text)]
+    border border-[color:var(--border)] border-[color:var(--border)]
     shadow-lg
-    hover:bg-gray-100 dark:hover:bg-gray-700
-    hover:text-gray-900 dark:hover:text-white
+    hover:bg-black/5 dark:hover:bg-white/5 dark:hover:bg-white/5
+    hover:text-gray-900 dark:hover:text-[color:var(--text)]
     hover:scale-105 active:scale-95
     transition-transform transition-colors
   "
@@ -444,14 +444,14 @@ export function UploadTrack({
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Title *</label>
+                  <label className="block text-sm font-medium text-[color:var(--text)] text-[color:var(--muted)] mb-2">Title *</label>
                   <input
                     type="text"
                     name="title"
                     value={formData.title}
                     onChange={handleInputChange}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[color:var(--accent-1)] dark:bg-gray-700 dark:text-white dark:border-gray-600 ${
-                      errors.title ? 'border-red-500' : 'border-gray-300'
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[color:var(--accent-1)] bg-[color:var(--panel)] dark:text-[color:var(--text)] border-[color:var(--border)] ${
+                      errors.title ? 'border-red-500' : 'border-[color:var(--border)]'
                     }`}
                     placeholder="Enter track title"
                   />
@@ -459,14 +459,14 @@ export function UploadTrack({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Label *</label>
+                  <label className="block text-sm font-medium text-[color:var(--text)] text-[color:var(--muted)] mb-2">Label *</label>
                   <input
                     type="text"
                     name="label"
                     value={formData.label}
                     onChange={handleInputChange}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 ${
-                      errors.label ? 'border-red-500' : 'border-gray-300'
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[color:var(--panel)] dark:text-[color:var(--text)] border-[color:var(--border)] ${
+                      errors.label ? 'border-red-500' : 'border-[color:var(--border)]'
                     }`}
                     placeholder="Enter record label"
                   />
@@ -474,13 +474,13 @@ export function UploadTrack({
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">UPC/EAN</label>
+                  <label className="block text-sm font-medium text-[color:var(--text)] text-[color:var(--muted)] mb-2">UPC/EAN</label>
                   <input
                     type="text"
                     name="upcEan"
                     value={formData.upcEan}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-[color:var(--border)] border-[color:var(--border)] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[color:var(--panel)] dark:text-[color:var(--text)]"
                     placeholder="Enter UPC/EAN code (optional)"
                   />
                 </div>
@@ -489,19 +489,19 @@ export function UploadTrack({
 
             {/* Artists & Credits */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4 border-b border-gray-200 dark:border-gray-700 pb-2">
+              <h2 className="text-xl font-semibold text-[color:var(--text)] dark:text-[color:var(--text)] mb-4 border-b border-[color:var(--border)] dark:border-[color:var(--border)] pb-2">
                 Artists & Credits
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div> 
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Primary Artist *</label>
+                  <label className="block text-sm font-medium text-[color:var(--text)] text-[color:var(--muted)] mb-2">Primary Artist *</label>
                   <input
                     type="text"
                     name="primaryArtist"
                     value={formData.primaryArtist}
                     onChange={handleInputChange}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 ${
-                      errors.primaryArtist ? 'border-red-500' : 'border-gray-300'
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[color:var(--panel)] dark:text-[color:var(--text)] border-[color:var(--border)] ${
+                      errors.primaryArtist ? 'border-red-500' : 'border-[color:var(--border)]'
                     }`}
                     placeholder="Enter primary artist name"
                   />
@@ -509,26 +509,26 @@ export function UploadTrack({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Featuring</label>
+                  <label className="block text-sm font-medium text-[color:var(--text)] text-[color:var(--muted)] mb-2">Featuring</label>
                   <input
                     type="text"
                     name="featuring"
                     value={formData.featuring}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-[color:var(--border)] border-[color:var(--border)] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[color:var(--panel)] dark:text-[color:var(--text)]"
                     placeholder="Featured artists (optional)"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Lyricist *</label>
+                  <label className="block text-sm font-medium text-[color:var(--text)] text-[color:var(--muted)] mb-2">Lyricist *</label>
                   <input
                     type="text"
                     name="lyricist"
                     value={formData.lyricist}
                     onChange={handleInputChange}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 ${
-                      errors.lyricist ? 'border-red-500' : 'border-gray-300'
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[color:var(--panel)] dark:text-[color:var(--text)] border-[color:var(--border)] ${
+                      errors.lyricist ? 'border-red-500' : 'border-[color:var(--border)]'
                     }`}
                     placeholder="Enter lyricist name"
                   />
@@ -536,14 +536,14 @@ export function UploadTrack({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Composer *</label>
+                  <label className="block text-sm font-medium text-[color:var(--text)] text-[color:var(--muted)] mb-2">Composer *</label>
                   <input
                     type="text"
                     name="composer"
                     value={formData.composer}
                     onChange={handleInputChange}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 ${
-                      errors.composer ? 'border-red-500' : 'border-gray-300'
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[color:var(--panel)] dark:text-[color:var(--text)] border-[color:var(--border)] ${
+                      errors.composer ? 'border-red-500' : 'border-[color:var(--border)]'
                     }`}
                     placeholder="Enter composer name"
                   />
@@ -551,25 +551,25 @@ export function UploadTrack({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Arranger</label>
+                  <label className="block text-sm font-medium text-[color:var(--text)] text-[color:var(--muted)] mb-2">Arranger</label>
                   <input
                     type="text"
                     name="arranger"
                     value={formData.arranger}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-[color:var(--border)] border-[color:var(--border)] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[color:var(--panel)] dark:text-[color:var(--text)]"
                     placeholder="Enter arranger name (optional)"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Producer</label>
+                  <label className="block text-sm font-medium text-[color:var(--text)] text-[color:var(--muted)] mb-2">Producer</label>
                   <input
                     type="text"
                     name="producer"
                     value={formData.producer}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-[color:var(--border)] border-[color:var(--border)] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[color:var(--panel)] dark:text-[color:var(--text)]"
                     placeholder="Enter producer name (optional)"
                   />
                 </div>
@@ -578,18 +578,18 @@ export function UploadTrack({
 
             {/* Track Information */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4 border-b border-gray-200 dark:border-gray-700 pb-2">
+              <h2 className="text-xl font-semibold text-[color:var(--text)] dark:text-[color:var(--text)] mb-4 border-b border-[color:var(--border)] dark:border-[color:var(--border)] pb-2">
                 Track Information
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Genre *</label>
+                  <label className="block text-sm font-medium text-[color:var(--text)] text-[color:var(--muted)] mb-2">Genre *</label>
                   <select
                     name="genre"
                     value={formData.genre}
                     onChange={handleInputChange}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 ${
-                      errors.genre ? 'border-red-500' : 'border-gray-300'
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[color:var(--panel)] dark:text-[color:var(--text)] border-[color:var(--border)] ${
+                      errors.genre ? 'border-red-500' : 'border-[color:var(--border)]'
                     }`}
                   >
                     <option className='drop-down'  value="">Select genre</option>
@@ -603,13 +603,13 @@ export function UploadTrack({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Lyrics Language *</label>
+                  <label className="block text-sm font-medium text-[color:var(--text)] text-[color:var(--muted)] mb-2">Lyrics Language *</label>
                   <select
                     name="lyricsLanguage"
                     value={formData.lyricsLanguage}
                     onChange={handleInputChange}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 ${
-                      errors.lyricsLanguage ? 'border-red-500' : 'border-gray-300'
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[color:var(--panel)] dark:text-[color:var(--text)] border-[color:var(--border)] ${
+                      errors.lyricsLanguage ? 'border-red-500' : 'border-[color:var(--border)]'
                     }`}
                   >
                     <option className='drop-down'  value="">Select language</option>
@@ -623,14 +623,14 @@ export function UploadTrack({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Ⓟ Line *</label>
+                  <label className="block text-sm font-medium text-[color:var(--text)] text-[color:var(--muted)] mb-2">Ⓟ Line *</label>
                   <input
                     type="text"
                     name="pLine"
                     value={formData.pLine}
                     onChange={handleInputChange}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 ${
-                      errors.pLine ? 'border-red-500' : 'border-gray-300'
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[color:var(--panel)] dark:text-[color:var(--text)] border-[color:var(--border)] ${
+                      errors.pLine ? 'border-red-500' : 'border-[color:var(--border)]'
                     }`}
                     placeholder="e.g., ℗ 2024 Record Label"
                   />
@@ -638,14 +638,14 @@ export function UploadTrack({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Ⓒ Line *</label>
+                  <label className="block text-sm font-medium text-[color:var(--text)] text-[color:var(--muted)] mb-2">Ⓒ Line *</label>
                   <input
                     type="text"
                     name="cLine"
                     value={formData.cLine}
                     onChange={handleInputChange}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 ${
-                      errors.cLine ? 'border-red-500' : 'border-gray-300'
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[color:var(--panel)] dark:text-[color:var(--text)] border-[color:var(--border)] ${
+                      errors.cLine ? 'border-red-500' : 'border-[color:var(--border)]'
                     }`}
                     placeholder="e.g., © 2024 Artist Name"
                   />
@@ -653,13 +653,13 @@ export function UploadTrack({
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Title Language *</label>
+                  <label className="block text-sm font-medium text-[color:var(--text)] text-[color:var(--muted)] mb-2">Title Language *</label>
                   <select
                     name="titleLanguage"
                     value={formData.titleLanguage}
                     onChange={handleInputChange}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 ${
-                      errors.titleLanguage ? 'border-red-500' : 'border-gray-300'
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[color:var(--panel)] dark:text-[color:var(--text)] border-[color:var(--border)] ${
+                      errors.titleLanguage ? 'border-red-500' : 'border-[color:var(--border)]'
                     }`}
                   >
                     <option className='drop-down'  value="">Select title language</option>
@@ -676,12 +676,12 @@ export function UploadTrack({
 
             {/* Release Information */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4 border-b border-gray-200 dark:border-gray-700 pb-2">
+              <h2 className="text-xl font-semibold text-[color:var(--text)] dark:text-[color:var(--text)] mb-4 border-b border-[color:var(--border)] dark:border-[color:var(--border)] pb-2">
                 Release Information
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Production Year *</label>
+                  <label className="block text-sm font-medium text-[color:var(--text)] text-[color:var(--muted)] mb-2">Production Year *</label>
                   <input
                     type="number"
                     name="productionYear"
@@ -689,8 +689,8 @@ export function UploadTrack({
                     onChange={handleInputChange}
                     min="1900"
                     max={new Date().getFullYear()}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 ${
-                      errors.productionYear ? 'border-red-500' : 'border-gray-300'
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[color:var(--panel)] dark:text-[color:var(--text)] border-[color:var(--border)] ${
+                      errors.productionYear ? 'border-red-500' : 'border-[color:var(--border)]'
                     }`}
                     placeholder="e.g., 2024"
                   />
@@ -698,14 +698,14 @@ export function UploadTrack({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Release Date *</label>
+                  <label className="block text-sm font-medium text-[color:var(--text)] text-[color:var(--muted)] mb-2">Release Date *</label>
                   <input
                     type="date"
                     name="releaseDate"
                     value={formData.releaseDate}
                     onChange={handleInputChange}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 ${
-                      errors.releaseDate ? 'border-red-500' : 'border-gray-300'
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[color:var(--panel)] dark:text-[color:var(--text)] border-[color:var(--border)] ${
+                      errors.releaseDate ? 'border-red-500' : 'border-[color:var(--border)]'
                     }`}
                   />
                   {errors.releaseDate && <p className="text-red-500 text-sm mt-1">{errors.releaseDate}</p>}
@@ -718,9 +718,9 @@ export function UploadTrack({
                       name="instrumental"
                       checked={formData.instrumental}
                       onChange={handleInputChange}
-                      className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-[color:var(--border)] rounded"
                     />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">Instrumental</span>
+                    <span className="text-sm text-[color:var(--text)] text-[color:var(--muted)]">Instrumental</span>
                   </label>
 
                   <label className="flex items-center">
@@ -729,9 +729,9 @@ export function UploadTrack({
                       name="parentalAdvisory"
                       checked={formData.parentalAdvisory}
                       onChange={handleInputChange}
-                      className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-[color:var(--border)] rounded"
                     />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">Parental Advisory</span>
+                    <span className="text-sm text-[color:var(--text)] text-[color:var(--muted)]">Parental Advisory</span>
                   </label>
                 </div>
               </div>
@@ -739,20 +739,20 @@ export function UploadTrack({
 
             {/* Upload Files */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4 border-b border-gray-200 dark:border-gray-700 pb-2">
+              <h2 className="text-xl font-semibold text-[color:var(--text)] dark:text-[color:var(--text)] mb-4 border-b border-[color:var(--border)] dark:border-[color:var(--border)] pb-2">
                 Upload Your Files
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-[color:var(--text)] text-[color:var(--muted)] mb-2">
                     Upload Audio File
-                    {mode === "edit" && <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">(Cannot edit Track ID: {serverPublicId}) </span>}
+                    {mode === "edit" && <span className="text-xs text-[color:var(--muted)] text-[color:var(--muted)] ml-2">(Cannot edit Track ID: {serverPublicId}) </span>}
                   </label>
                   <div
                     className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
                       errors.audioFile
                         ? 'border-red-300 bg-red-50 dark:bg-red-900/20'
-                        : 'border-gray-300 hover:border-blue-400 dark:border-gray-600 dark:hover:border-blue-500'
+                        : 'border-[color:var(--border)] hover:border-blue-400 border-[color:var(--border)] dark:hover:border-blue-500'
                     }`}
                   >
                     <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
@@ -766,7 +766,7 @@ export function UploadTrack({
                     />
                     <label htmlFor="audioFile" className="cursor-pointer">
                       <span className="text-blue-600 hover:text-blue-700 font-medium">Choose audio file</span>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">WAV or MP3 format (High quality required)</p>
+                      <p className="text-sm text-[color:var(--muted)] text-[color:var(--muted)] mt-1">WAV or MP3 format (High quality required)</p>
                     </label>
                     {formData.audioFile && <p className="text-sm text-green-600 mt-2">✓ {formData.audioFile.name}</p>}
                   </div>
@@ -774,14 +774,14 @@ export function UploadTrack({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-[color:var(--text)] text-[color:var(--muted)] mb-2">
                     Upload Cover Art
                   </label>
                   <div
                     className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
                       errors.coverArt
                         ? 'border-red-300 bg-red-50 dark:bg-red-900/20'
-                        : 'border-gray-300 hover:border-blue-400 dark:border-gray-600 dark:hover:border-blue-500'
+                        : 'border-[color:var(--border)] hover:border-blue-400 border-[color:var(--border)] dark:hover:border-blue-500'
                     }`}
                   >
                     <Image className="w-8 h-8 text-gray-400 mx-auto mb-2" />
@@ -794,7 +794,7 @@ export function UploadTrack({
                     />
                     <label htmlFor="coverArt" className="cursor-pointer">
                       <span className="text-blue-600 hover:text-blue-700 font-medium">Choose cover art</span>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">JPEG or PNG (3000x3000 pixels required)</p>
+                      <p className="text-sm text-[color:var(--muted)] text-[color:var(--muted)] mt-1">JPEG or PNG (3000x3000 pixels required)</p>
                     </label>
                     {formData.coverArt && <p className="text-sm text-green-600 mt-2">✓ {formData.coverArt.name}</p>}
                   </div>
@@ -811,7 +811,7 @@ export function UploadTrack({
 
   <div className="space-y-3">
     {/* ISRC Generation */}
-    <label className="flex items-center justify-between w-full bg-[#1F2937] border border-gray-700 rounded-lg px-5 py-3 hover:bg-gray-800 transition-colors">
+    <label className="flex items-center justify-between w-full bg-[color:var(--panel)] border border-[color:var(--border)] rounded-lg px-5 py-3 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
       {/* Left text */}
       <div className="flex flex-col">
         <span className="text-base font-semibold text-gray-100">ISRC Generation</span>
@@ -829,7 +829,7 @@ export function UploadTrack({
     </label>
 
     {/* CRBT Cut */}
-    <label className="flex items-center justify-between w-full bg-[#1F2937] border border-gray-700 rounded-lg px-5 py-3 hover:bg-gray-800 transition-colors">
+    <label className="flex items-center justify-between w-full bg-[color:var(--panel)] border border-[color:var(--border)] rounded-lg px-5 py-3 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
       <div className="flex flex-col">
         <span className="text-base font-semibold text-gray-100">CRBT Cut</span>
         <span className="text-xs text-gray-400">Enable CRBT/Caller tune cut</span>
@@ -848,7 +848,7 @@ export function UploadTrack({
 
             {/* Terms Agreement */}
      <section className="mt-6">
-  <div className="w-full bg-[#1F2937] border border-gray-700 rounded-lg px-5 py-3 flex items-center justify-between">
+  <div className="w-full bg-[color:var(--panel)] border border-[color:var(--border)] rounded-lg px-5 py-3 flex items-center justify-between">
     <span className="text-sm text-gray-300">
       By submitting, you agree to our{' '}
       <a
@@ -898,7 +898,7 @@ export function UploadTrack({
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`px-8 py-3 rounded-md font-semibold text-white transition-all duration-200 ${
+                className={`px-8 py-3 rounded-md font-semibold text-[color:var(--text)] transition-all duration-200 ${
                   isSubmitting
                     ? 'bg-gray-400 cursor-not-allowed'
                     : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:scale-105 active:scale-95'
@@ -914,7 +914,7 @@ export function UploadTrack({
                 )}
               </button>
 
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+              <p className="text-xs text-[color:var(--muted)] text-[color:var(--muted)] mt-2">
                 All form data is automatically saved and will be available in Form Data Manager
               </p>
             </div>

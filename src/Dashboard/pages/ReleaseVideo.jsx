@@ -30,7 +30,7 @@ export default function ReleaseVideo() {
         </div>
         <button
           onClick={() => setShowModal(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          className="bg-blue-600 text-[color:var(--text)] px-4 py-2 rounded-lg hover:bg-blue-700"
         >
           + Create
         </button>
@@ -75,13 +75,13 @@ export default function ReleaseVideo() {
                   type="button"
                   onClick={() => setShowModal(false)}
 
-                  className="px-4 py-2 text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-white"
+                  className="px-4 py-2 text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-[color:var(--text)]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                  className="bg-blue-600 text-[color:var(--text)] px-4 py-2 rounded-lg hover:bg-blue-700"
                 >
                   Save
                 </button>

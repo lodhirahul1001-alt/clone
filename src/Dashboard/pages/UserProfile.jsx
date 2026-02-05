@@ -415,7 +415,7 @@ const [saveError, setSaveError] = useState("");
       {/* Top Header */}
 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between w-full">
         <div>
-          <h1 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white">
+          <h1 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-[color:var(--text)]">
             User Profile
           </h1>
           <p className="text-xs sm:text-sm" style={{ color: "var(--muted)" }}>
@@ -452,7 +452,7 @@ const [saveError, setSaveError] = useState("");
               className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 border-b-2 text-xs sm:text-sm whitespace-nowrap transition-all duration-200 ${
                 activeTab === tab.id
                   ? "border-blue-500 text-blue-600 dark:text-blue-400"
-                  : "border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                  : "border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-[color:var(--text)]"
               }`}
             >
               <tab.icon className="w-4 h-4 shrink-0" />
@@ -466,7 +466,7 @@ const [saveError, setSaveError] = useState("");
       {activeTab === "personal" && (
         <div className="dash-card p-4 sm:p-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-            <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">
+            <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-[color:var(--text)]">
               Personal Information
             </h2>
             <div className="flex items-center gap-2">
@@ -495,7 +495,7 @@ const [saveError, setSaveError] = useState("");
                 className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-white dark:border-gray-600 shadow-lg"
               />
               {isEditing && (
-                <label className="absolute bottom-0 right-0 bg-blue-600 text-white p-1.5 sm:p-2 rounded-full cursor-pointer hover:bg-blue-700 transition-colors">
+                <label className="absolute bottom-0 right-0 bg-blue-600 text-[color:var(--text)] p-1.5 sm:p-2 rounded-full cursor-pointer hover:bg-blue-700 transition-colors">
                   <Camera className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   <input
                     type="file"
@@ -507,7 +507,7 @@ const [saveError, setSaveError] = useState("");
               )}
             </div>
             <div>
-              <h3 className="text-base sm:text-lg font-medium text-gray-900 dark:text-white">
+              <h3 className="text-base sm:text-lg font-medium text-gray-900 dark:text-[color:var(--text)]">
                 {userInfo.firstName} {userInfo.lastName}
               </h3>
               <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -543,7 +543,7 @@ const [saveError, setSaveError] = useState("");
                     setHasUnsavedChanges(true);
                   }}
                   disabled={!isEditing}
-                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-700 dark:text-white disabled:bg-gray-100 dark:disabled:bg-gray-800"
+                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-700 dark:text-[color:var(--text)] disabled:bg-gray-100 dark:disabled:bg-gray-800"
                 />
               </div>
             ))}
@@ -554,7 +554,7 @@ const [saveError, setSaveError] = useState("");
               <button
                 onClick={() => handleSave("personal")}
                 disabled={saveStatus === "saving"}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 flex items-center gap-2 disabled:opacity-50 text-sm"
+                className="bg-blue-600 text-[color:var(--text)] px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 flex items-center gap-2 disabled:opacity-50 text-sm"
               >
                 {getSaveButtonContent()}
               </button>
@@ -566,7 +566,7 @@ const [saveError, setSaveError] = useState("");
       {/* Password Tab */}
       {activeTab === "password" && (
         <div className="dash-card p-4 sm:p-6">
-          <h2 className="text-base sm:text-lg font-semibold mb-4 sm:mb-6 text-gray-900 dark:text-white">
+          <h2 className="text-base sm:text-lg font-semibold mb-4 sm:mb-6 text-gray-900 dark:text-[color:var(--text)]">
             Change Password
           </h2>
 
@@ -589,7 +589,7 @@ const [saveError, setSaveError] = useState("");
                       currentPassword: e.target.value,
                     })
                   }
-                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 pr-10 dark:bg-gray-700 dark:text-white"
+                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 pr-10 dark:bg-gray-700 dark:text-[color:var(--text)]"
                   required
                 />
                 <button
@@ -626,7 +626,7 @@ const [saveError, setSaveError] = useState("");
                       newPassword: e.target.value,
                     })
                   }
-                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 pr-10 dark:bg-gray-700 dark:text-white"
+                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 pr-10 dark:bg-gray-700 dark:text-[color:var(--text)]"
                   minLength={8}
                   required
                 />
@@ -667,7 +667,7 @@ const [saveError, setSaveError] = useState("");
                       confirmPassword: e.target.value,
                     })
                   }
-                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 pr-10 dark:bg-gray-700 dark:text-white"
+                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 pr-10 dark:bg-gray-700 dark:text-[color:var(--text)]"
                   required
                 />
                 <button
@@ -692,7 +692,7 @@ const [saveError, setSaveError] = useState("");
             <button
               type="submit"
               disabled={saveStatus === "saving"}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 flex items-center gap-2 disabled:opacity-50 text-sm"
+              className="bg-blue-600 text-[color:var(--text)] px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 flex items-center gap-2 disabled:opacity-50 text-sm"
             >
               {getSaveButtonContent()}
             </button>
@@ -711,7 +711,7 @@ const [saveError, setSaveError] = useState("");
       {activeTab === "bank" && (
         <div className="dash-card p-4 sm:p-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-            <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">
+            <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-[color:var(--text)]">
               Bank Account Details
             </h2>
             <div className="flex items-center gap-2">
@@ -752,7 +752,7 @@ const [saveError, setSaveError] = useState("");
                     setHasUnsavedChanges(true);
                   }}
                   disabled={!isEditing}
-                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-700 dark:text-white disabled:bg-gray-100 dark:disabled:bg-gray-800"
+                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-700 dark:text-[color:var(--text)] disabled:bg-gray-100 dark:disabled:bg-gray-800"
                 />
               </div>
             ))}
@@ -763,7 +763,7 @@ const [saveError, setSaveError] = useState("");
               <button
                 onClick={() => handleSave("bank")}
                 disabled={saveStatus === "saving"}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 flex items-center gap-2 disabled:opacity-50 text-sm"
+                className="bg-blue-600 text-[color:var(--text)] px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 flex items-center gap-2 disabled:opacity-50 text-sm"
               >
                 {getSaveButtonContent()}
               </button>
@@ -776,7 +776,7 @@ const [saveError, setSaveError] = useState("");
       {activeTab === "pan" && (
         <div className="dash-card p-4 sm:p-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-            <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">
+            <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-[color:var(--text)]">
               PAN Card Details
             </h2>
             <div className="flex items-center gap-2">
@@ -807,7 +807,7 @@ const [saveError, setSaveError] = useState("");
                 />
               )}
               {isEditing && (
-                <label className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-700 transition-colors flex items-center gap-2 text-xs sm:text-sm">
+                <label className="bg-blue-600 text-[color:var(--text)] px-3 sm:px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-700 transition-colors flex items-center gap-2 text-xs sm:text-sm">
                   <Upload className="w-4 h-4" />
                   Upload PAN Card
                   <input
@@ -839,7 +839,7 @@ const [saveError, setSaveError] = useState("");
                 disabled={!isEditing}
                 pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
                 maxLength={10}
-                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-700 dark:text-white disabled:bg-gray-100 dark:disabled:bg-gray-800"
+                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-700 dark:text-[color:var(--text)] disabled:bg-gray-100 dark:disabled:bg-gray-800"
               />
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 Format: ABCDE1234F
@@ -861,7 +861,7 @@ const [saveError, setSaveError] = useState("");
                   setHasUnsavedChanges(true);
                 }}
                 disabled={!isEditing}
-                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-700 dark:text-white disabled:bg-gray-100 dark:disabled:bg-gray-800"
+                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-700 dark:text-[color:var(--text)] disabled:bg-gray-100 dark:disabled:bg-gray-800"
               />
             </div>
 
@@ -880,7 +880,7 @@ const [saveError, setSaveError] = useState("");
                   setHasUnsavedChanges(true);
                 }}
                 disabled={!isEditing}
-                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-700 dark:text-white disabled:bg-gray-100 dark:disabled:bg-gray-800"
+                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-700 dark:text-[color:var(--text)] disabled:bg-gray-100 dark:disabled:bg-gray-800"
               />
             </div>
 
@@ -899,7 +899,7 @@ const [saveError, setSaveError] = useState("");
                   setHasUnsavedChanges(true);
                 }}
                 disabled={!isEditing}
-                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-700 dark:text-white disabled:bg-gray-100 dark:disabled:bg-gray-800"
+                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-700 dark:text-[color:var(--text)] disabled:bg-gray-100 dark:disabled:bg-gray-800"
               />
             </div>
           </div>
@@ -909,7 +909,7 @@ const [saveError, setSaveError] = useState("");
               <button
                 onClick={() => handleSave("pan")}
                 disabled={saveStatus === "saving"}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 flex items-center gap-2 disabled:opacity-50 text-sm"
+                className="bg-blue-600 text-[color:var(--text)] px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 flex items-center gap-2 disabled:opacity-50 text-sm"
               >
                 {getSaveButtonContent()}
               </button>

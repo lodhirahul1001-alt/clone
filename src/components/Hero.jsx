@@ -5,23 +5,25 @@ import Marquee from "../components/Marquee";
 function EqualizerOverlay() {
   const bars = [10, 16, 8, 18, 12, 20, 9, 14, 7, 17];
   return (
-    <div className="absolute bottom-3 left-3 right-3 flex items-end gap-1.5 h-10 pointer-events-none">
+    <div className="absolute bottom-4 left-4 right-4 flex items-end gap-1.5 h-12 pointer-events-none">
       {bars.map((h, i) => (
         <motion.span
           key={i}
           className="w-1.5 rounded-full"
           style={{
-            background: "linear-gradient(180deg,var(--accent-2),var(--accent-1))",
+            background:
+              "linear-gradient(180deg,var(--accent-2),var(--accent-1))",
           }}
           animate={{
-            height: [`${h / 2}px`, `${h}px`, `${h / 1.3}px`, `${h}px`],
-            opacity: [0.65, 1, 0.75, 1],
+            height: [`${h / 2}px`, `${h}px`, `${h / 1.35}px`, `${h}px`],
+            opacity: [0.55, 1, 0.7, 1],
           }}
           transition={{
-            duration: 1.1,
+            duration: 0.95,
             repeat: Infinity,
             repeatType: "mirror",
-            delay: i * 0.08,
+            delay: i * 0.06,
+            ease: "easeInOut",
           }}
         />
       ))}
@@ -29,133 +31,136 @@ function EqualizerOverlay() {
   );
 }
 
+function VinylBadge() {
+  return (
+    <motion.div
+      className="absolute -top-5 -right-5 w-20 h-20 rounded-full"
+      animate={{ rotate: 360 }}
+      transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+      style={{
+        background:
+          "radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), rgba(124,58,237,.35), rgba(0,0,0,.65))",
+        boxShadow: "0 0 0 1px rgba(255,255,255,.08), 0 20px 60px rgba(124,58,237,.25)",
+      }}
+    >
+      <div className="absolute inset-2 rounded-full bg-black/40" />
+      <div className="absolute inset-[22px] rounded-full bg-white/10" />
+      <div
+        className="absolute left-1/2 top-1/2 w-3 h-3 -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{ background: "var(--accent-2)" }}
+      />
+    </motion.div>
+  );
+}
+
 export default function Hero() {
-  // Free stock video (Pexels). If it ever fails, the UI still looks good without it.
   const videoSrc =
     "https://videos.pexels.com/video-files/6945625/6945625-hd_1920_1080_30fps.mp4";
 
+  const fadeUp = {
+    hidden: { opacity: 0, y: 18 },
+    show: { opacity: 1, y: 0 },
+  };
+
   return (
     <section className="relative overflow-hidden">
-      {/* Glowing blobs */}
+      {/* Background blobs */}
       <div
-        className="pointer-events-none absolute -top-32 -left-20 w-64 h-64 blur-3xl rounded-full opacity-60"
+        className="pointer-events-none absolute -top-36 -left-24 w-80 h-80 blur-3xl rounded-full opacity-60"
         style={{ background: "rgba(124,58,237,.45)" }}
       />
       <div
-        className="pointer-events-none absolute -bottom-40 right-0 w-72 h-72 blur-3xl rounded-full opacity-50"
-        style={{ background: "rgba(236,72,153,.35)" }}
+        className="pointer-events-none absolute -bottom-44 right-0 w-96 h-96 blur-3xl rounded-full opacity-50"
+        style={{ background: "rgba(236,72,153,.30)" }}
       />
       <div
-        className="pointer-events-none absolute top-1/2 left-1/2 w-80 h-80 -translate-x-1/2 blur-3xl rounded-full opacity-40"
+        className="pointer-events-none absolute top-1/2 left-1/2 w-[34rem] h-[34rem] -translate-x-1/2 blur-3xl rounded-full opacity-35"
         style={{ background: "rgba(59,130,246,.18)" }}
       />
 
-      {/* Subtle grid overlay */}
+      {/* Subtle grid */}
       <div className="pointer-events-none absolute inset-0 opacity-[0.08]">
         <div className="h-full w-full bg-[radial-gradient(circle_at_1px_1px,#ffffff25_1px,transparent_0)] bg-[length:18px_18px]" />
       </div>
 
-      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-        <div className="grid lg:grid-cols-2 gap-10 items-center">
+      {/* Gradient veil */}
+      <div className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(180deg,var(--heroShadeTop),var(--heroShadeMid),var(--heroShadeBottom))" }} />
 
-          {/* LEFT: VIDEO */}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          {/* LEFT: CONTENT */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial="hidden"
+            whileInView="show"
             viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="relative"
+            transition={{ staggerChildren: 0.12 }}
+            className="order-2 lg:order-1 space-y-6"
           >
-            <div className="glass p-3 sm:p-4 rounded-3xl overflow-hidden relative">
-              <div className="relative rounded-2xl overflow-hidden">
-                <video
-                  className="w-full aspect-[16/10] object-cover"
-                  src={videoSrc}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-
-                {/* Tiny "now playing" chip */}
-                <div className="absolute top-3 left-3 inline-flex items-center gap-2 px-3 py-1 rounded-full glass-soft text-xs">
-                  <span
-                    className="h-1.5 w-1.5 rounded-full animate-pulse"
-                    style={{ background: "var(--accent-2)" }}
-                  />
-                  Now distributing
-                </div>
-
-                <EqualizerOverlay />
-              </div>
-
-              {/* mini platform chips */}
-              <div className="mt-4 flex flex-wrap gap-2">
-                {["Spotify", "Apple Music", "JioSaavn", "Gaana", "YouTube Music"].map((p) => (
-                  <span
-                    key={p}
-                    className="px-3 py-1 rounded-full text-[11px] glass"
-                    style={{ border: "1px solid var(--dash-border)" }}
-                  >
-                    {p}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-
-          {/* RIGHT: CONTENT + ANIMATED CARDS */}
-          <div className="space-y-6">
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-soft text-xs"
+              variants={fadeUp}
+              className="inline-flex items-center gap-2 px-4 py-1 rounded-full glass-soft text-xs"
             >
               <span
                 className="h-1.5 w-1.5 rounded-full animate-pulse"
                 style={{ background: "var(--accent-2)" }}
               />
-              Built for Artists & Labels
+              Built for Artists • Labels • Studios
             </motion.div>
 
+            {/* Shine heading */}
             <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7 }}
+              variants={fadeUp}
               className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight"
             >
-              <span className="block">Unlimited</span>
-              <span className="block text-neon">Music Distribution</span>
+              <span className="block text-[color:var(--text)]/90">Unlimited</span>
 
-              <span className="block">in one dashboard.</span>
+              <span className="block relative">
+                <span className="text-neon">Music Distribution</span>
+                <motion.span
+                  className="absolute -inset-x-6 -inset-y-2 opacity-40 blur-2xl"
+                  animate={{ opacity: [0.18, 0.45, 0.18] }}
+                  transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+                  style={{
+                    background:
+                      "linear-gradient(90deg, rgba(124,58,237,.0), rgba(124,58,237,.6), rgba(236,72,153,.6), rgba(124,58,237,.0))",
+                  }}
+                />
+              </span>
+
+              <span className="block text-[color:var(--text)]/90">in one dashboard.</span>
             </motion.h1>
 
             <motion.p
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.1 }}
-              className="max-w-xl text-sm sm:text-base"
+              variants={fadeUp}
+              className="max-w-xl text-sm sm:text-base leading-relaxed"
               style={{ color: "var(--muted)" }}
             >
               Upload once, auto-deliver to every major platform. Track royalties,
               manage labels & artists, and keep 100% of your rights — designed for
-              studios and independent creators.
+              independent creators.
             </motion.p>
 
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.15 }}
+              variants={fadeUp}
               className="flex flex-wrap items-center gap-3"
             >
               <a href="/cms">
-                <button className="btn-primary">Get Your Dashboard</button>
+                <button
+                  className="btn-primary relative overflow-hidden"
+                  style={{
+                    boxShadow:
+                      "0 12px 50px rgba(124,58,237,.25), 0 0 0 1px rgba(255,255,255,.06)",
+                  }}
+                >
+                  <span className="relative z-10">Get Your Dashboard</span>
+                  <span
+                    className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity"
+                    style={{
+                      background:
+                        "linear-gradient(90deg, rgba(236,72,153,.2), rgba(124,58,237,.25))",
+                    }}
+                  />
+                </button>
               </a>
 
               <a
@@ -170,94 +175,96 @@ export default function Hero() {
               </a>
             </motion.div>
 
-            {/* Animated insight cards */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.25 }}
-              className="grid sm:grid-cols-2 gap-4 pt-2"
-            >
-              <div className="glass-soft p-4 rounded-2xl">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-xs" style={{ color: "var(--muted)" }}>
-                    <BarChart3 className="w-4 h-4" style={{ color: "var(--accent-1)" }} />
-                    Revenue pulse
-                  </div>
-                  <span className="text-[11px]" style={{ color: "var(--accent-1)" }}>
-                    Live
-                  </span>
+            {/* SMALL STAT ROW */}
+            <motion.div variants={fadeUp} className="flex flex-wrap gap-3 pt-2">
+              {[
+                { icon: <Globe2 className="w-4 h-4" />, t: "190+ Countries" },
+                { icon: <Music2 className="w-4 h-4" />, t: "25+ Platforms" },
+                { icon: <BarChart3 className="w-4 h-4" />, t: "Live Royalties" },
+              ].map((x) => (
+                <div
+                  key={x.t}
+                  className="glass-soft px-3 py-2 rounded-xl text-xs flex items-center gap-2"
+                  style={{ border: "1px solid var(--dash-border)" }}
+                >
+                  <span style={{ color: "var(--accent-2)" }}>{x.icon}</span>
+                  <span className="text-[color:var(--text)]/80">{x.t}</span>
                 </div>
-                <div className="mt-3 flex items-end gap-1.5 h-10">
-                  {[6, 12, 18, 10, 16, 8, 14, 9].map((h, idx) => (
-                    <motion.span
-                      key={idx}
-                      className="w-1.5 rounded-full"
-                      style={{
-                        background:
-                          "linear-gradient(180deg,var(--accent-2),var(--accent-1))",
-                      }}
-                      animate={{ height: [`${h / 2}px`, `${h}px`, `${h / 1.4}px`, `${h}px`] }}
-                      transition={{
-                        duration: 1.05,
-                        repeat: Infinity,
-                        repeatType: "mirror",
-                        delay: idx * 0.1,
-                      }}
-                    />
-                  ))}
-                </div>
-                <div className="mt-3 flex items-baseline justify-between">
-                  <div>
-                    <div className="text-[11px]" style={{ color: "var(--muted)" }}>
-                      This month
-                    </div>
-                    <div className="text-lg font-semibold">₹ 1,24,500</div>
-                  </div>
-                  <div
-                    className="px-3 py-1 rounded-full text-[11px]"
-                    style={{ background: "rgba(124,58,237,.12)", color: "var(--accent-1)" }}
-                  >
-                    +32%
-                  </div>
-                </div>
-              </div>
-
-              <div className="glass-soft p-4 rounded-2xl">
-                <div className="flex items-center gap-2 text-xs" style={{ color: "var(--muted)" }}>
-                  <Globe2 className="w-4 h-4" style={{ color: "var(--accent-2)" }} />
-                  Global reach
-                </div>
-                <div className="mt-3 grid grid-cols-2 gap-2">
-                  {[
-                    { k: "190+", v: "Countries" },
-                    { k: "25+", v: "DSPs" },
-                    { k: "10K+", v: "Releases" },
-                    { k: "24/7", v: "Support" },
-                  ].map((x) => (
-                    <div key={x.v} className="glass p-3 rounded-xl" style={{ border: "1px solid var(--dash-border)" }}>
-                      <div className="text-base font-semibold">{x.k}</div>
-                      <div className="text-[11px]" style={{ color: "var(--muted)" }}>
-                        {x.v}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-3 flex items-center gap-2 text-[11px]" style={{ color: "var(--muted)" }}>
-                  <Music2 className="w-3.5 h-3.5" />
-                  Spotify, Apple Music, JioSaavn, YouTube Music & more
-                </div>
-              </div>
+              ))}
             </motion.div>
-          </div>
+          </motion.div>
+
+          {/* RIGHT: VIDEO */}
+          <motion.div
+            initial={{ opacity: 0, x: 24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="order-1 lg:order-2 relative"
+          >
+            <div className="relative glass p-3 sm:p-4 rounded-3xl overflow-hidden">
+              {/* Glow border */}
+              <div
+                className="pointer-events-none absolute -inset-1 rounded-3xl opacity-50 blur-2xl"
+                style={{
+                  background:
+                    "linear-gradient(135deg, rgba(124,58,237,.45), rgba(236,72,153,.35), rgba(59,130,246,.25))",
+                }}
+              />
+
+              <div className="relative rounded-2xl overflow-hidden">
+                <motion.video
+                  className="w-full aspect-[16/10] object-cover"
+                  src={videoSrc}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  animate={{ scale: [1, 1.03, 1] }}
+                  transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+                />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(0deg,var(--heroShadeTop2),var(--heroShadeMid2),transparent)" }} />
+
+                {/* floating now chip */}
+                <motion.div
+                  className="absolute top-4 left-4 inline-flex items-center gap-2 px-3 py-1 rounded-full glass-soft text-xs"
+                  animate={{ y: [0, -6, 0] }}
+                  transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <span
+                    className="h-1.5 w-1.5 rounded-full animate-pulse"
+                    style={{ background: "var(--accent-2)" }}
+                  />
+                  Now Playing • Release Preview
+                </motion.div>
+
+                <VinylBadge />
+                <EqualizerOverlay />
+              </div>
+
+              {/* Platform chips + hover lift */}
+              <div className="mt-4 flex flex-wrap gap-2">
+                {["Spotify", "Apple Music", "JioSaavn", "Gaana", "YouTube Music"].map(
+                  (p) => (
+                    <motion.span
+                      key={p}
+                      whileHover={{ y: -2, scale: 1.02 }}
+                      className="px-3 py-1 rounded-full text-[11px] glass cursor-default"
+                      style={{ border: "1px solid var(--dash-border)" }}
+                    >
+                      {p}
+                    </motion.span>
+                  )
+                )}
+              </div>
+            </div>
+          </motion.div>
         </div>
 
-        {/* Logo marquee */}
-        <div className="mt-12">
-
+        {/* Marquee */}
+        {/* <div className="mt-14">
           <Marquee />
-          {/* <Marquee /> */}
-        </div>
+        </div> */}
       </div>
     </section>
   );

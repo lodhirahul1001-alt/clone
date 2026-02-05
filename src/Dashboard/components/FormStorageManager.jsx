@@ -127,7 +127,7 @@ export function FormStorageManager({ isOpen, onClose }) {
             <div className="flex items-center gap-3">
               <Database className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               <div>
-                <h2 className="text-xl font-semibold dark:text-white">Complete Form Data Manager</h2>
+                <h2 className="text-xl font-semibold dark:text-[color:var(--text)]">Complete Form Data Manager</h2>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   All user form submissions and data in one place
                 </p>
@@ -163,7 +163,7 @@ export function FormStorageManager({ isOpen, onClose }) {
                 className={`flex items-center gap-2 px-6 py-4 border-b-2 transition-all duration-200 ${
                   activeTab === tab.id
                     ? 'border-blue-500 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
-                    : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700/50'
+                    : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-[color:var(--text)] hover:bg-gray-50 dark:hover:bg-gray-700/50'
                 }`}
               >
                 <tab.icon className="w-4 h-4" />
@@ -219,7 +219,7 @@ export function FormStorageManager({ isOpen, onClose }) {
 
               {/* Form Type Breakdown */}
               <div className="bg-transparent rounded-lg p-6 border border-gray-200 dark:border-gray-600">
-                <h3 className="text-lg font-semibold mb-4 dark:text-white">Form Type Breakdown</h3>
+                <h3 className="text-lg font-semibold mb-4 dark:text-[color:var(--text)]">Form Type Breakdown</h3>
                 <div className="space-y-3">
                   {formTypes.map((type) => {
                     const count = allSubmissions.filter((s) => s.formType === type).length;
@@ -228,13 +228,13 @@ export function FormStorageManager({ isOpen, onClose }) {
                       <div key={type} className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           {getFormIcon(type)}
-                          <span className="dark:text-white capitalize">{type.replace('-', ' ')}</span>
+                          <span className="dark:text-[color:var(--text)] capitalize">{type.replace('-', ' ')}</span>
                         </div>
                         <div className="flex items-center gap-3">
                           <div className="w-32 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                             <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${percentage}%` }} />
                           </div>
-                          <span className="text-sm font-medium dark:text-white w-8">{count}</span>
+                          <span className="text-sm font-medium dark:text-[color:var(--text)] w-8">{count}</span>
                         </div>
                       </div>
                     );
@@ -249,7 +249,7 @@ export function FormStorageManager({ isOpen, onClose }) {
             <div className="p-6 max-h-[70vh] overflow-y-auto">
               <div className="bg-transparent rounded-lg p-6 border border-gray-200 dark:border-gray-600">
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-semibold dark:text-white">Complete User Profile Data</h3>
+                  <h3 className="text-lg font-semibold dark:text-[color:var(--text)]">Complete User Profile Data</h3>
                   <button
                     onClick={() => copyToClipboard(userProfile)}
                     className="flex items-center gap-2 px-3 py-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
@@ -265,7 +265,7 @@ export function FormStorageManager({ isOpen, onClose }) {
                       <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                         {key.replace(/([A-Z])/g, ' $1').trim()}
                       </div>
-                      <div className="text-sm font-medium dark:text-white mt-1 break-words">
+                      <div className="text-sm font-medium dark:text-[color:var(--text)] mt-1 break-words">
                         {typeof value === 'object' ? JSON.stringify(value) : String(value)}
                       </div>
                     </div>
@@ -298,7 +298,7 @@ export function FormStorageManager({ isOpen, onClose }) {
                         placeholder="Search all form data..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white text-sm"
+                        className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)] text-sm"
                       />
                     </div>
 
@@ -306,7 +306,7 @@ export function FormStorageManager({ isOpen, onClose }) {
                       <select
                         value={filterType}
                         onChange={(e) => setFilterType(e.target.value)}
-                        className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white text-sm"
+                        className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)] text-sm"
                       >
                         <option value="all">All Form Types</option>
                         {formTypes.map((type) => (
@@ -319,7 +319,7 @@ export function FormStorageManager({ isOpen, onClose }) {
                       <select
                         value={filterStatus}
                         onChange={(e) => setFilterStatus(e.target.value)}
-                        className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white text-sm"
+                        className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)] text-sm"
                       >
                         <option value="all">All Status</option>
                         <option value="draft">Draft</option>
@@ -329,7 +329,7 @@ export function FormStorageManager({ isOpen, onClose }) {
                     </div>
                   </div>
 
-                  <h3 className="font-medium text-gray-900 dark:text-white mb-4">
+                  <h3 className="font-medium text-gray-900 dark:text-[color:var(--text)] mb-4">
                     Form Submissions ({filteredSubmissions.length})
                   </h3>
 
@@ -349,7 +349,7 @@ export function FormStorageManager({ isOpen, onClose }) {
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
                             {getFormIcon(submission.formType)}
-                            <span className="font-medium text-sm dark:text-white">
+                            <span className="font-medium text-sm dark:text-[color:var(--text)]">
                               {submission.formTitle}
                             </span>
                           </div>
@@ -398,7 +398,7 @@ export function FormStorageManager({ isOpen, onClose }) {
                   {showDetails && selectedSubmission ? (
                     <div>
                       <div className="flex items-center justify-between mb-4">
-                        <h3 className="font-medium text-gray-900 dark:text-white">Complete Form Data</h3>
+                        <h3 className="font-medium text-gray-900 dark:text-[color:var(--text)]">Complete Form Data</h3>
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => copyToClipboard(selectedSubmission)}
@@ -420,36 +420,36 @@ export function FormStorageManager({ isOpen, onClose }) {
                       <div className="space-y-4">
                         {/* Form Info */}
                         <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
-                          <h4 className="font-medium text-gray-900 dark:text-white mb-3">Form Information</h4>
+                          <h4 className="font-medium text-gray-900 dark:text-[color:var(--text)] mb-3">Form Information</h4>
                           <div className="grid grid-cols-2 gap-4 text-sm">
                             <div>
                               <span className="text-gray-500 dark:text-gray-400">Form Type:</span>
-                              <p className="font-medium dark:text-white">{selectedSubmission.formType}</p>
+                              <p className="font-medium dark:text-[color:var(--text)]">{selectedSubmission.formType}</p>
                             </div>
                             <div>
                               <span className="text-gray-500 dark:text-gray-400">Form Title:</span>
-                              <p className="font-medium dark:text-white">{selectedSubmission.formTitle}</p>
+                              <p className="font-medium dark:text-[color:var(--text)]">{selectedSubmission.formTitle}</p>
                             </div>
                             <div>
                               <span className="text-gray-500 dark:text-gray-400">Status:</span>
-                              <p className="font-medium dark:text-white">{selectedSubmission.status}</p>
+                              <p className="font-medium dark:text-[color:var(--text)]">{selectedSubmission.status}</p>
                             </div>
                             <div>
                               <span className="text-gray-500 dark:text-gray-400">Submitted:</span>
-                              <p className="font-medium dark:text-white">
+                              <p className="font-medium dark:text-[color:var(--text)]">
                                 {new Date(selectedSubmission.timestamp).toLocaleString()}
                               </p>
                             </div>
                             {selectedSubmission.userInfo?.name && (
                               <div>
                                 <span className="text-gray-500 dark:text-gray-400">User:</span>
-                                <p className="font-medium dark:text-white">{selectedSubmission.userInfo.name}</p>
+                                <p className="font-medium dark:text-[color:var(--text)]">{selectedSubmission.userInfo.name}</p>
                               </div>
                             )}
                             {selectedSubmission.userInfo?.email && (
                               <div>
                                 <span className="text-gray-500 dark:text-gray-400">Email:</span>
-                                <p className="font-medium dark:text-white">{selectedSubmission.userInfo.email}</p>
+                                <p className="font-medium dark:text-[color:var(--text)]">{selectedSubmission.userInfo.email}</p>
                               </div>
                             )}
                           </div>
@@ -457,14 +457,14 @@ export function FormStorageManager({ isOpen, onClose }) {
 
                         {/* All Form Data */}
                         <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
-                          <h4 className="font-medium text-gray-900 dark:text-white mb-3">All Captured Data</h4>
+                          <h4 className="font-medium text-gray-900 dark:text-[color:var(--text)] mb-3">All Captured Data</h4>
                           <div className="space-y-3">
                             {Object.entries(selectedSubmission.data).map(([key, value]) => (
                               <div key={key} className="border-b border-gray-200 dark:border-gray-600 pb-2">
                                 <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                                   {key.replace(/([A-Z])/g, ' $1').trim()}
                                 </div>
-                                <div className="text-sm font-medium dark:text-white mt-1 break-words">
+                                <div className="text-sm font-medium dark:text-[color:var(--text)] mt-1 break-words">
                                   {typeof value === 'boolean'
                                     ? value
                                       ? 'Yes'
@@ -480,14 +480,14 @@ export function FormStorageManager({ isOpen, onClose }) {
 
                         {/* Status Management */}
                         <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
-                          <h4 className="font-medium text-gray-900 dark:text-white mb-3">Manage Status</h4>
+                          <h4 className="font-medium text-gray-900 dark:text-[color:var(--text)] mb-3">Manage Status</h4>
                           <div className="flex gap-2">
                             <select
                               value={selectedSubmission.status}
                               onChange={(e) =>
                                 updateSubmissionStatus(selectedSubmission.id, e.target.value)
                               }
-                              className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white text-sm"
+                              className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)] text-sm"
                             >
                               <option value="draft">Draft</option>
                               <option value="submitted">Submitted</option>
@@ -497,7 +497,7 @@ export function FormStorageManager({ isOpen, onClose }) {
                               onClick={() =>
                                 updateSubmissionStatus(selectedSubmission.id, selectedSubmission.status)
                               }
-                              className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm flex items-center gap-1"
+                              className="px-3 py-2 bg-blue-600 text-[color:var(--text)] rounded-lg hover:bg-blue-700 transition-colors text-sm flex items-center gap-1"
                             >
                               <RefreshCw className="w-3 h-3" />
                               Update

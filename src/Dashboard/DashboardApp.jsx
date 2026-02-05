@@ -123,7 +123,7 @@ const menuItems = [
     <>
       {/* Mobile backdrop */}
       <div
-        className={`fixed inset-0 z-50 md:hidden transition-opacity ${
+        className={`fixed inset-0 z-40 md:hidden transition-opacity ${
           isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
         style={{ background: "rgba(0,0,0,.55)" }}
@@ -132,7 +132,7 @@ const menuItems = [
 
       {/* Sidebar drawer */}
       <aside
-        className={`dash-sidebar fixed left-0 top-0 z-40 h-full w-[280px] md:w-[300px] p-5 transform transition-transform duration-200 md:translate-x-0 ${
+        className={`dash-sidebar fixed left-0 top-0 z-50 h-full w-[280px] md:w-[300px] p-5 transform transition-transform duration-200 md:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -324,16 +324,17 @@ function DashboardApp() {
               </div>
             </button>
 
-            <h1 className="text-sm ml-5 sm:text-base font-semibold dash-nav-label mb-1">Dashboard</h1>
+            <h1 className="text-sm sm:text-base font-semibold dash-nav-label mb-1 truncate max-w-[40vw] sm:max-w-none">Dashboard</h1>
 
             <div className="flex items-center gap-3">
               <button
                 type="button"
                 onClick={() => setNotifOpen(true)}
-                className="h-10 w-10 rounded-full grid place-items-center dash-icon-btn"
+                className="relative h-10 w-10 rounded-full grid place-items-center dash-card-soft text-[color:var(--text)] hover:opacity-90 -items-center dash-icon-btn"
                 aria-label="Open notifications"
               >
                 <Bell className="h-5 w-5" />
+              <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-[color:var(--accent-1)]"></span>
               </button>
 
               {/* User info (right side) */}

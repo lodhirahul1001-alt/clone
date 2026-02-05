@@ -48,8 +48,8 @@ function GradientCard({ title, value, icon: Icon, variant = "a" }) {
     <div className={`dash-gradient dash-gradient-${variant}`}>
       <div className="flex items-start justify-between gap-4">
         <div>
-          <div className="text-sm font-semibold text-white/90">{title}</div>
-          <div className="mt-3 text-3xl font-bold text-white">{value}</div>
+          <div className="text-sm font-semibold text-[color:var(--text)]/90">{title}</div>
+          <div className="mt-3 text-3xl font-bold text-[color:var(--text)]">{value}</div>
         </div>
         <div className="dash-gradient-icon">
           <Icon size={18} />

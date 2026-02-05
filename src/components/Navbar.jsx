@@ -39,7 +39,10 @@ export default function Navbar() {
             <div className="h-9 w-9 rounded-full grid place-items-center border border-white/10 bg-white/5">
               <span className="text-neon font-bold">M</span>
             </div>
-            <span className="font-semibold tracking-tight">Music Platform</span>
+            <span className="font-semibold tracking-tight">
+              <span className="sm:hidden">Music</span>
+              <span className="hidden sm:inline">Music Platform</span>
+            </span>
           </Link>
 
           {/* Desktop */}
@@ -96,14 +99,7 @@ export default function Navbar() {
           {/* Mobile */}
           <div className="md:hidden flex items-center gap-2">
             <ThemeToggle />
-            <button
-              type="button"
-              onClick={() => setCallbackOpen(true)}
-              className="h-10 px-4 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 transition-colors text-sm"
-            >
-              Callback
-            </button>
-            <button
+<button
               type="button"
               onClick={() => setOpen((v) => !v)}
               className="h-10 w-10 rounded-full grid place-items-center border border-white/10 bg-white/5 hover:bg-white/10 transition-colors"

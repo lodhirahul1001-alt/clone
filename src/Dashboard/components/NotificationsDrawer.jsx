@@ -12,7 +12,7 @@ export default function NotificationsDrawer({ open, onClose }) {
       {/* Backdrop */}
       <div
         className={
-          "fixed inset-0 z-40 bg-black/40 transition-opacity " +
+          "fixed inset-0 z-[60] bg-black/40 transition-opacity " +
           (open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none")
         }
         onClick={onClose}
@@ -21,13 +21,13 @@ export default function NotificationsDrawer({ open, onClose }) {
       {/* Panel */}
       <aside
         className={
-          "fixed right-0 top-0 z-50 h-full w-full max-w-sm transform transition-transform duration-200 " +
+          "fixed right-0 top-0 z-[70] h-full w-full max-w-sm transform transition-transform duration-200 " +
           (open ? "translate-x-0" : "translate-x-full")
         }
         aria-hidden={!open}
       >
-        <div className="h-full glass rounded-none border-l border-white/10">
-          <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
+        <div className="h-full dash-card rounded-none border-l border-[color:var(--border)] flex flex-col">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-[color:var(--border)]">
             <div className="flex items-center gap-2">
               <Bell className="h-5 w-5" />
               <div className="font-semibold">Notifications</div>
@@ -42,7 +42,7 @@ export default function NotificationsDrawer({ open, onClose }) {
             </button>
           </div>
 
-          <div className="p-4 space-y-3">
+          <div className="flex-1 overflow-y-auto p-4 space-y-3 pb-[calc(env(safe-area-inset-bottom)+16px)]">
             {demoNotifications.map((n) => (
               <div key={n.id} className="glass-soft p-4">
                 <div className="flex items-center justify-between gap-3">
