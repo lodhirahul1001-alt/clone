@@ -69,6 +69,16 @@ const ReleaseMusic = () => {
   const formatDate = (iso) =>
     iso ? new Date(iso).toLocaleDateString() : "-";
 
+  const getStoreLabel = (track) => {
+    if (Array.isArray(track?.stores) && track.stores.length > 0) {
+      return track.stores.join(", ");
+    }
+    if (typeof track?.store === "string" && track.store.trim()) {
+      return track.store;
+    }
+    return "-";
+  };
+
   return (
     <div className="dash-page space-y-4 w-full overflow-x-hidden">
       {/* Header */}
@@ -145,16 +155,22 @@ const ReleaseMusic = () => {
           <table className="min-w-full text-sm">
             <thead>
               <tr>
-                <th className="px-4 py-3 text-left">Track ID</th>
+                <th className="px-4 py-3 text-left">ID</th>
+                <th className="px-4 py-3 text-left">Album</th>
                 <th className="px-4 py-3 text-left">Title</th>
+                <th className="px-4 py-3 text-left">Label</th>
                 <th className="px-4 py-3 text-left">Created</th>
+                <th className="px-4 py-3 text-left">CAT</th>
+                <th className="px-4 py-3 text-left">ISRC/UPC</th>
+                <th className="px-4 py-3 text-left">Store</th>
+                <th className="px-4 py-3 text-left">Stage</th>
                 <th className="px-4 py-3 text-right">Actions</th>
               </tr>
             </thead>
             <tbody>
               {loading && (
                 <tr>
-                  <td colSpan={4} className="text-center py-6">
+                  <td colSpan={10} className="text-center py-6">
                     Loading...
                   </td>
                 </tr>
@@ -163,10 +179,20 @@ const ReleaseMusic = () => {
               {!loading &&
                 tracks.map((track) => (
                   <tr key={track._id} className="border-t">
-                    <td className="px-4 py-3">{track.publicId}</td>
-                    <td className="px-4 py-3">{track.title}</td>
+                    <td className="px-4 py-3">{track.publicId || "-"}</td>
+                    <td className="px-4 py-3">{track.album || track.title || "-"}</td>
+                    <td className="px-4 py-3">{track.title || "-"}</td>
+                    <td className="px-4 py-3">{track.label || "-"}</td>
                     <td className="px-4 py-3">
                       {formatDate(track.createdAt)}
+                    </td>
+                    <td className="px-4 py-3">{track.cat || track.productionYear || "-"}</td>
+                    <td className="px-4 py-3">{track.isrc || track.upcEan || "-"}</td>
+                    <td className="px-4 py-3">{getStoreLabel(track)}</td>
+                    <td className="px-4 py-3">
+                      <span className="px-2 py-1 rounded-lg dash-badge">
+                        {track.stage || track.status || "pending"}
+                      </span>
                     </td>
                     <td className="px-4 py-3 text-right">
                       <button

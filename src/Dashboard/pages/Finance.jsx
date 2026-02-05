@@ -26,31 +26,31 @@ export default function Finance() {
       type: 'earning',
       amount: 0,
       description: 'Spotify streaming royalties',
-      date: '2024-12-05',
+      date: '',
       status: 'completed'
     },
     {
       id: '2',
       type: 'withdrawal',
-      amount: -25.0,
+      amount: 0,
       description: 'Bank transfer withdrawal',
-      date: '2024-12-03',
+      date: '',
       status: 'completed'
     },
     {
       id: '3',
       type: 'royalty',
-      amount: 8.75,
+      amount: 0,
       description: 'YouTube Content ID earnings',
-      date: '2024-12-02',
+      date: '',
       status: 'pending'
     },
     {
       id: '4',
       type: 'earning',
-      amount: 12.4,
+      amount: 0,
       description: 'Apple Music streaming',
-      date: '2024-12-01',
+      date: '',
       status: 'completed'
     }
   ];
@@ -283,8 +283,8 @@ export default function Finance() {
       {/* Withdraw Tab */}
       {activeTab === 'withdraw' && (
         <div className="max-w-2xl">
-          <div className="bg-transparent rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-lg font-semibold mb-4 dark:text-[color:var(--text)]">Request Withdrawal</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Request Withdrawal</h2>
 
             <form onSubmit={handleWithdrawal} className="space-y-4">
               <div>
@@ -302,7 +302,7 @@ export default function Finance() {
                       amount: parseFloat(e.target.value) || 0
                     })
                   }
-                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white text-gray-900 placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-400"
                   placeholder={`Max: $${maxWithdrawal}`}
                   required
                 />
@@ -323,7 +323,7 @@ export default function Finance() {
                       method: e.target.value
                     })
                   }
-                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100"
                   required
                 >
                   <option value="bank">Bank Transfer</option>
@@ -334,7 +334,7 @@ export default function Finance() {
 
               {/* Bank Details Section */}
               {withdrawalRequest.method === 'bank' && (
-                <div className="space-y-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
+                <div className="space-y-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-600">
                   <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
                     <Building2 className="w-4 h-4" />
                     Bank Account Details
@@ -349,7 +349,7 @@ export default function Finance() {
                       type="text"
                       value={withdrawalRequest.bankDetails.accountHolderName}
                       onChange={(e) => updateBankDetails('accountHolderName', e.target.value)}
-                      className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                      className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white text-gray-900 placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-400"
                       placeholder="Enter full name as per bank records"
                       required
                     />
@@ -364,7 +364,7 @@ export default function Finance() {
                       type="text"
                       value={withdrawalRequest.bankDetails.accountNumber}
                       onChange={(e) => updateBankDetails('accountNumber', e.target.value)}
-                      className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                      className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white text-gray-900 placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-400"
                       placeholder="Enter bank account number"
                       required
                     />
@@ -379,7 +379,7 @@ export default function Finance() {
                       type="text"
                       value={withdrawalRequest.bankDetails.ifscCode}
                       onChange={(e) => updateBankDetails('ifscCode', e.target.value.toUpperCase())}
-                      className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                      className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white text-gray-900 placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-400"
                       placeholder="Enter IFSC code (e.g., SBIN0001234)"
                       pattern="[A-Z]{4}0[A-Z0-9]{6}"
                       maxLength={11}
@@ -394,7 +394,7 @@ export default function Finance() {
 
               {/* PayPal Details */}
               {withdrawalRequest.method === 'paypal' && (
-                <div className="space-y-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
+                <div className="space-y-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-600">
                   <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">PayPal Details</h3>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -406,7 +406,7 @@ export default function Finance() {
                       onChange={(e) =>
                         setWithdrawalRequest({ ...withdrawalRequest, paypalEmail: e.target.value })
                       }
-                      className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                      className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white text-gray-900 placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-400"
                       placeholder="Enter PayPal email address"
                       required
                     />
@@ -416,7 +416,7 @@ export default function Finance() {
 
               {/* Stripe Details */}
               {withdrawalRequest.method === 'stripe' && (
-                <div className="space-y-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
+                <div className="space-y-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-600">
                   <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">Stripe Details</h3>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -428,7 +428,7 @@ export default function Finance() {
                       onChange={(e) =>
                         setWithdrawalRequest({ ...withdrawalRequest, stripeAccountId: e.target.value })
                       }
-                      className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                      className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white text-gray-900 placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-400"
                       placeholder="Enter Stripe account ID"
                       required
                     />
@@ -458,10 +458,10 @@ export default function Finance() {
 
       {/* Enhanced Withdrawal Modal */}
       {showWithdrawModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-transparent rounded-lg p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-700 shadow-xl">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold dark:text-[color:var(--text)]">Quick Withdrawal</h2>
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Quick Withdrawal</h2>
               <button
                 onClick={() => setShowWithdrawModal(false)}
                 className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl"
@@ -486,7 +486,7 @@ export default function Finance() {
                       amount: parseFloat(e.target.value) || 0
                     })
                   }
-                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white text-gray-900 placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-400"
                   placeholder={`Max: $${maxWithdrawal}`}
                   required
                 />
@@ -507,7 +507,7 @@ export default function Finance() {
                       method: e.target.value
                     })
                   }
-                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100"
                   required
                 >
                   <option value="bank">Bank Transfer</option>
@@ -518,7 +518,7 @@ export default function Finance() {
 
               {/* Bank Details in Modal */}
               {withdrawalRequest.method === 'bank' && (
-                <div className="space-y-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
+                <div className="space-y-3 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-600">
                   <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
                     <Building2 className="w-4 h-4" />
                     Bank Details
@@ -532,7 +532,7 @@ export default function Finance() {
                       type="text"
                       value={withdrawalRequest.bankDetails.accountHolderName}
                       onChange={(e) => updateBankDetails('accountHolderName', e.target.value)}
-                      className="w-full border border-gray-300 dark:border-gray-600 rounded px-2 py-1.5 text-sm dark:bg-gray-700 dark:text-[color:var(--text)]"
+                      className="w-full border border-gray-300 dark:border-gray-600 rounded px-2 py-1.5 text-sm bg-white text-gray-900 placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-400"
                       placeholder="Full name as per bank"
                       required
                     />
@@ -546,7 +546,7 @@ export default function Finance() {
                       type="text"
                       value={withdrawalRequest.bankDetails.accountNumber}
                       onChange={(e) => updateBankDetails('accountNumber', e.target.value)}
-                      className="w-full border border-gray-300 dark:border-gray-600 rounded px-2 py-1.5 text-sm dark:bg-gray-700 dark:text-[color:var(--text)]"
+                      className="w-full border border-gray-300 dark:border-gray-600 rounded px-2 py-1.5 text-sm bg-white text-gray-900 placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-400"
                       placeholder="Bank account number"
                       required
                     />
@@ -560,7 +560,7 @@ export default function Finance() {
                       type="text"
                       value={withdrawalRequest.bankDetails.ifscCode}
                       onChange={(e) => updateBankDetails('ifscCode', e.target.value.toUpperCase())}
-                      className="w-full border border-gray-300 dark:border-gray-600 rounded px-2 py-1.5 text-sm dark:bg-gray-700 dark:text-[color:var(--text)]"
+                      className="w-full border border-gray-300 dark:border-gray-600 rounded px-2 py-1.5 text-sm bg-white text-gray-900 placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-400"
                       placeholder="IFSC code (e.g., SBIN0001234)"
                       pattern="[A-Z]{4}0[A-Z0-9]{6}"
                       maxLength={11}
@@ -572,7 +572,7 @@ export default function Finance() {
 
               {/* PayPal in Modal */}
               {withdrawalRequest.method === 'paypal' && (
-                <div className="space-y-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
+                <div className="space-y-3 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-600">
                   <div>
                     <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
                       PayPal Email <span className="text-red-500">*</span>
@@ -583,7 +583,7 @@ export default function Finance() {
                       onChange={(e) =>
                         setWithdrawalRequest({ ...withdrawalRequest, paypalEmail: e.target.value })
                       }
-                      className="w-full border border-gray-300 dark:border-gray-600 rounded px-2 py-1.5 text-sm dark:bg-gray-700 dark:text-[color:var(--text)]"
+                      className="w-full border border-gray-300 dark:border-gray-600 rounded px-2 py-1.5 text-sm bg-white text-gray-900 placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-400"
                       placeholder="PayPal email address"
                       required
                     />
@@ -593,7 +593,7 @@ export default function Finance() {
 
               {/* Stripe in Modal */}
               {withdrawalRequest.method === 'stripe' && (
-                <div className="space-y-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
+                <div className="space-y-3 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-600">
                   <div>
                     <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
                       Stripe Account ID <span className="text-red-500">*</span>
@@ -604,7 +604,7 @@ export default function Finance() {
                       onChange={(e) =>
                         setWithdrawalRequest({ ...withdrawalRequest, stripeAccountId: e.target.value })
                       }
-                      className="w-full border border-gray-300 dark:border-gray-600 rounded px-2 py-1.5 text-sm dark:bg-gray-700 dark:text-[color:var(--text)]"
+                      className="w-full border border-gray-300 dark:border-gray-600 rounded px-2 py-1.5 text-sm bg-white text-gray-900 placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-400"
                       placeholder="Stripe account ID"
                       required
                     />
