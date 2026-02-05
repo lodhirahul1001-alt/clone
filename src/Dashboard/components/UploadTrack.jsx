@@ -380,7 +380,7 @@ export function UploadTrack({
             
             <Music className="w-8 h-8 text-blue-600" />
             <div>
-              <h1 className="text-2xl font-bold text-[color:var(--text)]">Upload New Track</h1>
+              <h1 className="text-2xl font-bold  text-[color:var(--text)]">Upload New Track</h1>
               <p className="text-[color:var(--muted)] text-[color:var(--muted)]">
                 Distribute your music to all major platforms - All data automatically saved
               </p>
@@ -428,14 +428,14 @@ export function UploadTrack({
 
 
         {/* Platforms marquee (same as marketing site) */}
-        <div className="px-4 sm:px-6 pt-4">
-          <div className="dash-card-soft p-4">
+        <div className="px-4 sm:px-6 pt-2">
+          <div className=" ">
             <Marquee />
           </div>
         </div>
 
         {/* Form */}
-<div className="p-6 pt-28 sm:pt-32">
+<div className="p-6 pt-2 sm:pt-02">
           <form onSubmit={handleSubmit} className="space-y-8 dash-form">
             {/* Track Details */}
             <section>

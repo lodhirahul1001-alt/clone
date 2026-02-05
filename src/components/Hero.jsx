@@ -127,7 +127,7 @@ export default function Hero() {
                 />
               </span>
 
-              <span className="block text-[color:var(--text)]/90">in one dashboard.</span>
+              <span className="block text-[color:var(--text)]/90">In One Dashboard.</span>
             </motion.h1>
 
             <motion.p

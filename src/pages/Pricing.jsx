@@ -37,10 +37,10 @@ export default function Pricing() {
     const yearly = billing === "yearly";
     return [
       {
-        tag: "Basic Plan",
+        tag: "Free Plan",
         popular: false,
-        price: yearly ? "$39" : "$49",
-        cadence: yearly ? "/mo (billed yearly)" : "/month",
+        // price: yearly ? "$39" : "₹00 Off",
+        // cadence: yearly ? "/mo (billed yearly)" : "0/month",
         description: "Perfect for artists starting distribution.",
         features: [
           "Unlimited releases",
@@ -48,13 +48,15 @@ export default function Pricing() {
           "Basic royalty reporting",
           "Artist profile & links",
           "Email support",
+          ,
+
         ],
       },
       {
         tag: "Popular Plan",
         popular: true,
-        price: yearly ? "$99" : "$124",
-        cadence: yearly ? "/mo (billed yearly)" : "/month",
+        price: yearly ? " ₹29999" : "$2999",
+        cadence: yearly ? "/ (billed yearly)" : "/month",
         description: "For growing catalogs and teams.",
         features: [
           "Everything in Basic",
@@ -64,25 +66,25 @@ export default function Pricing() {
           "Priority support",
         ],
       },
-      {
-        tag: "Pro Plan",
-        popular: false,
-        price: yearly ? "$239" : "$299",
-        cadence: yearly ? "/mo (billed yearly)" : "/month",
-        description: "For labels, studios & high volume distribution.",
-        features: [
-          "Everything in Popular",
-          "YouTube Content ID",
-          "Custom reporting exports",
-          "Dedicated account manager",
-          "24/7 studio support",
-        ],
-      },
+      // {
+      //   tag: "Pro Plan",
+      //   popular: false,
+      //   price: yearly ? "₹2999" : "₹2999",
+      //   cadence: yearly ? "/mo (billed yearly)" : "/month",
+      //   description: "For labels, studios & high volume distribution.",
+      //   features: [
+      //     "Everything in Popular",
+      //     "YouTube Content ID",
+      //     "Custom reporting exports",
+      //     "Dedicated account manager",
+      //     "24/7 studio support",
+      //   ],
+      // },
     ];
   }, [billing]);
 
   return (
-    <div className="container-page pt-14 pb-24">
+    <div className="container-page  pt-14 pb-24">
       <div className="text-center">
         <h1 className="text-4xl md:text-5xl font-semibold tracking-tight">
           Try it first, then <span className="text-neon">choose a plan</span>.
@@ -116,7 +118,7 @@ export default function Pricing() {
       </div>
 
       {/* Pricing cards */}
-      <div className="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-19">
         {planCards.map((p, idx) => (
           <div
             key={idx}

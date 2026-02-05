@@ -340,7 +340,7 @@ export default function Home() {
                   {["Streams", "Revenue", "Top Cities"].map((k) => (
                     <div key={k} className="glass-soft p-4">
                       <div className="text-xs" style={{ color: "var(--muted)" }}>{k}</div>
-                      <div className="mt-2 text-lg font-semibold">{k === "Streams" ? "16.1k" : k === "Revenue" ? "₹12.5k" : "Delhi"}</div>
+                      <div className="mt-2 text-lg font-semibold">{k === "Streams" ? "9.2M" : k === "Revenue" ? "₹6.87L" : "Delhi"}</div>
                       <div className="mt-2 h-2 rounded-full" style={{ background: "rgba(255,255,255,.10)" }}>
                         <div className="h-2 rounded-full" style={{ width: "68%", background: "linear-gradient(90deg,var(--accent-1),var(--accent-2))" }} />
                       </div>

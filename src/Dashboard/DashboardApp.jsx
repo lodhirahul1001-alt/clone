@@ -149,7 +149,7 @@ const menuItems = [
           </div>
         </div>
 
-        <div className="mt-5 flex items-center gap-3 rounded-2xl p-3 dash-card">
+        {/* <div className="mt-5 flex items-center gap-3 rounded-2xl p-3 dash-card">
           {profilePhoto ? (
             <img
               src={profilePhoto}
@@ -166,7 +166,7 @@ const menuItems = [
             <div className="text-sm font-semibold truncate">{user?.fullName || "User"}</div>
             <div className="text-xs truncate" style={{ color: "var(--muted)" }}>{user?.email || ""}</div>
           </div>
-        </div>
+        </div> */}
 
         {/* Search
         <div className="mt-4 relative">
@@ -181,7 +181,7 @@ const menuItems = [
         {/* Create */}
         <button
           onClick={handleCreate}
-          className="mt-4 w-full dash-btn dash-btn-primary"
+          className="mt-4 w-full mt-42 dash-btn dash-btn-primary"
           type="button"
         >
           <Plus className="w-4 h-4" />
@@ -282,14 +282,16 @@ function DashboardApp() {
   const { user } = useSelector((state) => state.auth);
   const [holidayBanner, setHolidayBanner] = useState(true);
 
+  const holidayBannerKey = "cms_holiday_banner_dismissed_v2";
+
   useEffect(() => {
-    const v = localStorage.getItem("cms_holiday_banner_dismissed");
+    const v = localStorage.getItem(holidayBannerKey);
     if (v === "1") setHolidayBanner(false);
   }, []);
 
   const dismissHolidayBanner = () => {
     setHolidayBanner(false);
-    localStorage.setItem("cms_holiday_banner_dismissed", "1");
+    localStorage.setItem(holidayBannerKey, "1");
   };
 
   const profilePhoto = user?.dp;
