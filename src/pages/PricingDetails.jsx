@@ -1,6 +1,8 @@
 import React, { useMemo, useState } from "react";
 import { useSearchParams, Link } from "react-router";
 import axios from "axios";
+import { QRCodeCanvas } from "qrcode.react";
+
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -12,15 +14,15 @@ const UPI = {
 export default function PricingDetails() {
   const [params] = useSearchParams();
   const plan = params.get("plan") || "Basic";
-  const billing = params.get("billing") || "monthly";
+  const billing = params.get("billing") || "yearly";
 
   const amount = useMemo(() => {
     // Keeping the same numbers from Pricing page
     const table = {
-      monthly: { Basic: 49, Popular: 124, Pro: 299 },
-      yearly: { Basic: 39, Popular: 99, Pro: 239 },
+      // monthly: { Basic: 4999, Popular: 124, Pro: 299 },
+      yearly: { Basic: 35, Popular: 99, Pro: 239 },
     };
-    return table[billing]?.[plan] ?? 49;
+    return table[billing]?.[plan] ?? 4999;
   }, [billing, plan]);
 
   const upiUrl = useMemo(() => {
@@ -76,7 +78,7 @@ export default function PricingDetails() {
   return (
     <div className="container-page pt-14 pb-24">
       <div className="max-w-5xl mx-auto">
-        <div className="flex items-center justify-between flex-wrap gap-3">
+        <div className="flex items-center justify-between flex-wrap ">
           <div>
             <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">Secure Checkout</h1>
             <p className="mt-2 text-[color:var(--muted)]">
@@ -88,16 +90,16 @@ export default function PricingDetails() {
           </Link>
         </div>
 
-        <div className="mt-10 grid lg:grid-cols-2 gap-6 items-start">
+        <div className="mt-15 grid lg:grid-cols-1 justify-self-center bg-transparent gap-6 items-start">
           {/* LEFT: choose payment method */}
-          <div className="glass p-6">
-            <h2 className="text-lg font-semibold">Choose Payment Method</h2>
-            <p className="mt-1 text-sm text-[color:var(--muted)]">
-              Plan: <span className="text-neon font-semibold">{plan}</span>
-              <span className="ml-2 text-xs px-2 py-1 rounded-full bg-black/5 dark:bg-white/10">{billing}</span>
+          <div className="glass justify-between  p-6">
+            <h2 className="text-lg justify-self-center text-neon  font-semibold">Choose Payment Method</h2>
+            <p className="mt-5 text-l justify-center ml-25 text-[color:var(--muted)]">
+              Plan: <span className="text-neon mt-6 font-semibold">{plan}</span>
+              <span className="ml-2 mt-9 text-xs px-2 py-1 rounded-full bg-black/5 dark:bg-white/10">Yearly</span>
               <span className="ml-2 text-xs px-2 py-1 rounded-full bg-black/5 dark:bg-white/10">₹ {amount}</span>
             </p>
-
+{/* 
             <div className="mt-6 glass-soft p-4 rounded-3xl">
               <div className="text-sm font-semibold">UPI Payment</div>
               <div className="mt-2 flex items-center justify-between gap-3 flex-wrap">
@@ -108,10 +110,10 @@ export default function PricingDetails() {
                   Proceed to Pay
                 </a>
               </div>
-            </div>
+            </div> */}
 
             <div className="mt-6 text-xs text-[color:var(--muted)] leading-relaxed">
-              100% secure manual verification • Once done, click <span className="text-[color:var(--text)] font-semibold">I have completed payment</span> to submit details.
+              {/* 100% secure manual verification • Once done, click <span className="text-[color:var(--text)] font-semibold">I have completed payment</span> to submit details. */}
             </div>
           </div>
 
@@ -122,39 +124,34 @@ export default function PricingDetails() {
                 <div className="text-lg font-semibold">UPI Payment</div>
 
                 <div className="mt-4 flex justify-center">
-                  <div className="glass-soft p-4 rounded-3xl">
+                  {/* <div className="glass-soft p-4 rounded-3xl">
                     <img
                       src={qrSrc}
                       alt="UPI QR"
                       className="w-[240px] h-[240px] rounded-2xl"
                       loading="lazy"
                     />
-                  </div>
+                  </div> */}
+                  <div className="bg-white p-4 rounded-3xl shadow-lg">
+<QRCodeCanvas
+  value={upiUrl}
+  size={240}
+  bgColor="#ffffff"
+  fgColor="#000000"
+  level="H"   // logo ke liye important
+  includeMargin={true}
+  imageSettings={{
+    src: "/gpay.png",   // 👈 public folder path
+    height: 300,
+    width: 300,
+    excavate: true,
+  }}
+
+  />
+</div>
                 </div>
 
-                <div className="mt-4 flex items-center gap-2">
-                  <input
-                    readOnly
-                    value={UPI.id}
-                    className="dash-input flex-1"
-                    aria-label="UPI ID"
-                  />
-                  <button
-                    type="button"
-                    className="btn-primary"
-                    onClick={async () => {
-                      try {
-                        await navigator.clipboard.writeText(UPI.id);
-                        setCopied(true);
-                        setTimeout(() => setCopied(false), 1200);
-                      } catch {
-                        /* ignore */
-                      }
-                    }}
-                  >
-                    {copied ? "Copied" : "Copy"}
-                  </button>
-                </div>
+              
 
                 <button
                   type="button"

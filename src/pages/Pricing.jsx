@@ -43,27 +43,42 @@ export default function Pricing() {
         // cadence: yearly ? "/mo (billed yearly)" : "0/month",
         description: "Perfect for artists starting distribution.",
         features: [
-          "Unlimited releases",
-          "Delivery to major DSPs",
-          "Basic royalty reporting",
-          "Artist profile & links",
-          "Email support",
-          ,
+       "Upload unlimited releases",
+"75% Revenue",
+"No take down after plan expires",
+"Monthly Analytics & Revenue",
+"Spotify Verification",
+"Live automatically on new stores",
+"Approval in min 7 working days",
+"Customer support in 48 hours",
+"Free Backlinks",
+"Access to promotional tools",
+// "Instagram Account Linking",
+// "YouTube Official Artist Channel",
+// "Free YouTube Content ID"
 
         ],
       },
       {
-        tag: "Popular Plan",
+        tag: "Paid Plan",
         popular: true,
-        price: yearly ? " ₹29999" : "$2999",
-        cadence: yearly ? "/ (billed yearly)" : "/month",
+        price: yearly ? " ₹49999" : "₹4999",
+        cadence: yearly ? "/ (billed yearly)" : "/yearly",
         description: "For growing catalogs and teams.",
         features: [
-          "Everything in Basic",
-          "Advanced analytics",
-          "Release scheduling",
-          "Split payments (teams)",
-          "Priority support",
+      "Upload unlimited releases",
+        "100% Revenue",
+"No take down after plan expires",
+"Monthly Analytics & Revenue",
+"Spotify Verification",
+"Live automatically on new stores",
+"Approval in min 4 working days",
+"Customer support in 24 hours",
+"Free Backlinks",
+"Access to promotional tools",
+"Instagram Account Linking",
+"YouTube Official Artist Channel",
+"Free YouTube Content ID",
         ],
       },
       // {
@@ -92,7 +107,7 @@ export default function Pricing() {
         <p className="mt-4 text-[color:var(--muted)] max-w-2xl mx-auto">
           Simple pricing for music distribution and analytics. Change or cancel anytime.
         </p>
-
+{/* 
         <div className="mt-8 inline-flex items-center gap-3 glass-soft px-4 py-2">
           <span className={classNames("text-sm", billing === "monthly" ? "text-[color:var(--text)]" : "text-[color:var(--muted)]")}>
             Monthly
@@ -114,7 +129,7 @@ export default function Pricing() {
           <span className={classNames("text-sm", billing === "yearly" ? "text-[color:var(--text)]" : "text-[color:var(--muted)]")}>
             Yearly
           </span>
-        </div>
+        </div> */}
       </div>
 
       {/* Pricing cards */}
@@ -135,7 +150,7 @@ export default function Pricing() {
                 {p.tag}
                 {p.popular && (
                   <span className="ml-2 text-xs px-2 py-1 rounded-full bg-black/5 dark:bg-white/10">
-                    Popular
+                    Paid
                   </span>
                 )}
               </div>

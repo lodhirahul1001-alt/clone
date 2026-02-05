@@ -138,11 +138,11 @@ export default function PrivateDashboard() {
             Track earnings, releases, and requests across your catalog.
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        {/* <div className="flex items-center gap-3">
           <Link to="/cms/create-release" className="dash-btn">
             + Create Release
           </Link>
-        </div>
+        </div> */}
       </div>
 
       {/* TOP KPI ROW (like your screenshot) */}

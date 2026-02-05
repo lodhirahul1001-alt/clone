@@ -34,7 +34,7 @@ function EqualizerOverlay() {
 function VinylBadge() {
   return (
     <motion.div
-      className="absolute -top-5 -right-5 w-20 h-20 rounded-full"
+      className="absolute -top- -right-5 w-20 h-20 rounded-full"
       animate={{ rotate: 360 }}
       transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
       style={{
@@ -70,7 +70,7 @@ export default function Hero() {
         style={{ background: "rgba(124,58,237,.45)" }}
       />
       <div
-        className="pointer-events-none absolute -bottom-44 right-0 w-96 h-96 blur-3xl rounded-full opacity-50"
+        className="pointer-events-none absolute -bottom-44 right-0 w-96 h-96 blur-3xl rounded-full opacity-80"
         style={{ background: "rgba(236,72,153,.30)" }}
       />
       <div
@@ -179,7 +179,7 @@ export default function Hero() {
             <motion.div variants={fadeUp} className="flex flex-wrap gap-3 pt-2">
               {[
                 { icon: <Globe2 className="w-4 h-4" />, t: "190+ Countries" },
-                { icon: <Music2 className="w-4 h-4" />, t: "25+ Platforms" },
+                { icon: <Music2 className="w-4 h-4" />, t: "150+ Platforms" },
                 { icon: <BarChart3 className="w-4 h-4" />, t: "Live Royalties" },
               ].map((x) => (
                 <div
@@ -212,35 +212,17 @@ export default function Hero() {
                 }}
               />
 
-              <div className="relative rounded-2xl overflow-hidden">
-                <motion.video
-                  className="w-full aspect-[16/10] object-cover"
-                  src={videoSrc}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  animate={{ scale: [1, 1.03, 1] }}
-                  transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-                />
-                <div className="absolute inset-0" style={{ background: "linear-gradient(0deg,var(--heroShadeTop2),var(--heroShadeMid2),transparent)" }} />
+              <div className="w-full aspect-[16/10] overflow-hidden rounded-2xl">
+  <iframe
+    className="w-full h-full"
+    // src="https://www.youtube.com/embed/7hRLOkORUDo?autoplay=1&mute=1&loop=1&playlist=7hRLOkORUDo&controls=0&showinfo=0&modestbranding=1"
+    title="Music Preview"
+    frameBorder="0"
+    allow="autoplay; encrypted-media"
+    allowFullScreen
+  />
+</div>
 
-                {/* floating now chip */}
-                <motion.div
-                  className="absolute top-4 left-4 inline-flex items-center gap-2 px-3 py-1 rounded-full glass-soft text-xs"
-                  animate={{ y: [0, -6, 0] }}
-                  transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <span
-                    className="h-1.5 w-1.5 rounded-full animate-pulse"
-                    style={{ background: "var(--accent-2)" }}
-                  />
-                  Now Playing • Release Preview
-                </motion.div>
-
-                <VinylBadge />
-                <EqualizerOverlay />
-              </div>
 
               {/* Platform chips + hover lift */}
               <div className="mt-4 flex flex-wrap gap-2">
