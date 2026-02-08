@@ -23,7 +23,7 @@ export default function VideoFooter() {
             Join the Digital Revolution
           </h2>
           <p className="text-lg text-gray-200 max-w-2xl mx-auto">
-            Transform your content with PR DIGITAL CMS. Start your journey today.
+            Transform your content with Silent Music Group. Start your journey today.
           </p>
         </motion.div>
       </div>

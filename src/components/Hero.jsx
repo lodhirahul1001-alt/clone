@@ -54,9 +54,6 @@ function VinylBadge() {
 }
 
 export default function Hero() {
-  const videoSrc =
-    "https://videos.pexels.com/video-files/6945625/6945625-hd_1920_1080_30fps.mp4";
-
   const fadeUp = {
     hidden: { opacity: 0, y: 18 },
     show: { opacity: 1, y: 0 },
@@ -213,15 +210,23 @@ export default function Hero() {
               />
 
               <div className="w-full aspect-[16/10] overflow-hidden rounded-2xl">
-  <iframe
-    className="w-full h-full"
-    // src="https://www.youtube.com/embed/7hRLOkORUDo?autoplay=1&mute=1&loop=1&playlist=7hRLOkORUDo&controls=0&showinfo=0&modestbranding=1"
-    title="Music Preview"
-    frameBorder="0"
-    allow="autoplay; encrypted-media"
-    allowFullScreen
-  />
-</div>
+                {/*
+                <iframe
+                  className="w-full h-full"
+                  src="https://www.youtube.com/embed/7hRLOkORUDo?autoplay=1&mute=1&loop=1&playlist=7hRLOkORUDo&controls=0&showinfo=0&modestbranding=1"
+                  title="Music Preview"
+                  frameBorder="0"
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                />
+                */}
+
+                <img
+                  src="/homeimage.jpeg"
+                  alt="Music distribution dashboard preview"
+                  className="w-full h-full object-cover"
+                />
+              </div>
 
 
               {/* Platform chips + hover lift */}

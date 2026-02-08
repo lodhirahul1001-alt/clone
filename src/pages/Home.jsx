@@ -120,7 +120,7 @@ export default function Home() {
         name: "Sarah Johnson",
         role: "Independent Artist",
         quote:
-          "PR DIGITAL CMS made distribution simple. The dashboard is beautiful and the analytics actually help me plan my next release.",
+          "Silent Music Group made distribution simple. The dashboard is beautiful and the analytics actually help me plan my next release.",
         stars: 5,
         avatar:
           "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=220",

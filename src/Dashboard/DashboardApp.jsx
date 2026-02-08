@@ -87,6 +87,7 @@ const menuItems = [
   { name: "Dashboard", path: "/cms", icon: LayoutDashboard },
 
   { name: "Release Music", path: "/cms/release-music", icon: Music },
+  { name: "Create Claim", path: "/cms/release-video", icon: Plus },
   { name: "Labels", path: "/cms/labels", icon: Tags },
   // ✅ Sub Labels
   { name: "Sub Labels", path: "/cms/sub-labels", icon: Tags },
@@ -143,7 +144,7 @@ const menuItems = [
               <Music className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-sm font-semibold">PR DIGITAL CMS</div>
+              <div className="text-sm font-semibold">Silent Music Group</div>
               <div className="text-xs" style={{ color: "var(--muted)" }}>Artist Console</div>
             </div>
           </div>
@@ -179,14 +180,16 @@ const menuItems = [
         </div> */}
 
         {/* Create */}
-        <button
-          onClick={handleCreate}
-          className="mt-4 w-full mt-10 dash-btn dash-btn-primary"
-          type="button"
-        >
-          <Plus className="w-4 h-4" />
-          Create Release
-        </button>
+        <div className="mt-4 w-full mt-10 space-y-3">
+          <button
+            onClick={handleCreate}
+            className="w-full dash-btn dash-btn-primary"
+            type="button"
+          >
+            <Plus className="w-4 h-4" />
+            Create Release
+          </button>
+        </div>
 
         {/* Nav */}
         <nav className="mt-6 space-y-1">
@@ -200,6 +203,7 @@ const menuItems = [
   .filter((m) =>
     [
       "/cms/release-music",
+      "/cms/release-video",
       "/cms/labels",
       "/cms/sub-labels",
       "/cms/my-artists",

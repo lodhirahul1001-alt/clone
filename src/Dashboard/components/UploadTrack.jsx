@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Upload, Music, Image, Check, AlertCircle, X } from 'lucide-react';
+import { motion } from 'framer-motion';
 import Marquee from '../../components/Marquee';
 import { useFormStorage } from '../hooks/useFormStorage';
 // import { AutoFillButton } from './AutoFillButton';
 // import { FormSaveIndicator } from './FormSaveIndicator';
 import { uploadTrackApi, updateTrackApi } from "../../apis/TrackApis";
 import { useNavigate } from "react-router";
+import YouTube from 'react-youtube';
 
 
 
@@ -68,8 +70,10 @@ export function UploadTrack({
     releaseDate: '',
     instrumental: false,
     parentalAdvisory: false,
+    youTubecontentID: false,
     isrcGeneration: false,
     crbtCut: false,
+    stores: [],
     audioFile: null,
     coverArt: null,
     agreeToTerms: false,
@@ -94,8 +98,10 @@ export function UploadTrack({
     releaseDate: '',
     instrumental: false,
     parentalAdvisory: false,
+    youTubecontentID: false,
     isrcGeneration: false,
     crbtCut: false,
+    stores: [],
     audioFile: null,
     coverArt: null,
     agreeToTerms: false,
@@ -126,8 +132,14 @@ export function UploadTrack({
           : "",
         instrumental: !!initialTrack.instrumental,
         parentalAdvisory: !!initialTrack.parentalAdvisory,
+        youTubecontentID: !!initialTrack.youTubecontentID,
         isrcGeneration: !!initialTrack.isrcGeneration,
         crbtCut: !!initialTrack.crbtCut,
+        stores: Array.isArray(initialTrack.stores)
+          ? initialTrack.stores
+          : (typeof initialTrack.store === "string" && initialTrack.store.trim())
+            ? initialTrack.store.split(",").map((s) => s.trim()).filter(Boolean)
+            : [],
         audioFile: null, // cannot edit
         coverArt: null,
       }));
@@ -192,6 +204,62 @@ export function UploadTrack({
     if (errors[fileType]) {
       setErrors((prev) => ({ ...prev, [fileType]: '' }));
     }
+  };
+
+  const storeOptions = [
+    {
+      name: 'Spotify',
+      short: 'SP',
+      color: '#1DB954',
+    },
+    {
+      name: 'Apple Music',
+      short: 'AM',
+      color: '#FA243C',
+    },
+    {
+      name: 'YouTube Music',
+      short: 'YT',
+      color: '#FF0000',
+    },
+    {
+      name: 'Amazon Music',
+      short: 'AZ',
+      color: '#FF9900',
+    },
+    {
+      name: 'Deezer',
+      short: 'DZ',
+      color: '#FEAA2D',
+    },
+    {
+      name: 'Tidal',
+      short: 'TD',
+      color: '#000000',
+    },
+    {
+      name: 'SoundCloud',
+      short: 'SC',
+      color: '#FF5500',
+    },
+    {
+      name: 'Pandora',
+      short: 'PD',
+      color: '#005483',
+    },
+  ];
+
+  const handleStoreToggle = (storeName) => {
+    setFormData((prev) => {
+      const exists = prev.stores.includes(storeName);
+      return {
+        ...prev,
+        stores: exists
+          ? prev.stores.filter((item) => item !== storeName)
+          : [...prev.stores, storeName],
+      };
+    });
+    setHasUnsavedChanges(true);
   };
 
   // const handleAutoFill = (autoFillData) => {
@@ -803,48 +871,155 @@ export function UploadTrack({
               </div>
             </section>
 
+            {/* Stores */}
+            <section className="mt-6">
+              <h2 className="text-lg font-semibold text-[color:var(--text)] mb-4">
+                Select Stores
+              </h2>
+
+              <div className="relative w-full overflow-hidden bg-[color:var(--panel)] border border-[color:var(--border)] rounded-xl p-4 sm:p-6">
+                <p className="text-sm text-[color:var(--muted)] mb-3">
+                  Choose where this track will be delivered.
+                </p>
+
+                <div className="relative overflow-hidden rounded-lg">
+                  <motion.div
+                    className="flex w-max gap-6 mb-6"
+                    animate={{ x: ['0%', '-50%'] }}
+                    transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+                  >
+                    {[...storeOptions, ...storeOptions].map((logo, index) => {
+                      const isSelected = formData.stores.includes(logo.name);
+                      return (
+                        <motion.button
+                          key={`row1-${index}`}
+                          type="button"
+                          onClick={() => handleStoreToggle(logo.name)}
+                          className={`flex-shrink-0 group focus:outline-none ${
+                            isSelected ? 'scale-105' : ''
+                          }`}
+                          whileHover={{ scale: 1.08, rotate: 3, transition: { duration: 0.2 } }}
+                        >
+                          <div
+                            className={`w-20 h-20 sm:w-24 sm:h-24 rounded-2xl shadow-lg flex items-center justify-center transition-all duration-300 group-hover:shadow-xl border-2 ${
+                              isSelected
+                                ? 'border-white ring-2 ring-black dark:ring-white'
+                                : 'border-transparent'
+                            }`}
+                            style={{ backgroundColor: logo.color }}
+                          >
+                            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl bg-white/80 dark:bg-black/70 text-black dark:text-white font-extrabold text-sm sm:text-lg flex items-center justify-center tracking-wide">
+                              {logo.short}
+                            </div>
+                          </div>
+                          <p className="text-center text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mt-2 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
+                            {logo.name}
+                          </p>
+                        </motion.button>
+                      );
+                    })}
+                  </motion.div>
+
+                  <motion.div
+                    className="flex w-max gap-6"
+                    animate={{ x: ['-50%', '0%'] }}
+                    transition={{ duration: 24, repeat: Infinity, ease: 'linear' }}
+                  >
+                    {[...storeOptions.slice().reverse(), ...storeOptions.slice().reverse()].map((logo, index) => {
+                      const isSelected = formData.stores.includes(logo.name);
+                      return (
+                        <motion.button
+                          key={`row2-${index}`}
+                          type="button"
+                          onClick={() => handleStoreToggle(logo.name)}
+                          className={`flex-shrink-0 group focus:outline-none ${
+                            isSelected ? 'scale-105' : ''
+                          }`}
+                          whileHover={{ scale: 1.08, rotate: -3, transition: { duration: 0.2 } }}
+                        >
+                          <div
+                            className={`w-20 h-20 sm:w-24 sm:h-24 rounded-2xl shadow-lg flex items-center justify-center transition-all duration-300 group-hover:shadow-xl border-2 ${
+                              isSelected
+                                ? 'border-white ring-2 ring-black dark:ring-white'
+                                : 'border-transparent'
+                            }`}
+                            style={{ backgroundColor: logo.color }}
+                          >
+                            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl bg-white/80 dark:bg-black/70 text-black dark:text-white font-extrabold text-sm sm:text-lg flex items-center justify-center tracking-wide">
+                              {logo.short}
+                            </div>
+                          </div>
+                          <p className="text-center text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mt-2 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
+                            {logo.name}
+                          </p>
+                        </motion.button>
+                      );
+                    })}
+                  </motion.div>
+
+                  <div className="absolute top-0 left-0 w-16 sm:w-24 h-full bg-gradient-to-r from-[color:var(--panel)] to-transparent pointer-events-none"></div>
+                  <div className="absolute top-0 right-0 w-16 sm:w-24 h-full bg-gradient-to-l from-[color:var(--panel)] to-transparent pointer-events-none"></div>
+                </div>
+
+                <p className="mt-3 text-xs text-[color:var(--muted)]">
+                  Selected: {formData.stores.length > 0 ? formData.stores.join(', ') : 'No store selected'}
+                </p>
+              </div>
+            </section>
+
             {/* Additional Options */}
-      <section className="mt-6">
-  <h2 className="text-lg font-semibold text-gray-200 mb-4">
-    Additional Options
-  </h2>
+            <section className="mt-6">
+              <h2 className="text-lg font-semibold text-[color:var(--text)] mb-4">
+                Additional Options
+              </h2>
 
-  <div className="space-y-3">
-    {/* ISRC Generation */}
-    <label className="flex items-center justify-between w-full bg-[color:var(--panel)] border border-[color:var(--border)] rounded-lg px-5 py-3 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-      {/* Left text */}
-      <div className="flex flex-col">
-        <span className="text-base font-semibold text-gray-100">ISRC Generation</span>
-        <span className="text-xs text-gray-400">Generate ISRC automatically</span>
-      </div>
+              <div className="space-y-3">
+                <label className="flex items-center justify-between w-full bg-[color:var(--panel)] border border-[color:var(--border)] rounded-lg px-5 py-3 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                  <div className="flex flex-col">
+                    <span className="text-base font-semibold text-[color:var(--text)]">YouTube Content ID</span>
+                    <span className="text-xs text-[color:var(--muted)]">Enable YouTube Content ID matching</span>
+                  </div>
 
-      {/* Right checkbox */}
-      <input
-        type="checkbox"
-        name="isrcGeneration"
-        checked={formData.isrcGeneration}
-        onChange={handleInputChange}
-        className="h-5 w-5 accent-blue-500 border-gray-500 rounded"
-      />
-    </label>
+                  <input
+                    type="checkbox"
+                    name="youTubecontentID"
+                    checked={formData.youTubecontentID}
+                    onChange={handleInputChange}
+                    className="h-5 w-5 accent-black dark:accent-white border-[color:var(--border)] rounded"
+                  />
+                </label>
 
-    {/* CRBT Cut */}
-    <label className="flex items-center justify-between w-full bg-[color:var(--panel)] border border-[color:var(--border)] rounded-lg px-5 py-3 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-      <div className="flex flex-col">
-        <span className="text-base font-semibold text-gray-100">CRBT Cut</span>
-        <span className="text-xs text-gray-400">Enable CRBT/Caller tune cut</span>
-      </div>
+                <label className="flex items-center justify-between w-full bg-[color:var(--panel)] border border-[color:var(--border)] rounded-lg px-5 py-3 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                  <div className="flex flex-col">
+                    <span className="text-base font-semibold text-[color:var(--text)]">ISRC Generation</span>
+                    <span className="text-xs text-[color:var(--muted)]">Generate ISRC automatically</span>
+                  </div>
 
-      <input
-        type="checkbox"
-        name="crbtCut"
-        checked={formData.crbtCut}
-        onChange={handleInputChange}
-        className="h-5 w-5 accent-blue-500 border-gray-500 rounded"
-      />
-    </label>
-  </div>
-</section>
+                  <input
+                    type="checkbox"
+                    name="isrcGeneration"
+                    checked={formData.isrcGeneration}
+                    onChange={handleInputChange}
+                    className="h-5 w-5 accent-black dark:accent-white border-[color:var(--border)] rounded"
+                  />
+                </label>
+
+                <label className="flex items-center justify-between w-full bg-[color:var(--panel)] border border-[color:var(--border)] rounded-lg px-5 py-3 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                  <div className="flex flex-col">
+                    <span className="text-base font-semibold text-[color:var(--text)]">CRBT Cut</span>
+                    <span className="text-xs text-[color:var(--muted)]">Enable CRBT/Caller tune cut</span>
+                  </div>
+
+                  <input
+                    type="checkbox"
+                    name="crbtCut"
+                    checked={formData.crbtCut}
+                    onChange={handleInputChange}
+                    className="h-5 w-5 accent-black dark:accent-white border-[color:var(--border)] rounded"
+                  />
+                </label>
+              </div>
+            </section>
 
             {/* Terms Agreement */}
      <section className="mt-6">

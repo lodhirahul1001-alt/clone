@@ -59,7 +59,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <div className="font-medium">Email</div>
-                    <div className="text-[color:var(--muted)]">example@teamwebflow.com</div>
+                    <div className="text-[color:var(--muted)]">info@silentmusicgroup.com</div>
                   </div>
                 </div>
 
@@ -69,7 +69,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <div className="font-medium">Address</div>
-                    <div className="text-[color:var(--muted)]">4074 Ebert Summit Suite 375, Lake Leonardchester</div>
+                    <div className="text-[color:var(--muted)]">01, Sagar House, Bara Ayma, Khadagpur (West Bengal) 721304</div>
                   </div>
                 </div>
 
@@ -79,7 +79,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <div className="font-medium">Phone</div>
-                    <div className="text-[color:var(--muted)]">+44 123 654 7890</div>
+                    <div className="text-[color:var(--muted)]">+91 9060070222 , +91 9734235095</div>
                   </div>
                 </div>
               </div>

@@ -79,6 +79,19 @@ const ReleaseMusic = () => {
     return "-";
   };
 
+  const getCoverArt = (track) => {
+    const candidates = [
+      track?.coverArtUrl,
+      track?.coverArt,
+      track?.artwork,
+      track?.albumArt,
+      track?.image,
+      track?.thumbnail,
+    ];
+
+    return candidates.find((value) => typeof value === "string" && value.trim());
+  };
+
   return (
     <div className="dash-page space-y-4 w-full overflow-x-hidden">
       {/* Header */}
@@ -180,7 +193,27 @@ const ReleaseMusic = () => {
                 tracks.map((track) => (
                   <tr key={track._id} className="border-t">
                     <td className="px-4 py-3">{track.publicId || "-"}</td>
-                    <td className="px-4 py-3">{track.album || track.title || "-"}</td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-3">
+                        {getCoverArt(track) ? (
+                          <img
+                            src={getCoverArt(track)}
+                            alt={track.album || track.title || "Cover art"}
+                            className="w-10 h-10 rounded-md object-cover border"
+                            style={{ borderColor: "var(--dash-border)" }}
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div
+                            className="w-10 h-10 rounded-md border flex items-center justify-center text-xs"
+                            style={{ borderColor: "var(--dash-border)", color: "var(--muted)" }}
+                          >
+                            N/A
+                          </div>
+                        )}
+                        <span>{track.album || track.title || "-"}</span>
+                      </div>
+                    </td>
                     <td className="px-4 py-3">{track.title || "-"}</td>
                     <td className="px-4 py-3">{track.label || "-"}</td>
                     <td className="px-4 py-3">

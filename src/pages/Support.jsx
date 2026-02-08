@@ -138,7 +138,7 @@ export default function Support() {
   };
 
   const handlePhoneCall = () => {
-    window.location.href = 'tel:+911234567890';
+    window.location.href = 'tel:+91 9060070222';
   };
 
   const handleWhatsAppClick = () => {
@@ -255,7 +255,7 @@ export default function Support() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-blue-900 dark:text-blue-100">Call Support</h3>
-                    <p className="text-blue-700 dark:text-blue-300 text-sm">+91 73660 42410 </p>
+                    <p className="text-blue-700 dark:text-blue-300 text-sm">+91 90600 70222 </p>
                     <p className="text-blue-600 dark:text-blue-400 text-xs">24/7 Available</p>
                   </div>
                 </div>
@@ -272,7 +272,7 @@ export default function Support() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-green-900 dark:text-green-100">WhatsApp</h3>
-                    <p className="text-green-700 dark:text-green-300 text-sm">PrDigital Community</p>
+                    <p className="text-green-700 dark:text-green-300 text-sm">Silent Music Group Community</p>
                     <p className="text-green-600 dark:text-green-400 text-xs">Instant Support</p>
                   </div>
                 </div>
@@ -289,7 +289,7 @@ export default function Support() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-purple-900 dark:text-purple-100">Email Support</h3>
-                    <p className="text-purple-700 dark:text-purple-300 text-sm">prdigitalcms@gmail.com</p>
+                    <p className="text-purple-700 dark:text-purple-300 text-sm">info@silentmusicgroup.com</p>
                     <p className="text-purple-600 dark:text-purple-400 text-xs">Response in 2-4 hours</p>
                   </div>
                 </div>
@@ -603,7 +603,7 @@ export default function Support() {
                     </div>
                     <div>
                       <h3 className="font-medium dark:text-[color:var(--text)]">Phone Support</h3>
-                      <p className="text-blue-600 dark:text-blue-400 font-medium">+91 73660 42410</p>
+                      <p className="text-blue-600 dark:text-blue-400 font-medium">+91 9060070222</p>
                       <p className="text-sm text-gray-600 dark:text-gray-400">Available 24/7</p>
                     </div>
                   </motion.div>
@@ -633,7 +633,7 @@ export default function Support() {
                     </div>
                     <div>
                       <h3 className="font-medium dark:text-[color:var(--text)]">Email Support</h3>
-                      <p className="text-purple-600 dark:text-purple-400 font-medium">prdigitalcms@gmail.com</p>
+                      <p className="text-purple-600 dark:text-purple-400 font-medium">info@silentmusicgroup.com</p>
                       <p className="text-sm text-gray-600 dark:text-gray-400">Response within 2-4 hours</p>
                     </div>
                   </motion.div>

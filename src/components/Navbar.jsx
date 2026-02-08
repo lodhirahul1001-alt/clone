@@ -41,7 +41,7 @@ export default function Navbar() {
             </div>
             <span className="font-semibold tracking-tight">
               <span className="sm:hidden">Music</span>
-              <span className="hidden sm:inline">Music Platform</span>
+              <span className="hidden sm:inline">Silent Music Group</span>
             </span>
           </Link>
 

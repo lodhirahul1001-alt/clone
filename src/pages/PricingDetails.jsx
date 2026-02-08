@@ -8,7 +8,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const UPI = {
   id: "prdigitalcms@upi", // ✅ change if needed
-  name: "PR DIGITAL CMS",
+  name: "Silent Music Group",
 };
 
 export default function PricingDetails() {

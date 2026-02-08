@@ -175,15 +175,17 @@ export default function Pricing() {
             </div>
 
             <Link
-              to={`/pricing-details?plan=${encodeURIComponent(
-                p.tag.split(" ")[0]
-              )}&billing=${billing}`}
+              to={p.tag === "Free Plan"
+                ? "/signup"
+                : `/pricing-details?plan=${encodeURIComponent(
+                    p.tag.split(" ")[0]
+                  )}&billing=${billing}`}
               className={classNames(
-                "mt-8 w-full text-center",
+                "mt-8 w-full text-center text-neon",
                 p.popular ? "btn-primary" : "btn-ghost"
               )}
             >
-              View payment details
+              {p.tag === "Free Plan" ? "Free Singup Now" : "View payment details"}
             </Link>
           </div>
         ))}

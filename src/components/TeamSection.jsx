@@ -1,3 +1,4 @@
+import { Instagram } from "lucide-react";
 import React from "react";
 
 const people = [
@@ -38,37 +39,37 @@ const people = [
   //   email: "james@prdigital.com",
   // },
   {
-    name: "Sarah Williams",
-    role: "Director of Sales",
-    photo: "https://images.unsplash.com/photo-1548142813-c348350df52b",
-    bio: "Sales strategist driving sustainable revenue growth.",
-    linkedin: "#",
-    twitter: "#",
-    email: "sarah@prdigital.com",
+    name: "Rahul Lodhi",
+    role: "Website Devloper",
+    photo: "https://i.pinimg.com/736x/e2/54/52/e254524205172a4716c61e6bbe6fc060.jpg",
+    bio: "Website Developer & Designer crafting modern, user-focused digital experiences.",
+    linkedin: "",
+    Instagram: "@lodhi2449",
+    email: "Lodhirahul7002@.com",
   },
   {
-    name: "David Miller",
-    role: "Lead Software Engineer",
-    photo: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91",
-    bio: "Senior developer with a love for clean architecture.",
+    name: "R.K Yadav",
+    role: "Director Of Sales",
+    photo: "https://i.pinimg.com/736x/9a/02/fc/9a02fce3161c5eef1bea77ea13be4a84.jpg",
+    bio: "Director of Sales with a strong focus on web solutions, growth strategy, and high-performing revenue teams.",
     linkedin: "#",
     twitter: "#",
     email: "david@prdigital.com",
   },
   {
-    name: "Emily Johnson",
-    role: "Marketing",
-    photo: "https://images.unsplash.com/photo-1546961329-78bef0414d7c",
-    bio: "Marketing expert specializing in SaaS brand growth.",
+    name: "Sagar Gupta",
+    role: "Manager",
+    photo: "https://i.pinimg.com/736x/4f/27/80/4f2780676e3703302c2adb8a0a91aba2.jpg",
+    bio: "Digital marketing specialist driving traffic, leads, and conversions through data-backed campaigns.",
     linkedin: "#",
     twitter: "#",
     email: "emily@prdigital.com",
   },
   {
-    name: "Jillie Bernard",
+    name: "A.K Yadav",
     role: "Founder & CEO",
-    photo: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e",
-    bio: "Visionary leader with 15+ years of industry experience.",
+    photo: "https://i.pinimg.com/736x/bb/ba/f2/bbbaf2989cb34bd317724a07ca350a0c.jpg",
+    bio: "Visionary leader with 15+ years of industry experience Web-focused company delivering modern, high-impact solutions..",
     linkedin: "#",
     twitter: "#",
     email: "jillie@prdigital.com",
@@ -81,7 +82,7 @@ export default function TeamSection({ compact = false }) {
       <div className="mx-auto max-w-6xl px-4">
         {/* Header */}
         <div className="text-center">
-          <h2 className="text-3xl md:text-5xl font-semibold tracking-tight text-[color:var(--text)]">
+          <h2 className="text-3xl text-neon md:text-5xl font-semibold tracking-tight ]">
             Meet Our Team
           </h2>
           <p className="mt-3 text-sm md:text-base text-[var(--muted)] max-w-2xl mx-auto">

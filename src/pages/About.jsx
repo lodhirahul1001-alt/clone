@@ -21,7 +21,7 @@ const About = () => {
         title="Join thousands of satisfied customers"
         subtitle="Trusted by artists, labels and studios across regions."
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {stats.map((s) => (
             <div
               key={s.label}
@@ -67,7 +67,7 @@ const About = () => {
           transition={{ duration: 0.6 }}
           className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6"
         >
-          About <span className="text-neon">PR DIGITAL CMS</span>
+          About <span className="text-neon">Silent Music Group</span>
         </motion.h1>
 
         <motion.p
@@ -75,7 +75,7 @@ const About = () => {
           transition={{ duration: 0.6, delay: 0.15 }}
           className="text-base sm:text-lg md:text-xl text-[color:var(--muted)] max-w-3xl mx-auto"
         >
-          PR DIGITAL CMS is the leading independent development partner for content creators,
+          Silent Music Group is the leading independent development partner for content creators,
           helping build audiences and careers through technology and services across distribution,
           publishing administration, and promotional services.
         </motion.p>
@@ -114,7 +114,7 @@ const About = () => {
           transition={{ duration: 0.6, delay: 0.15 }}
           className="text-base sm:text-lg md:text-xl text-[color:var(--muted)] max-w-3xl mx-auto"
         >
-          PR DIGITAL CMS&apos;s mission is to best serve content creators and brands in the early
+          Silent Music Group&apos;s mission is to best serve content creators and brands in the early
           stages of their development in the digital ecosystem, with fairness, expertise, respect
           and transparency.
         </motion.p>
