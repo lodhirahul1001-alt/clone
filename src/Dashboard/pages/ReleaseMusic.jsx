@@ -233,7 +233,7 @@ const ReleaseMusic = () => {
                           setEditTrack(track);
                           setShowUploadModal(true);
                         }}
-                        className="p-2 border rounded-lg"
+cz                        className="p-2 border rounded-lg"
                       >
                         <Edit2 size={16} />
                       </button>

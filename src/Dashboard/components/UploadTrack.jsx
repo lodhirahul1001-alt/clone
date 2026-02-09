@@ -207,46 +207,39 @@ export function UploadTrack({
   };
 
   const storeOptions = [
-    {
-      name: 'Spotify',
-      short: 'SP',
-      color: '#1DB954',
-    },
-    {
-      name: 'Apple Music',
-      short: 'AM',
-      color: '#FA243C',
-    },
-    {
-      name: 'YouTube Music',
-      short: 'YT',
-      color: '#FF0000',
-    },
-    {
-      name: 'Amazon Music',
-      short: 'AZ',
-      color: '#FF9900',
-    },
-    {
-      name: 'Deezer',
-      short: 'DZ',
-      color: '#FEAA2D',
-    },
-    {
-      name: 'Tidal',
-      short: 'TD',
-      color: '#000000',
-    },
-    {
-      name: 'SoundCloud',
-      short: 'SC',
-      color: '#FF5500',
-    },
-    {
-      name: 'Pandora',
-      short: 'PD',
-      color: '#005483',
-    },
+    { name: 'Spotify', short: 'SP', link: 'https://open.spotify.com', image: '/01 Spotify .png', color: '#1DB954' },
+    { name: 'Deezer', short: 'DZ', link: 'https://www.deezer.com', image: '/02 Deezeer.png', color: '#A238FF' },
+    { name: 'Apple Music', short: 'AM', link: 'https://music.apple.com', image: '/03 Apple music.png', color: '#FA243C' },
+    { name: 'JioSaavn', short: 'JS', link: 'https://www.jiosaavn.com', image: '/04 Savan.png', color: '#2BB673' },
+    { name: 'YouTube Music', short: 'YT', link: 'https://music.youtube.com', image: '/05 Yt Music.png', color: '#FF0000' },
+    { name: 'Gaana', short: 'GA', link: 'https://gaana.com', image: '/06 Gaana.png', color: '#EF3E36' },
+    { name: 'Wynk Music', short: 'WK', link: 'https://wynk.in', image: '/07 Wynk.png', color: '#FF1744' },
+    { name: 'Hungama', short: 'HG', link: 'https://www.hungama.com', image: '/08 Hungama.png', color: '#FF6F00' },
+    { name: 'Google Play Music', short: 'GP', link: 'https://play.google.com/music', image: '/09 Google Play Music.png', color: '#FFB300' },
+    { name: 'TIDAL', short: 'TD', link: 'https://tidal.com', image: '/10 Tindal.png', color: '#111111' },
+    { name: 'Amazon Music', short: 'AZ', link: 'https://music.amazon.in', image: '/11 Amazon Music.png', color: '#00A8E1' },
+    { name: 'Instagram', short: 'IG', link: 'https://www.instagram.com', image: '/12 instagram.png', color: '#E1306C' },
+    { name: 'Facebook', short: 'FB', link: 'https://www.facebook.com', image: '/13 Facebook.png', color: '#1877F2' },
+    { name: 'Beatport', short: 'BP', link: 'https://www.beatport.com', image: '/14 Beatportup.png', color: '#95D600' },
+    { name: '7digital', short: '7D', link: 'https://www.7digital.com', image: '/15 7 Digital.png', color: '#6F42C1' },
+    { name: 'Yandex Music', short: 'YM', link: 'https://music.yandex.com', image: '/16 Yandex.png', color: '#FFCC00' },
+    { name: 'Pandora', short: 'PD', link: 'https://www.pandora.com', image: '/17 Pandora.png', color: '#005483' },
+    { name: 'KKBOX', short: 'KK', link: 'https://www.kkbox.com', image: '/18 Kkbox.png', color: '#00C389' },
+    { name: 'Boomplay', short: 'BM', link: 'https://www.boomplay.com', image: '/20 Boomplay.png', color: '#FFB100' },
+    { name: 'Napster', short: 'NP', link: 'https://us.napster.com', image: '/21 Napster.png', color: '#1A1A1A' },
+    { name: 'Audius', short: 'AU', link: 'https://audius.co', image: '/22 Auduis.png', color: '#CC0FE0' },
+    { name: 'AWA', short: 'AW', link: 'https://awa.fm', image: '/23 Awa.png', color: '#6A00FF' },
+    { name: 'TuneIn', short: 'TI', link: 'https://tunein.com', image: '/24 Tunein.png', color: '#14A800' },
+    { name: 'SoundCloud', short: 'SC', link: 'https://soundcloud.com', image: '/25 Sound Cloud.png', color: '#FF5500' },
+    { name: 'Groove Music', short: 'GM', link: 'https://www.microsoft.com/groove', image: '/26 Groove.png', color: '#0078D4' },
+    { name: 'Netflix', short: 'NF', link: 'https://www.netflix.com', image: '/27 Netflix.png', color: '#E50914' },
+    { name: 'VK Music', short: 'VK', link: 'https://vk.com/music', image: '/28 Vk Music.png', color: '#2787F5' },
+    { name: 'Audiomack', short: 'AK', link: 'https://audiomack.com', image: '/29 Audiomack.png', color: '#F5A623' },
+    { name: 'CD Baby', short: 'CD', link: 'https://cdbaby.com', image: '/30 Cd Baby Music.png', color: '#1F2937' },
+    { name: 'Bandcamp', short: 'BC', link: 'https://bandcamp.com', image: '/31 Bandcamp.png', color: '#408294' },
+    { name: 'Anghami', short: 'AN', link: 'https://www.anghami.com', image: '/32 Anghami .png', color: '#7C3AED' },
+    { name: 'VEVO', short: 'VV', link: 'https://www.vevo.com', image: '/33 vevo.png', color: '#FF2D55' },
+    { name: 'TikTok', short: 'TT', link: 'https://www.tiktok.com', image: '/35 TikTOK.png', color: '#111111' },
   ];
 
   const handleStoreToggle = (storeName) => {
@@ -884,9 +877,9 @@ export function UploadTrack({
 
                 <div className="relative overflow-hidden rounded-lg">
                   <motion.div
-                    className="flex w-max gap-6 mb-6"
+                    className="flex w-max gap-5 mb-6"
                     animate={{ x: ['0%', '-50%'] }}
-                    transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+                    transition={{ duration: 34, repeat: Infinity, ease: 'linear' }}
                   >
                     {[...storeOptions, ...storeOptions].map((logo, index) => {
                       const isSelected = formData.stores.includes(logo.name);
@@ -901,18 +894,31 @@ export function UploadTrack({
                           whileHover={{ scale: 1.08, rotate: 3, transition: { duration: 0.2 } }}
                         >
                           <div
-                            className={`w-20 h-20 sm:w-24 sm:h-24 rounded-2xl shadow-lg flex items-center justify-center transition-all duration-300 group-hover:shadow-xl border-2 ${
+                            className={`w-24 h-24 sm:w-28 sm:h-28 rounded-2xl shadow-lg flex items-center justify-center transition-all duration-300 group-hover:shadow-xl border-2 ${
                               isSelected
                                 ? 'border-white ring-2 ring-black dark:ring-white'
                                 : 'border-transparent'
                             }`}
                             style={{ backgroundColor: logo.color }}
                           >
-                            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl bg-white/80 dark:bg-black/70 text-black dark:text-white font-extrabold text-sm sm:text-lg flex items-center justify-center tracking-wide">
-                              {logo.short}
+                            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-white dark:bg-black/80 flex items-center justify-center overflow-hidden p-1.5">
+                              <img
+                                src={logo.image}
+                                alt={logo.name}
+                                className="w-full h-full object-contain"
+                                loading="lazy"
+                                onError={(e) => {
+                                  e.currentTarget.style.display = 'none';
+                                  const fallback = e.currentTarget.nextElementSibling;
+                                  if (fallback) fallback.style.display = 'flex';
+                                }}
+                              />
+                              <span className="hidden w-full h-full items-center justify-center text-black dark:text-white font-bold text-xs sm:text-sm">
+                                {logo.short}
+                              </span>
                             </div>
                           </div>
-                          <p className="text-center text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mt-2 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
+                          <p className="text-center text-xs sm:text-sm font-medium text-[color:var(--muted)] mt-2 group-hover:text-[color:var(--text)] transition-colors">
                             {logo.name}
                           </p>
                         </motion.button>
@@ -921,9 +927,9 @@ export function UploadTrack({
                   </motion.div>
 
                   <motion.div
-                    className="flex w-max gap-6"
+                    className="flex w-max gap-5"
                     animate={{ x: ['-50%', '0%'] }}
-                    transition={{ duration: 24, repeat: Infinity, ease: 'linear' }}
+                    transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
                   >
                     {[...storeOptions.slice().reverse(), ...storeOptions.slice().reverse()].map((logo, index) => {
                       const isSelected = formData.stores.includes(logo.name);
@@ -938,18 +944,31 @@ export function UploadTrack({
                           whileHover={{ scale: 1.08, rotate: -3, transition: { duration: 0.2 } }}
                         >
                           <div
-                            className={`w-20 h-20 sm:w-24 sm:h-24 rounded-2xl shadow-lg flex items-center justify-center transition-all duration-300 group-hover:shadow-xl border-2 ${
+                            className={`w-24 h-24 sm:w-28 sm:h-28 rounded-2xl shadow-lg flex items-center justify-center transition-all duration-300 group-hover:shadow-xl border-2 ${
                               isSelected
                                 ? 'border-white ring-2 ring-black dark:ring-white'
                                 : 'border-transparent'
                             }`}
                             style={{ backgroundColor: logo.color }}
                           >
-                            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl bg-white/80 dark:bg-black/70 text-black dark:text-white font-extrabold text-sm sm:text-lg flex items-center justify-center tracking-wide">
-                              {logo.short}
+                            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-white dark:bg-black/80 flex items-center justify-center overflow-hidden p-1.5">
+                              <img
+                                src={logo.image}
+                                alt={logo.name}
+                                className="w-full h-full object-contain"
+                                loading="lazy"
+                                onError={(e) => {
+                                  e.currentTarget.style.display = 'none';
+                                  const fallback = e.currentTarget.nextElementSibling;
+                                  if (fallback) fallback.style.display = 'flex';
+                                }}
+                              />
+                              <span className="hidden w-full h-full items-center justify-center text-black dark:text-white font-bold text-xs sm:text-sm">
+                                {logo.short}
+                              </span>
                             </div>
                           </div>
-                          <p className="text-center text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mt-2 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
+                          <p className="text-center text-xs sm:text-sm font-medium text-[color:var(--muted)] mt-2 group-hover:text-[color:var(--text)] transition-colors">
                             {logo.name}
                           </p>
                         </motion.button>
