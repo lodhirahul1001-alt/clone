@@ -10,7 +10,13 @@ export default function Footer() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <div className="h-10 w-10 rounded-full border border-white/10 bg-white/5 grid place-items-center">
-                  <span className="text-neon font-bold">M</span>
+                   <div className="h-9 w-9 rounded-full grid place-items-center border border-white/10 bg-white/5">
+              <img
+                src="/newlogo.png"
+                alt="Silent Music Group logo"
+                className="h-7 w-7 object-contain"
+              />
+            </div>
                 </div>
                 <div className="font-semibold">Silent Music Group</div>
               </div>
@@ -100,7 +106,7 @@ export default function Footer() {
 
           <div className="mt-10 pt-6 border-t border-black/10 dark:border-white/10 text-sm text-[color:var(--muted)] flex flex-col sm:flex-row items-center justify-between gap-3">
             <span>© {new Date().getFullYear()} Silent Music Group All rights reserved.</span>
-            <span className="text-xs">UI theme: Light/Dark (purple glass)</span>
+            <span className="text-xs">Contect For Website Create - Lodhirahul7002@gmail.com</span>
           </div>
         </div>
       </div>

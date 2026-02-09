@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { NavLink, Link, useNavigate } from "react-router";
 import { Menu, X, LayoutDashboard, LogIn } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
@@ -10,6 +10,7 @@ import CallbackModal from "./CallbackModal";
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [callbackOpen, setCallbackOpen] = useState(false);
+  const navWrapperRef = useRef(null);
   const { isLoggedIn, user } = useSelector((s) => s.auth);
   
   
@@ -31,14 +32,37 @@ export default function Navbar() {
     }
   };
 
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (!open) return;
+      if (navWrapperRef.current && !navWrapperRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+
+    const handleEscape = (event) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    document.addEventListener("touchstart", handleOutsideClick);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener("touchstart", handleOutsideClick);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [open]);
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
-      <div className="container-page py-2 sm:py-4">
+      <div className="container-page py-2 sm:py-3" ref={navWrapperRef}>
         <div className="glass nav-surface flex items-center justify-between px-4 py-3">
           <Link to="/" className="flex items-center gap-2">
             <div className="h-9 w-9 rounded-full grid place-items-center border border-white/10 bg-white/5">
               <img
-                src="/log.png"
+                src="/newlogo.png"
                 alt="Silent Music Group logo"
                 className="h-7 w-7 object-contain"
               />
@@ -50,7 +74,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-1">
             <NavLink to="/" className={linkClass} end>
               Home
             </NavLink>
@@ -77,11 +101,11 @@ export default function Navbar() {
             </NavLink>
           </nav>
 
-          <div className="hidden md:flex items-center gap-2">
+          <div className="hidden lg:flex items-center gap-2">
             <ThemeToggle />
-            <button type="button" className="btn-ghost" onClick={() => setCallbackOpen(true)}>
+            {/* <button type="button" className="btn-ghost" onClick={() => setCallbackOpen(true)}>
               Request Callback
-            </button>
+            </button> */}
             {isLoggedIn ? (
               <>
                 <Link to="/user-dashboard" className="btn-primary">
@@ -101,7 +125,7 @@ export default function Navbar() {
           </div>
 
           {/* Mobile */}
-          <div className="md:hidden flex items-center gap-2">
+          <div className="lg:hidden flex items-center gap-2">
             <ThemeToggle />
 <button
               type="button"
@@ -115,7 +139,7 @@ export default function Navbar() {
         </div>
 
         {open && (
-          <div className="glass-soft mt-3 p-3 md:hidden max-h-[calc(100vh-110px)] overflow-y-auto">
+          <div className="mt-2 p-3 lg:hidden max-h-[calc(100vh-110px)] overflow-y-auto rounded-3xl border border-[color:var(--border)] bg-[color:var(--panel)] shadow-[0_12px_40px_rgba(0,0,0,0.22)] backdrop-blur-xl">
             <div className="flex flex-col">
               <NavLink to="/" className={linkClass} end onClick={() => setOpen(false)}>
                 Home

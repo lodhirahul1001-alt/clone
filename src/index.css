@@ -720,7 +720,7 @@ html:not(.dark) .dash-btn {
 }
 
 /* Dark Theme */
-[data-theme="dark"] {
+.dark {
   --dropdown-bg: #1e1e1e;
   --dropdown-text: #f5f5f5;
   --dropdown-hover-bg: #333333;
@@ -790,7 +790,7 @@ html.dark .dash-shell{
   background:
     radial-gradient(900px 520px at 18% 10%, rgba(124,58,237,.16), transparent 60%),
     radial-gradient(900px 520px at 75% 15%, rgba(236,72,153,.10), transparent 60%),
-    linear-gradient(180deg, #000000 0%, #03030a 50%, #000000 100%) !important;
+    var(--dash-bg);
 }
 
 html.dark .dash-sidebar{

@@ -117,7 +117,7 @@ export default function Home() {
   const testimonials = useMemo(
     () => [
       {
-        name: "Sarah Johnson",
+        name: "Praveen Rajput",
         role: "Independent Artist",
         quote:
           "Silent Music Group made distribution simple. The dashboard is beautiful and the analytics actually help me plan my next release.",

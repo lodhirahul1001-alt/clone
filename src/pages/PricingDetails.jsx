@@ -7,7 +7,7 @@ import { QRCodeCanvas } from "qrcode.react";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const UPI = {
-  id: "prdigitalcms@upi", // ✅ change if needed
+  id: "", // ✅ change if needed
   name: "Silent Music Group",
 };
 
@@ -141,7 +141,7 @@ export default function PricingDetails() {
   level="H"   // logo ke liye important
   includeMargin={true}
   imageSettings={{
-    src: "/gpay.png",   // 👈 public folder path
+    src: "/newcode.jpeg",   // 👈 public folder path
     height: 300,
     width: 300,
     excavate: true,

@@ -1,4 +1,4 @@
-import { Instagram } from "lucide-react";
+import { Facebook, Instagram, Youtube } from "lucide-react";
 import React from "react";
 
 const people = [
@@ -43,6 +43,11 @@ const people = [
     role: "Website Devloper",
     photo: "https://i.pinimg.com/736x/e2/54/52/e254524205172a4716c61e6bbe6fc060.jpg",
     bio: "Website Developer & Designer crafting modern, user-focused digital experiences.",
+    socials: {
+      instagram: "https://www.instagram.com/lodhi2449?igsh=NjE5NmcybnptdW1q",
+      youtube: "https://youtube.com/@indianavr?si=UITi8F2fazjvbCUr",
+      facebook: "https://www.facebook.com/share/1LJoWWwU24/",
+    },
     linkedin: "",
     Instagram: "@lodhi2449",
     email: "Lodhirahul7002@.com",
@@ -50,7 +55,7 @@ const people = [
   {
     name: "R.K Yadav",
     role: "Director Of Sales",
-    photo: "https://i.pinimg.com/736x/9a/02/fc/9a02fce3161c5eef1bea77ea13be4a84.jpg",
+    photo: "https://i.pinimg.com/736x/ef/dd/7e/efdd7ea17a90fe42a238b0cd11aac8fd.jpg",
     bio: "Director of Sales with a strong focus on web solutions, growth strategy, and high-performing revenue teams.",
     linkedin: "#",
     twitter: "#",
@@ -164,14 +169,37 @@ export default function TeamSection({ compact = false }) {
       </div>
 
       {/* Social icons */}
-      <div className="mt-7 flex justify-center gap-3">
-        {[1, 2, 3].map((i) => (
-          <span
-            key={i}
-            className="h-9 w-9 rounded-xl bg-[color:var(--panel-soft)] border border-[color:var(--border)] opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100 hover:scale-110 hover:shadow-lg"
-          />
-        ))}
-      </div>
+      {p.socials && (
+        <div className="mt-7 flex justify-center gap-3">
+          <a
+            href={p.socials.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${p.name} Instagram`}
+            className="h-9 w-9 rounded-xl bg-[color:var(--panel-soft)] border border-[color:var(--border)] flex items-center justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100 hover:scale-110 hover:shadow-lg"
+          >
+            <Instagram size={16} />
+          </a>
+          <a
+            href={p.socials.youtube}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${p.name} YouTube`}
+            className="h-9 w-9 rounded-xl bg-[color:var(--panel-soft)] border border-[color:var(--border)] flex items-center justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100 hover:scale-110 hover:shadow-lg"
+          >
+            <Youtube size={16} />
+          </a>
+          <a
+            href={p.socials.facebook}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${p.name} Facebook`}
+            className="h-9 w-9 rounded-xl bg-[color:var(--panel-soft)] border border-[color:var(--border)] flex items-center justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100 hover:scale-110 hover:shadow-lg"
+          >
+            <Facebook size={16} />
+          </a>
+        </div>
+      )}
 
       {/* Subtle shine */}
       <div
