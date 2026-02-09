@@ -160,9 +160,9 @@ export default function Support() {
       case 'Resolved':
         return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
       case 'Closed':
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
+        return 'bg-gray-200/70 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400';
       default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
+        return 'bg-gray-200/70 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400';
     }
   };
 
@@ -189,7 +189,7 @@ export default function Support() {
   });
 
   return (
-    <div className="p-6 dark:bg-gray-900 min-h-screen">
+    <div className="p-6 min-h-screen">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
@@ -215,7 +215,7 @@ export default function Support() {
         </motion.div>
 
         {/* Tab Navigation */}
-        <div className="flex space-x-1 mb-8 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
+        <div className="flex space-x-1 mb-8 glass-soft p-1 rounded-lg border border-[color:var(--border)]">
           {[
             { id: 'overview', label: 'Overview', icon: BookOpen },
             { id: 'tickets', label: 'My Tickets', icon: FileText },
@@ -229,8 +229,8 @@ export default function Support() {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-6 py-3 rounded-lg transition-all duration-200 flex-1 justify-center ${
                 activeTab === tab.id
-                  ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-md'
-                  : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-[color:var(--text)]'
+                  ? 'bg-gradient-to-r from-[var(--accent-1)] to-[var(--accent-2)] text-white shadow-md'
+                  : 'text-[color:var(--muted)] hover:text-[color:var(--text)]'
               }`}
             >
               <tab.icon className="w-5 h-5" />
@@ -302,7 +302,7 @@ export default function Support() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.1 }}
-                className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
+                className="glass-soft p-6 rounded-lg border border-[color:var(--border)]"
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -317,7 +317,7 @@ export default function Support() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.2 }}
-                className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
+                className="glass-soft p-6 rounded-lg border border-[color:var(--border)]"
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -332,7 +332,7 @@ export default function Support() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.3 }}
-                className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
+                className="glass-soft p-6 rounded-lg border border-[color:var(--border)]"
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -347,7 +347,7 @@ export default function Support() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.4 }}
-                className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
+                className="glass-soft p-6 rounded-lg border border-[color:var(--border)]"
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -360,7 +360,7 @@ export default function Support() {
             </div>
 
             {/* Popular Resources */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="glass-soft rounded-lg border border-[color:var(--border)] p-6">
               <h2 className="text-xl font-semibold mb-6 dark:text-[color:var(--text)]">Popular Resources</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {[
@@ -377,7 +377,7 @@ export default function Support() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
                     whileHover={{ scale: 1.02 }}
-                    className="flex items-center gap-3 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-all duration-200"
+                    className="flex items-center gap-3 p-4 rounded-lg border border-[color:var(--border)] hover:bg-white/5 cursor-pointer transition-all duration-200"
                   >
                     {/* Note: dynamic Tailwind class names below may need safelisting in production */}
                     <div className={`p-2 rounded-lg bg-${resource.color}-100 dark:bg-${resource.color}-900/20`}>
@@ -405,13 +405,13 @@ export default function Support() {
                     placeholder="Search tickets..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                    className="input-ui w-full pl-10 pr-4 py-2"
                   />
                 </div>
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                  className="input-ui px-4 py-2"
                 >
                   {categories.map((category) => (
                     <option key={category} value={category}>
@@ -427,10 +427,10 @@ export default function Support() {
             </div>
 
             {/* Tickets List */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="glass-soft rounded-lg border border-[color:var(--border)] overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-gray-50 dark:bg-gray-700">
+                  <thead className="bg-white/5">
                     <tr>
                       <th className="text-left p-4 font-medium text-gray-900 dark:text-gray-100">Ticket ID</th>
                       <th className="text-left p-4 font-medium text-gray-900 dark:text-gray-100">Subject</th>
@@ -447,7 +447,7 @@ export default function Support() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                        className="border-b border-[color:var(--border)] hover:bg-white/5 transition-colors"
                       >
                         <td className="p-4">
                           <span className="font-mono text-sm text-blue-600 dark:text-blue-400">{ticket.id}</span>
@@ -497,13 +497,13 @@ export default function Support() {
                   placeholder="Search FAQs..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                  className="input-ui w-full pl-10 pr-4 py-3"
                 />
               </div>
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                className="input-ui px-4 py-3"
               >
                 {categories.map((category) => (
                   <option key={category} value={category}>
@@ -521,11 +521,11 @@ export default function Support() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden"
+                  className="glass-soft rounded-lg border border-[color:var(--border)] overflow-hidden"
                 >
                   <button
                     onClick={() => setExpandedFAQ(expandedFAQ === faq.id ? null : faq.id)}
-                    className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                    className="w-full p-6 text-left flex items-center justify-between hover:bg-white/5 transition-colors"
                   >
                     <div className="flex-1">
                       <h3 className="font-medium text-gray-900 dark:text-[color:var(--text)] mb-1">{faq.question}</h3>
@@ -553,7 +553,7 @@ export default function Support() {
                         transition={{ duration: 0.3 }}
                         className="border-t border-gray-200 dark:border-gray-700"
                       >
-                        <div className="p-6 bg-gray-50 dark:bg-gray-700/50">
+                        <div className="p-6 bg-white/5">
                           <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{faq.answer}</p>
                           <div className="mt-4 flex items-center gap-4">
                             <span className="text-sm text-gray-500 dark:text-gray-400">Was this helpful?</span>
@@ -589,7 +589,7 @@ export default function Support() {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Contact Information */}
             <div className="space-y-6">
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+              <div className="glass-soft rounded-lg border border-[color:var(--border)] p-6">
                 <h2 className="text-xl font-semibold mb-6 dark:text-[color:var(--text)]">Get in Touch</h2>
 
                 <div className="space-y-4">
@@ -641,7 +641,7 @@ export default function Support() {
               </div>
 
               {/* Office Hours */}
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+              <div className="glass-soft rounded-lg border border-[color:var(--border)] p-6">
                 <h3 className="font-semibold mb-4 dark:text-[color:var(--text)] flex items-center gap-2">
                   <Clock className="w-5 h-5" />
                   Support Hours
@@ -670,7 +670,7 @@ export default function Support() {
             </div>
 
             {/* Quick Contact Form */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="glass-soft rounded-lg border border-[color:var(--border)] p-6">
               <h2 className="text-xl font-semibold mb-6 dark:text-[color:var(--text)]">Quick Message</h2>
 
               <form className="space-y-4">
@@ -678,7 +678,7 @@ export default function Support() {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Your Name</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                    className="input-ui w-full px-3 py-2"
                     placeholder="Enter your name"
                   />
                 </div>
@@ -687,7 +687,7 @@ export default function Support() {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
                   <input
                     type="email"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                    className="input-ui w-full px-3 py-2"
                     placeholder="Enter your email"
                   />
                 </div>
@@ -696,7 +696,7 @@ export default function Support() {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Subject</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                    className="input-ui w-full px-3 py-2"
                     placeholder="What can we help you with?"
                   />
                 </div>
@@ -705,7 +705,7 @@ export default function Support() {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Message</label>
                   <textarea
                     rows="4"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                    className="input-ui w-full px-3 py-2"
                     placeholder="Describe your issue or question..."
                   />
                 </div>
@@ -737,7 +737,7 @@ export default function Support() {
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
-                className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+                className="glass rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-[color:var(--border)]"
               >
                 <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
                   <h2 className="text-xl font-semibold dark:text-[color:var(--text)]">Create Support Ticket</h2>
@@ -759,7 +759,7 @@ export default function Support() {
                       required
                       value={newTicket.subject}
                       onChange={(e) => setNewTicket({ ...newTicket, subject: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                      className="input-ui w-full px-3 py-2"
                       placeholder="Brief description of your issue"
                     />
                   </div>
@@ -773,7 +773,7 @@ export default function Support() {
                         required
                         value={newTicket.category}
                         onChange={(e) => setNewTicket({ ...newTicket, category: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                        className="input-ui w-full px-3 py-2"
                       >
                         {categories.slice(1).map((category) => (
                           <option key={category} value={category}>
@@ -791,7 +791,7 @@ export default function Support() {
                         required
                         value={newTicket.priority}
                         onChange={(e) => setNewTicket({ ...newTicket, priority: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                        className="input-ui w-full px-3 py-2"
                       >
                         <option value="Low">Low</option>
                         <option value="Medium">Medium</option>
@@ -810,7 +810,7 @@ export default function Support() {
                       rows="4"
                       value={newTicket.description}
                       onChange={(e) => setNewTicket({ ...newTicket, description: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                      className="input-ui w-full px-3 py-2"
                       placeholder="Provide detailed information about your issue..."
                     />
                   </div>
@@ -821,7 +821,7 @@ export default function Support() {
                       type="file"
                       multiple
                       onChange={(e) => setNewTicket({ ...newTicket, files: e.target.files || undefined })}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                      className="input-ui w-full px-3 py-2"
                     />
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                       Max: 5 files, 10MB each. Supported: JPG, PNG, PDF, DOC, TXT
@@ -832,7 +832,7 @@ export default function Support() {
                     <button
                       type="button"
                       onClick={() => setShowTicketModal(false)}
-                      className="px-4 py-2 rounded-md border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-[color:var(--text)] hover:bg-gray-100 dark:hover:bg-gray-700"
+                      className="px-4 py-2 rounded-md border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-[color:var(--text)] hover:bg-gray-200/70 dark:hover:bg-gray-700"
                     >
                       Cancel
                     </button>

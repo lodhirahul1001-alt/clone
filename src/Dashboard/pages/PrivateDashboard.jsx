@@ -146,10 +146,10 @@ export default function PrivateDashboard() {
       </div>
 
       {/* TOP KPI ROW (like your screenshot) */}
-<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+<div className="grid gap-4  sm:grid-cols-2 lg:grid-cols-4">
 
   {/* Card 1 */}
-  <div className="rounded-2xl p-5 text-white bg-gradient-to-br from-pink-500 via-red-500 to-yellow-400 shadow-lg">
+  <div className="rounded-2xl  p-5 text-black bg-gradient-to-br from-pink-500 via-red-400 to-yellow-300 shadow-lg">
     <div className="flex justify-between items-center">
       <div>
         <p className="text-sm opacity-90">Total Earnings</p>
@@ -161,7 +161,7 @@ export default function PrivateDashboard() {
   </div>
 
   {/* Card 2 */}
-  <div className="rounded-2xl p-5 text-white bg-gradient-to-br from-blue-500 via-cyan-400 to-emerald-400 shadow-lg">
+  <div className="rounded-2xl p-5 text-black bg-gradient-to-br from-blue-500 via-cyan-300 to-emerald-500 shadow-lg">
     <div className="flex justify-between items-center">
       <div>
         <p className="text-sm opacity-90">Total Payout</p>
@@ -173,7 +173,7 @@ export default function PrivateDashboard() {
   </div>
 
   {/* Card 3 */}
-  <div className="rounded-2xl p-5 text-white bg-gradient-to-br from-purple-500 via-fuchsia-500 to-pink-500 shadow-lg">
+  <div className="rounded-2xl p-5 text-black bg-gradient-to-br from-purple-500 via-fuchsia-400 to-pink-400 shadow-lg">
     <div className="flex justify-between items-center">
       <div>
         <p className="text-sm opacity-90">Pending Payout</p>
@@ -185,7 +185,7 @@ export default function PrivateDashboard() {
   </div>
 
   {/* Card 4 */}
-  <div className="rounded-2xl p-5 text-white bg-gradient-to-br from-orange-500 via-amber-400 to-lime-400 shadow-lg">
+  <div className="rounded-2xl p-5 text-black bg-gradient-to-br from-orange-500 via-amber-300 to-lime-400 shadow-lg">
     <div className="flex justify-between items-center">
       <div>
         <p className="text-sm opacity-90">Top in 3 months</p>

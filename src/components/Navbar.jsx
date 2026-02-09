@@ -33,11 +33,15 @@ export default function Navbar() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
-      <div className="container-page py-4">
+      <div className="container-page py-2 sm:py-4">
         <div className="glass flex items-center justify-between px-4 py-3">
           <Link to="/" className="flex items-center gap-2">
             <div className="h-9 w-9 rounded-full grid place-items-center border border-white/10 bg-white/5">
-              <span className="text-neon font-bold">M</span>
+              <img
+                src="/log.png"
+                alt="Silent Music Group logo"
+                className="h-7 w-7 object-contain"
+              />
             </div>
             <span className="font-semibold tracking-tight">
               <span className="sm:hidden">Music</span>
@@ -111,7 +115,7 @@ export default function Navbar() {
         </div>
 
         {open && (
-          <div className="glass-soft mt-3 p-3 md:hidden">
+          <div className="glass-soft mt-3 p-3 md:hidden max-h-[calc(100vh-110px)] overflow-y-auto">
             <div className="flex flex-col">
               <NavLink to="/" className={linkClass} end onClick={() => setOpen(false)}>
                 Home

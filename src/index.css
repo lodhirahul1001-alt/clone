@@ -80,6 +80,8 @@
     color: var(--text);
     @apply antialiased transition-colors duration-300 min-h-screen;
   }
+  #root { min-height: 100vh; overflow-x: hidden; }
+  body { overflow-x: hidden; }
 
   h1, h2, h3, h4, h5, h6 { @apply font-sans; }
 }
@@ -154,7 +156,6 @@
 @layer components {
 
   .container-page { @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8; }
-  .container-page { @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-2; }
 
   .glass{
     background: var(--panel);
@@ -693,21 +694,18 @@ html:not(.dark) .dash-btn {
   color: white !important;
   border: none !important;
 }
-main {
-  padding-top: 50px; /* prevents overlap under sticky header */
-}
 .dash-header {
   height: 72px;
 }
 
 
 .app-shell {
-  padding-top: 96px;
+  padding-top: calc(96px + env(safe-area-inset-top, 0px));
 }
 
 @media (max-width: 768px) {
   .app-shell {
-    padding-top: 84px;
+    padding-top: calc(88px + env(safe-area-inset-top, 0px));
   }
 }
 
@@ -739,4 +737,46 @@ main {
 .drop-down:hover {
   background-color: var(--dropdown-hover-bg);
   color: var(--dropdown-hover-text);
+}
+
+/* Native select dropdown options: keep readable in both themes */
+select.input-ui option {
+  color: #111827;
+  background-color: #ffffff;
+}
+
+html.dark select.input-ui option {
+  color: #111827;
+  background-color: #ffffff;
+}
+
+/* ===== Dashboard dark-theme visibility + deeper black overrides ===== */
+.dash-nav-label{
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.dash-nav-item{
+  color: var(--text);
+  border: 1px solid transparent;
+}
+
+.dash-nav-item:hover{
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.10);
+}
+
+html.dark .dash-shell{
+  background:
+    radial-gradient(900px 520px at 18% 10%, rgba(124,58,237,.16), transparent 60%),
+    radial-gradient(900px 520px at 75% 15%, rgba(236,72,153,.10), transparent 60%),
+    linear-gradient(180deg, #000000 0%, #03030a 50%, #000000 100%) !important;
+}
+
+html.dark .dash-sidebar{
+  background: rgba(0,0,0,.92) !important;
+  border-right: 1px solid rgba(255,255,255,.12) !important;
 }

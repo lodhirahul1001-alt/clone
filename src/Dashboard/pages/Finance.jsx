@@ -132,7 +132,7 @@ export default function Finance() {
   };
 
   return (
-    <div className="p-6 dark:bg-gray-900 min-h-screen">
+    <div className="p-6 min-h-screen text-[color:var(--text)]">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold dark:text-[color:var(--text)]">Finance Report</h1>
         <button
@@ -145,15 +145,15 @@ export default function Finance() {
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex space-x-4 mb-6">
+      <div className="flex space-x-2 mb-6 glass-soft p-1 rounded-xl border border-[color:var(--border)] max-w-max">
         {['overview', 'transactions', 'withdraw'].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`px-4 py-2 rounded-lg capitalize transition-all duration-200 ${
               activeTab === tab
-                ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400'
-                : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50'
+                ? 'bg-gradient-to-r from-[var(--accent-1)] to-[var(--accent-2)] text-white'
+                : 'text-[color:var(--muted)] hover:bg-white/5'
             }`}
           >
             {tab}
@@ -283,12 +283,12 @@ export default function Finance() {
       {/* Withdraw Tab */}
       {activeTab === 'withdraw' && (
         <div className="max-w-2xl">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Request Withdrawal</h2>
+          <div className="glass-soft rounded-lg border border-[color:var(--border)] p-6">
+            <h2 className="text-lg font-semibold mb-4 text-[color:var(--text)]">Request Withdrawal</h2>
 
             <form onSubmit={handleWithdrawal} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
                   Amount (USD) <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -302,17 +302,17 @@ export default function Finance() {
                       amount: parseFloat(e.target.value) || 0
                     })
                   }
-                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white text-gray-900 placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-400"
+                  className="input-ui w-full px-3 py-2"
                   placeholder={`Max: $${maxWithdrawal}`}
                   required
                 />
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                <p className="text-xs text-[color:var(--muted)] mt-1">
                   Maximum withdrawal: ${maxWithdrawal} | Available balance: ${currentBalance}
                 </p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
                   Withdrawal Method <span className="text-red-500">*</span>
                 </label>
                 <select
@@ -323,7 +323,7 @@ export default function Finance() {
                       method: e.target.value
                     })
                   }
-                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100"
+                  className="input-ui w-full px-3 py-2"
                   required
                 >
                   <option value="bank">Bank Transfer</option>
@@ -334,14 +334,14 @@ export default function Finance() {
 
               {/* Bank Details Section */}
               {withdrawalRequest.method === 'bank' && (
-                <div className="space-y-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-600">
-                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                <div className="space-y-4 p-4 bg-white/5 rounded-lg border border-[color:var(--border)]">
+                  <h3 className="text-sm font-medium text-[color:var(--muted)] flex items-center gap-2">
                     <Building2 className="w-4 h-4" />
                     Bank Account Details
                   </h3>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
                       <User className="w-4 h-4 inline mr-1" />
                       Account Holder Name <span className="text-red-500">*</span>
                     </label>
@@ -349,14 +349,14 @@ export default function Finance() {
                       type="text"
                       value={withdrawalRequest.bankDetails.accountHolderName}
                       onChange={(e) => updateBankDetails('accountHolderName', e.target.value)}
-                      className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white text-gray-900 placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-400"
+                      className="input-ui w-full px-3 py-2"
                       placeholder="Enter full name as per bank records"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
                       <Hash className="w-4 h-4 inline mr-1" />
                       Account Number <span className="text-red-500">*</span>
                     </label>
@@ -364,14 +364,14 @@ export default function Finance() {
                       type="text"
                       value={withdrawalRequest.bankDetails.accountNumber}
                       onChange={(e) => updateBankDetails('accountNumber', e.target.value)}
-                      className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white text-gray-900 placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-400"
+                      className="input-ui w-full px-3 py-2"
                       placeholder="Enter bank account number"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
                       <Building2 className="w-4 h-4 inline mr-1" />
                       IFSC Code <span className="text-red-500">*</span>
                     </label>
@@ -379,13 +379,13 @@ export default function Finance() {
                       type="text"
                       value={withdrawalRequest.bankDetails.ifscCode}
                       onChange={(e) => updateBankDetails('ifscCode', e.target.value.toUpperCase())}
-                      className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white text-gray-900 placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-400"
+                      className="input-ui w-full px-3 py-2"
                       placeholder="Enter IFSC code (e.g., SBIN0001234)"
                       pattern="[A-Z]{4}0[A-Z0-9]{6}"
                       maxLength={11}
                       required
                     />
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    <p className="text-xs text-[color:var(--muted)] mt-1">
                       11-character IFSC code (e.g., SBIN0001234)
                     </p>
                   </div>
@@ -394,10 +394,10 @@ export default function Finance() {
 
               {/* PayPal Details */}
               {withdrawalRequest.method === 'paypal' && (
-                <div className="space-y-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-600">
-                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">PayPal Details</h3>
+                <div className="space-y-4 p-4 bg-white/5 rounded-lg border border-[color:var(--border)]">
+                  <h3 className="text-sm font-medium text-[color:var(--muted)]">PayPal Details</h3>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
                       PayPal Email <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -406,7 +406,7 @@ export default function Finance() {
                       onChange={(e) =>
                         setWithdrawalRequest({ ...withdrawalRequest, paypalEmail: e.target.value })
                       }
-                      className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white text-gray-900 placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-400"
+                      className="input-ui w-full px-3 py-2"
                       placeholder="Enter PayPal email address"
                       required
                     />
@@ -416,10 +416,10 @@ export default function Finance() {
 
               {/* Stripe Details */}
               {withdrawalRequest.method === 'stripe' && (
-                <div className="space-y-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-600">
-                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">Stripe Details</h3>
+                <div className="space-y-4 p-4 bg-white/5 rounded-lg border border-[color:var(--border)]">
+                  <h3 className="text-sm font-medium text-[color:var(--muted)]">Stripe Details</h3>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
                       Stripe Account ID <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -428,7 +428,7 @@ export default function Finance() {
                       onChange={(e) =>
                         setWithdrawalRequest({ ...withdrawalRequest, stripeAccountId: e.target.value })
                       }
-                      className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white text-gray-900 placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-400"
+                      className="input-ui w-full px-3 py-2"
                       placeholder="Enter Stripe account ID"
                       required
                     />
@@ -440,7 +440,7 @@ export default function Finance() {
                 <button
                   type="button"
                   onClick={resetWithdrawalForm}
-                  className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-[color:var(--text)]"
+                  className="px-4 py-2 text-[color:var(--muted)] hover:text-[color:var(--text)]"
                 >
                   Clear
                 </button>
@@ -459,12 +459,12 @@ export default function Finance() {
       {/* Enhanced Withdrawal Modal */}
       {showWithdrawModal && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-700 shadow-xl">
+          <div className="glass text-[color:var(--text)] rounded-lg p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-[color:var(--border)] shadow-xl">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Quick Withdrawal</h2>
+              <h2 className="text-xl font-semibold text-[color:var(--text)]">Quick Withdrawal</h2>
               <button
                 onClick={() => setShowWithdrawModal(false)}
-                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl"
+                className="text-[color:var(--muted)] hover:text-[color:var(--text)] text-2xl"
               >
                 ×
               </button>
@@ -472,7 +472,7 @@ export default function Finance() {
 
             <form onSubmit={handleWithdrawal} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
                   Amount (USD) <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -486,17 +486,17 @@ export default function Finance() {
                       amount: parseFloat(e.target.value) || 0
                     })
                   }
-                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white text-gray-900 placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-400"
+                  className="input-ui w-full px-3 py-2"
                   placeholder={`Max: $${maxWithdrawal}`}
                   required
                 />
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                <p className="text-xs text-[color:var(--muted)] mt-1">
                   Available: ${currentBalance} | Max: ${maxWithdrawal}
                 </p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
                   Method <span className="text-red-500">*</span>
                 </label>
                 <select
@@ -507,7 +507,7 @@ export default function Finance() {
                       method: e.target.value
                     })
                   }
-                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100"
+                  className="input-ui w-full px-3 py-2"
                   required
                 >
                   <option value="bank">Bank Transfer</option>
@@ -518,49 +518,49 @@ export default function Finance() {
 
               {/* Bank Details in Modal */}
               {withdrawalRequest.method === 'bank' && (
-                <div className="space-y-3 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-600">
-                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                <div className="space-y-3 p-3 bg-white/5 rounded-lg border border-[color:var(--border)]">
+                  <h3 className="text-sm font-medium text-[color:var(--muted)] flex items-center gap-2">
                     <Building2 className="w-4 h-4" />
                     Bank Details
                   </h3>
 
                   <div>
-                    <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                    <label className="block text-xs font-medium text-[color:var(--muted)] mb-1">
                       Account Holder Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       value={withdrawalRequest.bankDetails.accountHolderName}
                       onChange={(e) => updateBankDetails('accountHolderName', e.target.value)}
-                      className="w-full border border-gray-300 dark:border-gray-600 rounded px-2 py-1.5 text-sm bg-white text-gray-900 placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-400"
+                      className="input-ui w-full px-2 py-1.5 text-sm"
                       placeholder="Full name as per bank"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                    <label className="block text-xs font-medium text-[color:var(--muted)] mb-1">
                       Account Number <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       value={withdrawalRequest.bankDetails.accountNumber}
                       onChange={(e) => updateBankDetails('accountNumber', e.target.value)}
-                      className="w-full border border-gray-300 dark:border-gray-600 rounded px-2 py-1.5 text-sm bg-white text-gray-900 placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-400"
+                      className="input-ui w-full px-2 py-1.5 text-sm"
                       placeholder="Bank account number"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                    <label className="block text-xs font-medium text-[color:var(--muted)] mb-1">
                       IFSC Code <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       value={withdrawalRequest.bankDetails.ifscCode}
                       onChange={(e) => updateBankDetails('ifscCode', e.target.value.toUpperCase())}
-                      className="w-full border border-gray-300 dark:border-gray-600 rounded px-2 py-1.5 text-sm bg-white text-gray-900 placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-400"
+                      className="input-ui w-full px-2 py-1.5 text-sm"
                       placeholder="IFSC code (e.g., SBIN0001234)"
                       pattern="[A-Z]{4}0[A-Z0-9]{6}"
                       maxLength={11}
@@ -572,9 +572,9 @@ export default function Finance() {
 
               {/* PayPal in Modal */}
               {withdrawalRequest.method === 'paypal' && (
-                <div className="space-y-3 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-600">
+                <div className="space-y-3 p-3 bg-white/5 rounded-lg border border-[color:var(--border)]">
                   <div>
-                    <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                    <label className="block text-xs font-medium text-[color:var(--muted)] mb-1">
                       PayPal Email <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -583,7 +583,7 @@ export default function Finance() {
                       onChange={(e) =>
                         setWithdrawalRequest({ ...withdrawalRequest, paypalEmail: e.target.value })
                       }
-                      className="w-full border border-gray-300 dark:border-gray-600 rounded px-2 py-1.5 text-sm bg-white text-gray-900 placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-400"
+                      className="input-ui w-full px-2 py-1.5 text-sm"
                       placeholder="PayPal email address"
                       required
                     />
@@ -593,9 +593,9 @@ export default function Finance() {
 
               {/* Stripe in Modal */}
               {withdrawalRequest.method === 'stripe' && (
-                <div className="space-y-3 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-600">
+                <div className="space-y-3 p-3 bg-white/5 rounded-lg border border-[color:var(--border)]">
                   <div>
-                    <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                    <label className="block text-xs font-medium text-[color:var(--muted)] mb-1">
                       Stripe Account ID <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -604,7 +604,7 @@ export default function Finance() {
                       onChange={(e) =>
                         setWithdrawalRequest({ ...withdrawalRequest, stripeAccountId: e.target.value })
                       }
-                      className="w-full border border-gray-300 dark:border-gray-600 rounded px-2 py-1.5 text-sm bg-white text-gray-900 placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-400"
+                      className="input-ui w-full px-2 py-1.5 text-sm"
                       placeholder="Stripe account ID"
                       required
                     />
@@ -616,7 +616,7 @@ export default function Finance() {
                 <button
                   type="button"
                   onClick={() => setShowWithdrawModal(false)}
-                  className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-[color:var(--text)]"
+                  className="px-4 py-2 text-[color:var(--muted)] hover:text-[color:var(--text)]"
                 >
                   Cancel
                 </button>

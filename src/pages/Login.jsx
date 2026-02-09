@@ -28,7 +28,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-10 app-shell">
+    <div className="min-h-screen flex items-center justify-center px-4 py-10">
       <div className="container-page">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
           {/* Left welcome */}

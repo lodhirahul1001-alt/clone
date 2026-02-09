@@ -93,9 +93,9 @@ export default function OurServices() {
         `}
       </style>
 
-      <div className="bg-gray-50 py-20">
+      <div className="py-20">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
+          <h2 className="text-3xl font-bold text-center mb-12 text-[color:var(--text)]">
             Our Services
           </h2>
 
@@ -110,17 +110,17 @@ export default function OurServices() {
               return (
                 <div
                   key={index}
-                  className="glass-soft rounded-2xl p-6 shadow-sm hover:shadow-md transition-transform hover:scale-[1.02]"
+                  className="glass-soft rounded-2xl p-6 border border-[color:var(--border)] transition-transform hover:scale-[1.02]"
                 >
                   <div
                     className={`bg-gradient-to-r ${feature.color} w-12 h-12 rounded-lg flex items-center justify-center mb-6`}
                   >
                     {IconComponent && <IconComponent className="w-6 h-6 text-[color:var(--text)]" />}
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  <h3 className="text-lg font-semibold text-[color:var(--text)] mb-2">
                     {feature.title}
                   </h3>
-                  <p className="text-sm text-gray-600">{feature.description}</p>
+                  <p className="text-sm text-[color:var(--muted)]">{feature.description}</p>
                 </div>
               );
             })}

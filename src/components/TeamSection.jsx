@@ -69,7 +69,7 @@ const people = [
     name: "A.K Yadav",
     role: "Founder & CEO",
     photo: "https://i.pinimg.com/736x/bb/ba/f2/bbbaf2989cb34bd317724a07ca350a0c.jpg",
-    bio: "Visionary leader with 15+ years of industry experience Web-focused company delivering modern, high-impact solutions..",
+    bio: "Visionary leader with 10+ years of industry experience Web-focused company delivering modern, high-impact solutions..",
     linkedin: "#",
     twitter: "#",
     email: "jillie@prdigital.com",

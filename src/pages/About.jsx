@@ -4,7 +4,7 @@ import Section from "../components/Section";
 
 const stats = [
   { number: "150+", label: "Digital Platforms", icon: Globe },
-  { number: "1M+", label: "Content Creators", icon: Users },
+  { number: "50K+", label: "Content Creators", icon: Users },
   { number: "10+", label: "Years Experience", icon: Award },
 ];
 

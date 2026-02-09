@@ -133,7 +133,7 @@ const menuItems = [
 
       {/* Sidebar drawer */}
       <aside
-        className={`dash-sidebar fixed left-0 top-0 z-50 h-full w-[280px] md:w-[300px] p-5 transform transition-transform duration-200 md:translate-x-0 ${
+        className={`dash-sidebar fixed left-0 top-0 z-50 h-full w-[280px] md:w-[300px] p-5 overflow-y-auto transform transition-transform duration-200 md:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -305,7 +305,7 @@ function DashboardApp() {
     "U";
 
   return (
-      <div className="dash-shell dash-scope min-h-screen flex text-[color:var(--text)]">
+      <div className="dash-shell dash-scope min-h-screen flex text-[color:var(--text)] overflow-x-hidden">
         {/* Sidebar (mobile + desktop) */}
         <Sidebar
           isOpen={sidebarOpen}
@@ -314,7 +314,7 @@ function DashboardApp() {
 
         <NotificationsDrawer open={notifOpen} onClose={() => setNotifOpen(false)} />
         {/* Right side content */}
-        <div className="flex-1 flex flex-col min-h-screen md:ml-[300px] ml-0 mt-1">
+        <div className="flex-1 min-w-0 flex flex-col min-h-screen md:ml-[300px] ml-0">
           {/* Top bar */}
           <header className="dash-header sticky top-0 z-20 flex items-center justify-between px-3 sm:px-6 py-3">
             {/* Hamburger only on mobile */}
@@ -374,7 +374,7 @@ function DashboardApp() {
           {/* Holiday update banner (protected routes) */}
           {holidayBanner && (
             <div className="px-3 sm:px-6 mt-3">
-              <div className="dash-card-soft p-3 rounded-2xl flex items-start justify-between gap-3">
+              <div className="dash-card-soft p-3 rounded-2xl flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                 <div>
                   <div className="text-sm font-semibold">🎉 Holiday Update</div>
                   <div className="text-xs mt-1" style={{ color: "var(--muted)" }}>
@@ -394,7 +394,7 @@ function DashboardApp() {
           )}
 
           {/* Main content */}
-          <main className="flex-1 px-3 sm:px-6 py-4 sm:py-6 overflow-y-auto">
+          <main className="flex-1 min-w-0 overflow-x-hidden px-3 sm:px-6 py-4 sm:py-6 overflow-y-auto">
             {/* Yaha /cms/* ke nested routes */}
             <Routes>
               {/* /cms */}

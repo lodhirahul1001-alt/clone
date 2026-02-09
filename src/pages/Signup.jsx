@@ -28,7 +28,7 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-10 app-shell">
+    <div className="min-h-screen flex items-center justify-center px-4 py-10">
       <div className="container-page">
         <div className="glass p-8 md:p-10 max-w-2xl mx-auto">
           <h1 className="text-3xl md:text-4xl font-semibold">

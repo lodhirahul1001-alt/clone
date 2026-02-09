@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, BarChart3, Globe, Megaphone, Rocket, Shield, Users } from 'lucide-react';
 import OurServices from './OurServices';
@@ -43,18 +42,8 @@ const services = [
 ];
 
 export default function Services() {
-  const [darkMode] = useState(false);
-
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [darkMode]);
-
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen py-6">
       
       {/* Toggle Button */}
 
@@ -76,7 +65,7 @@ export default function Services() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8"
+          className="text-xl text-[color:var(--muted)] max-w-3xl mx-auto mb-8"
         >
           You pour your blood, sweat, and tears into creating content. Track its journey from submission to going live with our advanced tracking system.
         </motion.p>
@@ -100,13 +89,13 @@ export default function Services() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-gray-100 dark:bg-gray-900 rounded-2xl p-8 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"
+              className="glass-soft rounded-2xl p-8 border border-[color:var(--border)] hover:-translate-y-1 transition-all duration-200"
             >
               <div className={`bg-gradient-to-r ${service.color} w-12 h-12 rounded-lg flex items-center justify-center mb-6`}>
                 <service.icon className="w-6 h-6 text-[color:var(--text)]" />
               </div>
-              <h3 className="text-xl font-bold mb-4">{service.title}</h3>
-              <p className="text-gray-700 dark:text-gray-400">{service.description}</p>
+              <h3 className="text-xl font-bold mb-4 text-[color:var(--text)]">{service.title}</h3>
+              <p className="text-[color:var(--muted)]">{service.description}</p>
             </motion.div>
           ))}
         </div>

@@ -113,7 +113,7 @@ export default function SubLabels() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-[color:var(--text)] flex items-center gap-2">
+          <h1 className="text-2xl font-bold dark:text-[colodr:var(--text)] flex items-center gap-2">
             <Building2 className="w-6 ml-8 h-6 text-primary" />
             Sub Labels
           </h1>
