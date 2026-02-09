@@ -870,16 +870,16 @@ export function UploadTrack({
                 Select Stores
               </h2>
 
-              <div className="relative w-full overflow-hidden bg-[color:var(--panel)] border border-[color:var(--border)] rounded-xl p-4 sm:p-6">
+              <div className="relative w-full overflow-hidden bg-[color:var(--panel)] rounded-xl p-4 sm:p-6">
                 <p className="text-sm text-[color:var(--muted)] mb-3">
                   Choose where this track will be delivered.
                 </p>
 
-                <div className="relative overflow-hidden rounded-lg">
+                <div className="relative overflow-hidden rounded">
                   <motion.div
-                    className="flex w-max gap-5 mb-6"
+                    className="flex w-max items-center gap-1 mb-1"
                     animate={{ x: ['0%', '-50%'] }}
-                    transition={{ duration: 34, repeat: Infinity, ease: 'linear' }}
+                    transition={{ duration: 55, repeat: Infinity, ease: 'linear' }}
                   >
                     {[...storeOptions, ...storeOptions].map((logo, index) => {
                       const isSelected = formData.stores.includes(logo.name);
@@ -888,48 +888,32 @@ export function UploadTrack({
                           key={`row1-${index}`}
                           type="button"
                           onClick={() => handleStoreToggle(logo.name)}
-                          className={`flex-shrink-0 group focus:outline-none ${
-                            isSelected ? 'scale-105' : ''
-                          }`}
+                          className={`flex-shrink-0 group focus:outline-none ${isSelected ? 'scale-105' : ''}`}
                           whileHover={{ scale: 1.08, rotate: 3, transition: { duration: 0.2 } }}
                         >
-                          <div
-                            className={`w-24 h-24 sm:w-28 sm:h-28 rounded-2xl shadow-lg flex items-center justify-center transition-all duration-300 group-hover:shadow-xl border-2 ${
-                              isSelected
-                                ? 'border-white ring-2 ring-black dark:ring-white'
-                                : 'border-transparent'
-                            }`}
-                            style={{ backgroundColor: logo.color }}
-                          >
-                            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-white dark:bg-black/80 flex items-center justify-center overflow-hidden p-1.5">
-                              <img
-                                src={logo.image}
-                                alt={logo.name}
-                                className="w-full h-full object-contain"
-                                loading="lazy"
-                                onError={(e) => {
-                                  e.currentTarget.style.display = 'none';
-                                  const fallback = e.currentTarget.nextElementSibling;
-                                  if (fallback) fallback.style.display = 'flex';
-                                }}
-                              />
-                              <span className="hidden w-full h-full items-center justify-center text-black dark:text-white font-bold text-xs sm:text-sm">
-                                {logo.short}
-                              </span>
-                            </div>
-                          </div>
-                          <p className="text-center text-xs sm:text-sm font-medium text-[color:var(--muted)] mt-2 group-hover:text-[color:var(--text)] transition-colors">
-                            {logo.name}
-                          </p>
+                          <img
+                            src={logo.image}
+                            alt={logo.name}
+                            className={`w-16 h-16 sm:w-20 sm:h-20 object-contain transition-all duration-300 ${isSelected ? 'opacity-100 scale-105' : 'opacity-85 group-hover:opacity-100'}`}
+                            loading="lazy"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                              const fallback = e.currentTarget.nextElementSibling;
+                              if (fallback) fallback.style.display = 'flex';
+                            }}
+                          />
+                          <span className="hidden w-16 h-16 sm:w-20 sm:h-20 items-center justify-center text-black dark:text-white font-bold text-xs sm:text-sm">
+                            {logo.short}
+                          </span>
                         </motion.button>
                       );
                     })}
                   </motion.div>
 
                   <motion.div
-                    className="flex w-max gap-5"
+                    className="flex w-max items-center gap-1"
                     animate={{ x: ['-50%', '0%'] }}
-                    transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
+                    transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
                   >
                     {[...storeOptions.slice().reverse(), ...storeOptions.slice().reverse()].map((logo, index) => {
                       const isSelected = formData.stores.includes(logo.name);
@@ -938,39 +922,23 @@ export function UploadTrack({
                           key={`row2-${index}`}
                           type="button"
                           onClick={() => handleStoreToggle(logo.name)}
-                          className={`flex-shrink-0 group focus:outline-none ${
-                            isSelected ? 'scale-105' : ''
-                          }`}
+                          className={`flex-shrink-0 group focus:outline-none ${isSelected ? 'scale-105' : ''}`}
                           whileHover={{ scale: 1.08, rotate: -3, transition: { duration: 0.2 } }}
                         >
-                          <div
-                            className={`w-24 h-24 sm:w-28 sm:h-28 rounded-2xl shadow-lg flex items-center justify-center transition-all duration-300 group-hover:shadow-xl border-2 ${
-                              isSelected
-                                ? 'border-white ring-2 ring-black dark:ring-white'
-                                : 'border-transparent'
-                            }`}
-                            style={{ backgroundColor: logo.color }}
-                          >
-                            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-white dark:bg-black/80 flex items-center justify-center overflow-hidden p-1.5">
-                              <img
-                                src={logo.image}
-                                alt={logo.name}
-                                className="w-full h-full object-contain"
-                                loading="lazy"
-                                onError={(e) => {
-                                  e.currentTarget.style.display = 'none';
-                                  const fallback = e.currentTarget.nextElementSibling;
-                                  if (fallback) fallback.style.display = 'flex';
-                                }}
-                              />
-                              <span className="hidden w-full h-full items-center justify-center text-black dark:text-white font-bold text-xs sm:text-sm">
-                                {logo.short}
-                              </span>
-                            </div>
-                          </div>
-                          <p className="text-center text-xs sm:text-sm font-medium text-[color:var(--muted)] mt-2 group-hover:text-[color:var(--text)] transition-colors">
-                            {logo.name}
-                          </p>
+                          <img
+                            src={logo.image}
+                            alt={logo.name}
+                            className={`w-16 h-16 sm:w-20 sm:h-20 object-contain transition-all duration-300 ${isSelected ? 'opacity-100 scale-105' : 'opacity-85 group-hover:opacity-100'}`}
+                            loading="lazy"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                              const fallback = e.currentTarget.nextElementSibling;
+                              if (fallback) fallback.style.display = 'flex';
+                            }}
+                          />
+                          <span className="hidden w-16 h-16 sm:w-20 sm:h-20 items-center justify-center text-black dark:text-white font-bold text-xs sm:text-sm">
+                            {logo.short}
+                          </span>
                         </motion.button>
                       );
                     })}
