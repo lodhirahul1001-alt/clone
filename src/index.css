@@ -739,6 +739,23 @@ html:not(.dark) .dash-btn {
   color: var(--dropdown-hover-text);
 }
 
+/* Navbar surface tuned for both themes */
+.nav-surface{
+  background:
+    linear-gradient(90deg, rgba(124,58,237,.20), rgba(236,72,153,.14)),
+    rgba(255,255,255,.72);
+  border: 1px solid rgba(2,6,23,.12);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+html.dark .nav-surface{
+  background:
+    linear-gradient(90deg, rgba(124,58,237,.18), rgba(236,72,153,.12)),
+    rgba(0,0,0,.78);
+  border-color: rgba(255,255,255,.14);
+}
+
 /* Native select dropdown options: keep readable in both themes */
 select.input-ui option {
   color: #111827;
