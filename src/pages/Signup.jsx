@@ -41,7 +41,7 @@ export default function Signup() {
           <form onSubmit={handleSubmit(onSubmit)} className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
               <div className="relative">
-                <User className="h-4 w-4 absolute left-4 top-1/2 -translate-y-1/2 opacity-70" />
+                <User className="h-4 w-4 absolute left-4 top-1/2 -translate-y-1/2 text-[color:var(--muted)] opacity-90" />
                 <input
                   className="input-ui pl-11"
                   placeholder="Full name"
@@ -53,7 +53,7 @@ export default function Signup() {
 
             <div className="md:col-span-2">
               <div className="relative">
-                <Mail className="h-4 w-4 absolute left-4 top-1/2 -translate-y-1/2 opacity-70" />
+                <Mail className="h-4 w-4 absolute left-4 top-1/2 -translate-y-1/2 text-[color:var(--muted)] opacity-90" />
                 <input
                   className="input-ui pl-11"
                   placeholder="Email"
@@ -66,9 +66,9 @@ export default function Signup() {
 
             <div className="md:col-span-2">
               <div className="relative">
-                <Lock className="h-4 w-4 absolute left-4 top-1/2 -translate-y-1/2 opacity-70" />
+                <Lock className="h-4 w-4 absolute left-4 top-1/2 -translate-y-1/2 text-[color:var(--muted)] opacity-90" />
                 <input
-                  className="input-ui pl-11"
+                  className="input-ui pl-11 pr-12"
                   placeholder="Password"
                   type={showPassword ? "text" : "password"}
                   {...register("password", { required: "Password is required", minLength: { value: 6, message: "Min 6 characters" } })}
@@ -76,13 +76,13 @@ export default function Signup() {
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg text-[color:var(--muted)] hover:text-[color:var(--text)] hover:bg-black/10 dark:hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/50"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
               {showPassword ? (
-  <EyeOff className="h-4 w-4 text-[color:var(--text)] opacity-80" />
+  <EyeOff className="h-4 w-4" />
 ) : (
-  <Eye className="h-4 w-4 text-[color:var(--text)] opacity-80" />
+  <Eye className="h-4 w-4" />
 )}
 
                 </button>

@@ -57,7 +57,7 @@ export default function Login() {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
                 <div className="relative">
-                  <User className="h-4 w-4 absolute left-4 top-1/2 -translate-y-1/2 opacity-70" />
+                  <User className="h-4 w-4 absolute left-4 top-1/2 -translate-y-1/2 text-[color:var(--muted)] opacity-90" />
                   <input
                     className="input-ui pl-11"
                     placeholder="Email"
@@ -72,9 +72,9 @@ export default function Login() {
 
               <div>
                 <div className="relative">
-                  <Lock className="h-4 w-4 absolute left-4 top-1/2 -translate-y-1/2 opacity-70" />
+                  <Lock className="h-4 w-4 absolute left-4 top-1/2 -translate-y-1/2 text-[color:var(--muted)] opacity-90" />
                   <input
-                    className="input-ui pl-11"
+                    className="input-ui pl-11 pr-12"
                     placeholder="Password"
                     type={showPassword ? "text" : "password"}
                     {...register("password", { required: "Password is required" })}
@@ -82,13 +82,13 @@ export default function Login() {
                   <button
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg text-[color:var(--muted)] hover:text-[color:var(--text)] hover:bg-black/10 dark:hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/50"
                     aria-label={showPassword ? "Hide password" : "Show password"}
                   >
                     {showPassword ? (
-                      <EyeOff className="h-4 w-4 text-[color:var(--text)] opacity-80" />
+                      <EyeOff className="h-4 w-4" />
                     ) : (
-                      <Eye className="h-4 w-4 text-[color:var(--text)] opacity-80" />
+                      <Eye className="h-4 w-4" />
                     )}
                   </button>
                 </div>
