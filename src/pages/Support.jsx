@@ -618,7 +618,7 @@ export default function Support() {
                     </div>
                     <div>
                       <h3 className="font-medium dark:text-[color:var(--text)]">WhatsApp Community</h3>
-                      <p className="text-green-600 dark:text-green-400 font-medium">PrDigital Support</p>
+                      <p className="text-green-600 dark:text-green-400 font-medium">SMG Support Team </p>
                       <p className="text-sm text-gray-600 dark:text-gray-400">Join our community for instant help</p>
                     </div>
                   </motion.div>
