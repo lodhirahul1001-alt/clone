@@ -458,8 +458,8 @@ export default function Finance() {
 
       {/* Enhanced Withdrawal Modal */}
       {showWithdrawModal && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-          <div className="glass text-[color:var(--text)] rounded-lg p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-[color:var(--border)] shadow-xl">
+        <div className="fixed inset-0 z-[100] bg-black/100 backdrop-blur-l flex items-center justify-center p-4">
+          <div className="dash-card text-[color:var(--text)] rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-[color:var(--border)] shadow-2xl">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold text-[color:var(--text)]">Quick Withdrawal</h2>
               <button
@@ -518,7 +518,7 @@ export default function Finance() {
 
               {/* Bank Details in Modal */}
               {withdrawalRequest.method === 'bank' && (
-                <div className="space-y-3 p-3 bg-white/5 rounded-lg border border-[color:var(--border)]">
+                <div className="space-y-3 p-3 bg-[color:var(--panel-soft)] rounded-xl border border-[color:var(--border)]">
                   <h3 className="text-sm font-medium text-[color:var(--muted)] flex items-center gap-2">
                     <Building2 className="w-4 h-4" />
                     Bank Details
@@ -572,7 +572,7 @@ export default function Finance() {
 
               {/* PayPal in Modal */}
               {withdrawalRequest.method === 'paypal' && (
-                <div className="space-y-3 p-3 bg-white/5 rounded-lg border border-[color:var(--border)]">
+                <div className="space-y-3 p-3 bg-[color:var(--panel-soft)] rounded-xl border border-[color:var(--border)]">
                   <div>
                     <label className="block text-xs font-medium text-[color:var(--muted)] mb-1">
                       PayPal Email <span className="text-red-500">*</span>
@@ -593,7 +593,7 @@ export default function Finance() {
 
               {/* Stripe in Modal */}
               {withdrawalRequest.method === 'stripe' && (
-                <div className="space-y-3 p-3 bg-white/5 rounded-lg border border-[color:var(--border)]">
+                <div className="space-y-3 p-3 bg-[color:var(--panel-soft)] rounded-xl border border-[color:var(--border)]">
                   <div>
                     <label className="block text-xs font-medium text-[color:var(--muted)] mb-1">
                       Stripe Account ID <span className="text-red-500">*</span>

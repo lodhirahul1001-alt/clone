@@ -113,11 +113,11 @@ export default function SubLabels() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold dark:text-[colodr:var(--text)] flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-[color:var(--text)] flex items-center gap-2">
             <Building2 className="w-6 ml-8 h-6 text-primary" />
             Sub Labels
           </h1>
-          <p className="text-sm ml-8 text-gray-600 dark:text-gray-300 mt-1">
+          <p className="text-sm ml-8 text-[color:var(--muted)] mt-1">
             Create and manage sub-labels under your account.
           </p>
         </div>
@@ -134,57 +134,57 @@ export default function SubLabels() {
       {/* Search */}
       <div className="flex items-center ml-8 gap-3 flex-wrap">
         <div className="relative flex-1 min-w-[220px]">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-800" />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search sub labels..."
-            className="w-full pl-9 pr-3  py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-800/50 text-gray-900 dark:text-[color:var(--text)]"
+            className="w-full pl-9 pr-3 py-2 rounded-xl border border-[color:var(--border)] bg-[color:var(--panel)] text-[color:var(--text)]"
           />
         </div>
       </div>
 
       {/* Table */}
-      <div className="rounded-2xl border ml-8 border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/40 backdrop-blur overflow-hidden">
+      <div className="rounded-2xl border ml-8 border-[color:var(--border)] bg-[color:var(--panel)] backdrop-blur overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50/80 dark:bg-gray-900/60">
+            <thead className="bg-[color:var(--panel-soft)]">
               <tr className="text-left">
-                <th className="px-4 py-3 font-semibold text-gray-700 dark:text-gray-200">Name</th>
-                <th className="px-4 py-3 font-semibold text-gray-700 dark:text-gray-200">Email</th>
-                <th className="px-4 py-3 font-semibold text-gray-700 dark:text-gray-200">Phone</th>
-                <th className="px-4 py-3 font-semibold text-gray-700 dark:text-gray-200">City</th>
-                <th className="px-4 py-3 font-semibold text-gray-700 dark:text-gray-200">State</th>
-                <th className="px-4 py-3 font-semibold text-gray-700 dark:text-gray-200 text-right">Actions</th>
+                <th className="px-4 py-3 font-semibold text-[color:var(--muted)]">Name</th>
+                <th className="px-4 py-3 font-semibold text-[color:var(--muted)]">Email</th>
+                <th className="px-4 py-3 font-semibold text-[color:var(--muted)]">Phone</th>
+                <th className="px-4 py-3 font-semibold text-[color:var(--muted)]">City</th>
+                <th className="px-4 py-3 font-semibold text-[color:var(--muted)]">State</th>
+                <th className="px-4 py-3 font-semibold text-[color:var(--muted)] text-right">Actions</th>
               </tr>
             </thead>
 
             <tbody>
               {loading ? (
                 <tr>
-                  <td className="px-4 py-6 text-gray-600 dark:text-gray-300" colSpan={6}>
+                  <td className="px-4 py-6 text-[color:var(--muted)]" colSpan={6}>
                     Loading...
                   </td>
                 </tr>
               ) : filtered.length === 0 ? (
                 <tr>
-                  <td className="px-4 py-10 text-gray-600 dark:text-gray-300" colSpan={6}>
+                  <td className="px-4 py-10 text-[color:var(--muted)]" colSpan={6}>
                     No sub labels found.
                   </td>
                 </tr>
               ) : (
                 filtered.map((row) => (
-                  <tr key={row._id} className="border-t border-gray-100 dark:border-gray-800">
-                    <td className="px-4 py-3 text-gray-900 dark:text-[color:var(--text)] font-medium">{row.name}</td>
-                    <td className="px-4 py-3 text-gray-700 dark:text-gray-200">{row.email || "—"}</td>
-                    <td className="px-4 py-3 text-gray-700 dark:text-gray-200">{row.phone || "—"}</td>
-                    <td className="px-4 py-3 text-gray-700 dark:text-gray-200">{row.city || "—"}</td>
-                    <td className="px-4 py-3 text-gray-700 dark:text-gray-200">{row.state || "—"}</td>
+                  <tr key={row._id} className="border-t border-[color:var(--border)]">
+                    <td className="px-4 py-3 text-[color:var(--text)] font-medium">{row.name}</td>
+                    <td className="px-4 py-3 text-[color:var(--muted)]">{row.email || "—"}</td>
+                    <td className="px-4 py-3 text-[color:var(--muted)]">{row.phone || "—"}</td>
+                    <td className="px-4 py-3 text-[color:var(--muted)]">{row.city || "—"}</td>
+                    <td className="px-4 py-3 text-[color:var(--muted)]">{row.state || "—"}</td>
                     <td className="px-4 py-3">
                       <div className="flex justify-end gap-2">
                         <button
                           onClick={() => onEdit(row)}
-                          className="p-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-800 dark:text-gray-100"
+                          className="p-2 rounded-lg border border-[color:var(--border)] hover:bg-[color:var(--panel-soft)] text-[color:var(--text)]"
                           title="Edit"
                         >
                           <Pencil className="w-4 h-4" />
@@ -211,14 +211,14 @@ export default function SubLabels() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60" onClick={onClose} />
 
-          <div className="relative w-full max-w-xl rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-xl overflow-hidden">
-            <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
-              <h2 className="font-semibold text-gray-900 dark:text-[color:var(--text)]">
+          <div className="relative w-full max-w-xl rounded-2xl border border-[color:var(++border)] bg-[color:var(++panel)] bg-black shadow-xl overflow-hidden">
+            <div className="px-5 py-4 border-b border-[color:var(--border)] flex items-center justify-between">
+              <h2 className="font-semibold text-[color:var(--text)]">
                 {editing?._id ? "Edit Sub Label" : "Create Sub Label"}
               </h2>
               <button
                 onClick={onClose}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 text-gray-700 dark:text-gray-200"
+                className="p-2 rounded-lg hover:bg-[color:var(--panel-soft)] text-[color:var(--muted)]"
                 title="Close"
               >
                 <X className="w-4 h-4" />
@@ -226,63 +226,63 @@ export default function SubLabels() {
             </div>
 
             <form onSubmit={submit} className="p-5 space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-bla">
                 <div>
-                  <label className="text-xs text-gray-600 dark:text-gray-300">Name *</label>
+                  <label className="text-xs text-[color:var(--muted)]">Name *</label>
                   <input
                     value={form.name}
                     onChange={(e) => onChange("name", e.target.value)}
-                    className="mt-1 w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/50 text-gray-900 dark:text-[color:var(--text)]"
+                    className="mt-1 w-full px-3 py-2 rounded-xl border border-[color:var(--border)] bg-[color:var(--panel-soft)] text-[color:var(--text)]"
                     placeholder="Sub label name"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs text-gray-600 dark:text-gray-300">Email</label>
+                  <label className="text-xs text-[color:var(--muted)]">Email</label>
                   <input
                     value={form.email}
                     onChange={(e) => onChange("email", e.target.value)}
-                    className="mt-1 w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/50 text-gray-900 dark:text-[color:var(--text)]"
+                    className="mt-1 w-full px-3 py-2 rounded-xl border border-[color:var(--border)] bg-[color:var(--panel-soft)] text-[color:var(--text)]"
                     placeholder="email@domain.com"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs text-gray-600 dark:text-gray-300">Phone</label>
+                  <label className="text-xs text-[color:var(--muted)]">Phone</label>
                   <input
                     value={form.phone}
                     onChange={(e) => onChange("phone", e.target.value)}
-                    className="mt-1 w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/50 text-gray-900 dark:text-[color:var(--text)]"
+                    className="mt-1 w-full px-3 py-2 rounded-xl border border-[color:var(--border)] bg-[color:var(--panel-soft)] text-[color:var(--text)]"
                     placeholder="+91..."
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs text-gray-600 dark:text-gray-300">Website</label>
+                  <label className="text-xs text-[color:var(--muted)]">Website</label>
                   <input
                     value={form.website}
                     onChange={(e) => onChange("website", e.target.value)}
-                    className="mt-1 w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/50 text-gray-900 dark:text-[color:var(--text)]"
+                    className="mt-1 w-full px-3 py-2 rounded-xl border border-[color:var(--border)] bg-[color:var(--panel-soft)] text-[color:var(--text)]"
                     placeholder="https://"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs text-gray-600 dark:text-gray-300">City</label>
+                  <label className="text-xs text-[color:var(--muted)]">City</label>
                   <input
                     value={form.city}
                     onChange={(e) => onChange("city", e.target.value)}
-                    className="mt-1 w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/50 text-gray-900 dark:text-[color:var(--text)]"
+                    className="mt-1 w-full px-3 py-2 rounded-xl border border-[color:var(--border)] bg-[color:var(--panel-soft)] text-[color:var(--text)]"
                     placeholder="City"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs text-gray-600 dark:text-gray-300">State</label>
+                  <label className="text-xs text-[color:var(--muted)]">State</label>
                   <input
                     value={form.state}
                     onChange={(e) => onChange("state", e.target.value)}
-                    className="mt-1 w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/50 text-gray-900 dark:text-[color:var(--text)]"
+                    className="mt-1 w-full px-3 py-2 rounded-xl border border-[color:var(--border)] bg-[color:var(--panel-soft)] text-[color:var(--text)]"
                     placeholder="State"
                   />
                 </div>
@@ -292,7 +292,7 @@ export default function SubLabels() {
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-900"
+                  className="px-4 py-2 rounded-xl border border-[color:var(--border)] text-[color:var(--text)] hover:bg-[color:var(--panel-soft)]"
                 >
                   Cancel
                 </button>

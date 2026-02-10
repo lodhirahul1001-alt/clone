@@ -296,7 +296,7 @@
     radial-gradient(1000px 520px at 18% 10%, rgba(94, 17, 104, 0.18), transparent 60%),
     radial-gradient(900px 520px at 70% 5%, rgba(124,58,237,.18), transparent 60%),
     radial-gradient(900px 520px at 90% 60%, rgba(63, 6, 35, 0.1), transparent 60%),
-    var(--bg);
+    var(--dash-bg);
 }
 
 .dash-scope{
@@ -480,6 +480,23 @@
   padding: 10px 12px;
   color: var(--text);
   outline: none;
+}
+
+/* Themed select control for dashboard forms (Release Title / Claim Category etc.) */
+.dash-select-themed{
+  background: var(--panel-soft) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+}
+
+.dash-select-themed option{
+  background-color: #ffffff;
+  color: #111827;
+}
+
+html.dark .dash-select-themed option{
+  background-color: #0b1020;
+  color: #e5e7eb;
 }
 .dash-form input::placeholder,
 .dash-form textarea::placeholder{

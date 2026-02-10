@@ -152,12 +152,12 @@ export default function ReleaseVideo() {
         <form onSubmit={handleSubmit} className="dash-form space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">
-                Claim Category <span className="text-red-500">*</span>
+              <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
+                Claim Category <span className="text-red-500 text-">*</span>
               </label>
               <select
                 name="claimCategory"
-                className="dash-select"
+                className="dash-select dash-select-themed"
                 value={formData.claimCategory}
                 onChange={handleInputChange}
                 required
@@ -169,7 +169,7 @@ export default function ReleaseVideo() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
                 Claim URL <span className="text-red-500">*</span>
               </label>
               <input
@@ -184,12 +184,12 @@ export default function ReleaseVideo() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
                 Release Title <span className="text-red-500">*</span>
               </label>
               <select
                 name="releaseId"
-                className="dash-select"
+                className="dash-select dash-select-themed"
                 value={formData.releaseId}
                 onChange={handleInputChange}
                 required
@@ -206,7 +206,7 @@ export default function ReleaseVideo() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
                 ISRC <span className="text-red-500">*</span>
               </label>
               <input
@@ -223,7 +223,7 @@ export default function ReleaseVideo() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
                 CMS Name <span className="text-red-500">*</span>
               </label>
               <input
@@ -236,7 +236,7 @@ export default function ReleaseVideo() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">User Email</label>
+              <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">User Email</label>
               <input
                 type="email"
                 className="dash-input"
