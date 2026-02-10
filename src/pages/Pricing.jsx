@@ -150,7 +150,7 @@ export default function Pricing() {
                 {p.tag}
                 {p.popular && (
                   <span className="ml-2 text-xs px-2 py-1 rounded-full bg-black/5 dark:bg-white/10">
-                    Paid
+                    
                   </span>
                 )}
               </div>

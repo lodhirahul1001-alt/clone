@@ -4,7 +4,7 @@ import Section from "../components/Section";
 
 const stats = [
   { number: "150+", label: "Digital Platforms", icon: Globe },
-  { number: "50K+", label: "Audio Creators", icon: Users },
+  { number: "50K+", label: "Audio Distributed", icon: Users },
   { number: "10+", label: "Years Experience", icon: Award },
 ];
 
@@ -16,6 +16,26 @@ const fadeUp = {
 const About = () => {
   return (
     <div className="overflow-x-hidden">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mt-25 mb-20">
+        <motion.h1
+          {...fadeUp}
+          transition={{ duration: 0.6 }}
+          className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6"
+        >
+          About <span className="text-neon">Silent Music Group</span>
+        </motion.h1>
+
+        <motion.p
+          {...fadeUp}
+          transition={{ duration: 0.6, delay: 0.15 }}
+          className="text-base sm:text-lg md:text-xl text-[color:var(--muted)] max-w-3xl mx-auto"
+        >
+          Silent Music Group is the leading independent development partner for content creators,
+          helping build audiences and careers through technology and services across distribution,
+          publishing administration, and promotional services.
+        </motion.p>
+      </section>
+
       <Section
         id="trust"
         title="Join thousands of satisfied customers"
@@ -61,27 +81,9 @@ const About = () => {
         </div>
       </Section>
 
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-20">
-        <motion.h1
-          {...fadeUp}
-          transition={{ duration: 0.6 }}
-          className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6"
-        >
-          About <span className="text-neon">Silent Music Group</span>
-        </motion.h1>
+      
 
-        <motion.p
-          {...fadeUp}
-          transition={{ duration: 0.6, delay: 0.15 }}
-          className="text-base sm:text-lg md:text-xl text-[color:var(--muted)] max-w-3xl mx-auto"
-        >
-          Silent Music Group is the leading independent development partner for content creators,
-          helping build audiences and careers through technology and services across distribution,
-          publishing administration, and promotional services.
-        </motion.p>
-      </section>
-
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
+      {/* <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {stats.map((stat, index) => (
             <motion.div
@@ -98,8 +100,8 @@ const About = () => {
             </motion.div>
           ))}
         </div>
-      </section>
-
+      </section> */}
+{/* 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-24">
         <motion.h2
           {...fadeUp}
@@ -118,7 +120,7 @@ const About = () => {
           stages of their development in the digital ecosystem, with fairness, expertise, respect
           and transparency.
         </motion.p>
-      </section>
+      </section> */}
     </div>
   );
 };

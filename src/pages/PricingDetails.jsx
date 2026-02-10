@@ -141,7 +141,7 @@ export default function PricingDetails() {
   level="H"   // logo ke liye important
   includeMargin={true}
   imageSettings={{
-    src: "/newcode.jpeg",   // 👈 public folder path
+    src: "/gpayy.jpeg",   // 👈 public folder path
     height: 300,
     width: 300,
     excavate: true,

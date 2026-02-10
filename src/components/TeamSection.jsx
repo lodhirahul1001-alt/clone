@@ -1,4 +1,4 @@
-import { Facebook, Instagram, Youtube } from "lucide-react";
+import { Facebook, Instagram, MessageCircle, Youtube } from "lucide-react";
 import React from "react";
 
 const people = [
@@ -47,6 +47,7 @@ const people = [
       instagram: "https://www.instagram.com/lodhi2449?igsh=NjE5NmcybnptdW1q",
       youtube: "https://youtube.com/@indianavr?si=UITi8F2fazjvbCUr",
       facebook: "https://www.facebook.com/share/1LJoWWwU24/",
+      whatsapp: "https://chat.whatsapp.com/BCuYjUJIArzJr8sjUy39cz",
     },
     linkedin: "",
     Instagram: "@lodhi2449",
@@ -197,6 +198,15 @@ export default function TeamSection({ compact = false }) {
             className="h-9 w-9 rounded-xl bg-[color:var(--panel-soft)] border border-[color:var(--border)] flex items-center justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100 hover:scale-110 hover:shadow-lg"
           >
             <Facebook size={16} />
+          </a>
+          <a
+            href={p.socials.whatsapp}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${p.name} WhatsApp`}
+            className="h-9 w-9 rounded-xl bg-[color:var(--panel-soft)] border border-[color:var(--border)] flex items-center justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100 hover:scale-110 hover:shadow-lg"
+          >
+            <MessageCircle size={16} />
           </a>
         </div>
       )}
