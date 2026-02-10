@@ -39,8 +39,8 @@ export default function Pricing() {
       {
         tag: "Free Plan",
         popular: false,
-        // price: yearly ? "$39" : "₹00 Off",
-        // cadence: yearly ? "/mo (billed yearly)" : "0/month",
+        price: yearly ? "₹0" : "₹0",
+        cadence: yearly ? "/yearly" : "/monthly",
         description: "Perfect for artists starting distribution.",
         features: [
        "Upload unlimited releases",
@@ -99,9 +99,9 @@ export default function Pricing() {
   }, [billing]);
 
   return (
-    <div className="container-page  pt-14 pb-24">
+    <div className="container-page pt-10 sm:pt-14 pb-16 sm:pb-24">
       <div className="text-center">
-        <h1 className="text-4xl md:text-5xl font-semibold tracking-tight">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight leading-tight">
           Try it first, then <span className="text-neon">choose a plan</span>.
         </h1>
         <p className="mt-4 text-[color:var(--muted)] max-w-2xl mx-auto">
@@ -133,12 +133,12 @@ export default function Pricing() {
       </div>
 
       {/* Pricing cards */}
-      <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-19">
+      <div className="mt-10 sm:mt-12 grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
         {planCards.map((p, idx) => (
           <div
             key={idx}
             className={classNames(
-              "glass p-7 relative overflow-hidden",
+              "glass p-5 sm:p-7 relative overflow-hidden h-full",
               p.popular ? "ring-2 ring-[color:var(--accent-1)]" : ""
             )}
           >
@@ -150,7 +150,7 @@ export default function Pricing() {
                 {p.tag}
                 {p.popular && (
                   <span className="ml-2 text-xs px-2 py-1 rounded-full bg-black/5 dark:bg-white/10">
-                    
+                    Popular
                   </span>
                 )}
               </div>
@@ -181,11 +181,11 @@ export default function Pricing() {
                     p.tag.split(" ")[0]
                   )}&billing=${billing}`}
               className={classNames(
-                "mt-8 w-full text-center text-neon",
+                "mt-8 w-full text-center",
                 p.popular ? "btn-primary" : "btn-ghost"
               )}
             >
-              {p.tag === "Free Plan" ? "Free Singup Now" : "View payment details"}
+              {p.tag === "Free Plan" ? "Free Signup Now" : "View payment details"}
             </Link>
           </div>
         ))}

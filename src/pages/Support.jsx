@@ -198,8 +198,8 @@ export default function Support() {
           className="flex justify-between items-center mb-8"
         >
           <div>
-            <h1 className="text-3xl font-bold dark:text-[color:var(--text)] mb-2">Help & Support Center</h1>
-            <p className="text-gray-600 dark:text-gray-300">
+            <h1 className="text-3xl font-bold text-[color:var(--text)] mb-2">Help & Support Center</h1>
+            <p className="text-[color:var(--muted)]">
               Get help, find answers, and connect with our support team
             </p>
           </div>
@@ -528,8 +528,8 @@ export default function Support() {
                     className="w-full p-6 text-left flex items-center justify-between hover:bg-white/5 transition-colors"
                   >
                     <div className="flex-1">
-                      <h3 className="font-medium text-gray-900 dark:text-[color:var(--text)] mb-1">{faq.question}</h3>
-                      <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+                      <h3 className="font-medium text-[color:var(--text)] mb-1">{faq.question}</h3>
+                      <div className="flex items-center gap-4 text-sm text-[color:var(--muted)]">
                         <span className="bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-400 px-2 py-1 rounded">
                           {faq.category}
                         </span>
@@ -540,7 +540,7 @@ export default function Support() {
                       </div>
                     </div>
                     <motion.div animate={{ rotate: expandedFAQ === faq.id ? 90 : 0 }} transition={{ duration: 0.2 }}>
-                      <ChevronRight className="w-5 h-5 text-gray-400" />
+                      <ChevronRight className="w-5 h-5 text-[color:var(--muted)]" />
                     </motion.div>
                   </button>
 
@@ -551,12 +551,12 @@ export default function Support() {
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.3 }}
-                        className="border-t border-gray-200 dark:border-gray-700"
+                        className="border-t border-[color:var(--border)]"
                       >
-                        <div className="p-6 bg-white/5">
-                          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{faq.answer}</p>
+                        <div className="p-6 bg-[color:var(--panel-soft)]">
+                          <p className="text-[color:var(--text)] leading-relaxed">{faq.answer}</p>
                           <div className="mt-4 flex items-center gap-4">
-                            <span className="text-sm text-gray-500 dark:text-gray-400">Was this helpful?</span>
+                            <span className="text-sm text-[color:var(--muted)]">Was this helpful?</span>
                             <div className="flex gap-2">
                               <motion.button
                                 whileHover={{ scale: 1.1 }}
