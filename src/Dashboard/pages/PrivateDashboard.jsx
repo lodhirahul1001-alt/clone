@@ -21,7 +21,6 @@ import {
   Award,
 } from "lucide-react";
 import { AxiosIntance } from "../../config/Axios.Intance";
-import { getFinanceSummaryApi } from "../../apis/FinanceApis";
 
 function StatCard({ icon: Icon, title, value, sub }) {
   return (
@@ -68,14 +67,11 @@ export default function PrivateDashboard() {
 
   const [activeNotice, setActiveNotice] = useState(null);
 
-  const [financeLoading, setFinanceLoading] = useState(false);
-  const [financeSummary, setFinanceSummary] = useState(null);
-
   useEffect(() => {
     const loadNotice = async () => {
       try {
         const res = await AxiosIntance.get("/notification/active");
-        setActiveNotice(res?.data?.notification || null);
+        setActiveNotice(res?.data?.item || null);
       } catch {
         // ignore
       }
@@ -83,61 +79,32 @@ export default function PrivateDashboard() {
     loadNotice();
   }, []);
 
-  useEffect(() => {
-    const loadFinance = async () => {
-      try {
-        setFinanceLoading(true);
-        const res = await getFinanceSummaryApi();
-        setFinanceSummary(res);
-      } catch {
-        // ignore (dashboard should still render)
-      } finally {
-        setFinanceLoading(false);
-      }
-    };
-    loadFinance();
-  }, []);
-
-  const formatINR = (n) => {
-    const num = Number(n || 0);
-    try {
-      return new Intl.NumberFormat("en-IN", {
-        style: "currency",
-        currency: "INR",
-        maximumFractionDigits: 2,
-      }).format(num);
-    } catch {
-      return `INR ${num.toFixed(2)}`;
-    }
-  };
-
-  const totals = financeSummary?.totals || {
-    totalEarnings: 0,
-    totalPaid: 0,
-    pendingWithdrawals: 0,
-    availableBalance: 0,
-  };
-
+  // Demo numbers (wire with real API later)
   const summary = useMemo(
     () => ({
-      totalEarnings: formatINR(totals.totalEarnings),
-      totalPayout: formatINR(totals.totalPaid),
-      pendingPayout: formatINR(totals.pendingWithdrawals),
+      totalEarnings: "INR 0.00",
+      totalPayout: "INR 0.00",
+      pendingPayout: "INR 0.00",
       topPlatform: "YouTube",
       musicCreated: 0,
       musicReleased: 0,
       videosCreated: 0,
       videosReleased: 0,
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [totals.totalEarnings, totals.totalPaid, totals.pendingWithdrawals]
+    []
   );
 
-  const earningData = useMemo(() => {
-    const months = financeSummary?.monthly || [];
-    const last6 = months.slice(-6);
-    return last6.map((m) => ({ name: m.name, amount: m.amount || 0 }));
-  }, [financeSummary]);
+  const earningData = useMemo(
+    () => [
+      { name: "Jan", amount: 0 },
+      { name: "Feb", amount: 0 },
+      { name: "Mar", amount: 0 },
+      { name: "Apr", amount: 0 },
+      { name: "May", amount: 0 },
+      { name: "Jun", amount: 0 },
+    ],
+    []
+  );
 
   const news = useMemo(
     () => [

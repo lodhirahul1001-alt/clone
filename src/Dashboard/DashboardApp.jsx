@@ -48,6 +48,7 @@ import AdminPayments from "./pages/AdminPayments";
 import AdminClaims from "./pages/AdminClaims";
 import AdminCallbacks from "./pages/AdminCallbacks";
 import AdminNotification from "./pages/AdminNotification";
+import AdminOverview from "./pages/AdminOverview";
 
 import { useSelector, useDispatch } from "react-redux";
 import { removeUser } from "../features/reducers/AuthSlice";
@@ -103,6 +104,7 @@ const menuItems = [
   { name: "User Profile", path: "/cms/user-profile", icon: UserIcon },
 
   // ✅ ADMIN (rendered only if role=admin)
+  { name: "Admin Overview", path: "/cms/admin", icon: LayoutDashboard, adminOnly: true },
   { name: "Admin Tracks", path: "/cms/admin/tracks", icon: FileText, adminOnly: true },
   { name: "Admin Users", path: "/cms/admin/users", icon: Users, adminOnly: true },
   { name: "Admin Claims", path: "/cms/admin/claims", icon: FileText, adminOnly: true },
@@ -436,6 +438,16 @@ function DashboardApp() {
               <Route path="finance" element={<Finance />} />
               {/* /cms/user-profile */}
               <Route path="user-profile" element={<UserProfile />} />
+
+              {/* /cms/admin */}
+              <Route
+                path="admin"
+                element={
+                  <AdminRoute>
+                    <AdminOverview />
+                  </AdminRoute>
+                }
+              />
 
               {/* /cms/admin/tracks */}
               <Route

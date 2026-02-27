@@ -1,220 +1,125 @@
 import React, { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import {
-  adminCreateEarningApi,
-  adminGetEarningsApi,
   adminGetPaymentsApi,
-  adminGetUsersApi,
-  adminGetWithdrawalsApi,
-  adminPayWithdrawalApi,
-  adminUpdatePaymentStatusApi,
-  adminUpdateWithdrawalStatusApi,
+  adminApprovePaymentApi,
+  adminRejectPaymentApi,
+  adminGetUserTransactionsApi,
+  adminUpdateUserWalletApi,
 } from "../../apis/AdminApis";
 
-const verificationStatusOptions = ["pending", "verified", "rejected"];
-const withdrawalStatusOptions = ["pending", "approved", "rejected", "paid"];
+const statusOptions = ["pending", "approved", "rejected"];
 
-const formatINR = (n) => {
-  const num = Number(n || 0);
-  try {
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-      maximumFractionDigits: 2,
-    }).format(num);
-  } catch {
-    return `INR ${num.toFixed(2)}`;
-  }
+const badgeClass = {
+  pending: "bg-yellow-500/15 text-yellow-600 dark:text-yellow-400 border-yellow-500/30",
+  approved: "bg-green-500/15 text-green-600 dark:text-green-400 border-green-500/30",
+  rejected: "bg-red-500/15 text-red-600 dark:text-red-400 border-red-500/30",
 };
 
-// Uploads are served from backend under /uploads (outside /api). Build absolute URLs for links.
-const backendOrigin = (import.meta.env.VITE_BACKEND_URL || "http://localhost:5000/api").replace(/\/?api\/?$/, "");
-const assetUrl = (p) => (p && String(p).startsWith("/uploads") ? `${backendOrigin}${p}` : p);
-
 export default function AdminPayments() {
-  const [tab, setTab] = useState("verifications");
+  const [loading, setLoading] = useState(false);
+  const [items, setItems] = useState([]);
+  const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [preview, setPreview] = useState(null);
+  const [selected, setSelected] = useState(null);
+  const [txLoading, setTxLoading] = useState(false);
+  const [transactions, setTransactions] = useState([]);
+  const [walletDraft, setWalletDraft] = useState({ balance: "", pendingEarnings: "", maxWithdrawal: "" });
 
-  // =====================
-  // 1) Payment Verifications
-  // =====================
-  const [vLoading, setVLoading] = useState(false);
-  const [verifications, setVerifications] = useState([]);
-  const [vQuery, setVQuery] = useState("");
-  const [vStatusFilter, setVStatusFilter] = useState("all");
-
-  const fetchVerifications = async () => {
+  const fetchItems = async () => {
     try {
-      setVLoading(true);
-      const data = await adminGetPaymentsApi({ search: vQuery, status: vStatusFilter, limit: 50 });
-      setVerifications(data?.items || []);
+      setLoading(true);
+      const data = await adminGetPaymentsApi({ search: query, status: statusFilter, limit: 50 });
+      setItems(data?.items || []);
     } catch (e) {
       toast.error(e?.response?.data?.msg || "Failed to load payments");
     } finally {
-      setVLoading(false);
+      setLoading(false);
     }
   };
 
-  const updateVerificationStatus = async (id, status) => {
-    try {
-      await adminUpdatePaymentStatusApi(id, { status });
-      setVerifications((prev) => prev.map((x) => (x._id === id ? { ...x, status } : x)));
-      toast.success("Payment updated");
-    } catch (e) {
-      toast.error(e?.response?.data?.msg || "Failed to update");
-    }
-  };
-
-  // =====================
-  // 2) Earnings (Admin sets user earning)
-  // =====================
-  const [eLoading, setELoading] = useState(false);
-  const [earnings, setEarnings] = useState([]);
-  const [eQuery, setEQuery] = useState("");
-
-  const [userSearch, setUserSearch] = useState("");
-  const [userOptions, setUserOptions] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [earningForm, setEarningForm] = useState({ amount: "", description: "", earningDate: "" });
-
-  const fetchUsers = async () => {
-    try {
-      const res = await adminGetUsersApi({ search: userSearch, limit: 20, page: 1 });
-      setUserOptions(res?.users || []);
-    } catch {
-      setUserOptions([]);
-    }
-  };
-
-  const fetchEarnings = async () => {
-    try {
-      setELoading(true);
-      const data = await adminGetEarningsApi({ search: eQuery, limit: 50 });
-      setEarnings(data?.items || []);
-    } catch (e) {
-      toast.error(e?.response?.data?.msg || "Failed to load earnings");
-    } finally {
-      setELoading(false);
-    }
-  };
-
-  const addEarning = async () => {
-    const amt = Number(earningForm.amount);
-    if (!selectedUser?._id) return toast.error("Select a user");
-    if (!amt || Number.isNaN(amt) || amt < 0) return toast.error("Enter valid amount");
-
-    try {
-      await adminCreateEarningApi({
-        userId: selectedUser._id,
-        amount: amt,
-        description: earningForm.description,
-        earningDate: earningForm.earningDate || undefined,
-      });
-      toast.success("Earning added");
-      setEarningForm({ amount: "", description: "", earningDate: "" });
-      await fetchEarnings();
-    } catch (e) {
-      toast.error(e?.response?.data?.msg || "Failed to add earning");
-    }
-  };
-
-  // =====================
-  // 3) Withdrawals (Admin processes)
-  // =====================
-  const [wLoading, setWLoading] = useState(false);
-  const [withdrawals, setWithdrawals] = useState([]);
-  const [wQuery, setWQuery] = useState("");
-  const [wStatusFilter, setWStatusFilter] = useState("all");
-
-  const [payModalOpen, setPayModalOpen] = useState(false);
-  const [payingItem, setPayingItem] = useState(null);
-  const [payForm, setPayForm] = useState({
-    transactionId: "",
-    paidAmount: "",
-    paidDate: "",
-    accountName: "",
-    accountNo: "",
-    screenshot: null,
-  });
-  const [paySubmitting, setPaySubmitting] = useState(false);
-
-  const fetchWithdrawals = async () => {
-    try {
-      setWLoading(true);
-      const data = await adminGetWithdrawalsApi({ search: wQuery, status: wStatusFilter, limit: 50 });
-      setWithdrawals(data?.items || []);
-    } catch (e) {
-      toast.error(e?.response?.data?.msg || "Failed to load withdrawals");
-    } finally {
-      setWLoading(false);
-    }
-  };
-
-  const updateWithdrawalStatus = async (id, status) => {
-    try {
-      await adminUpdateWithdrawalStatusApi(id, { status });
-      setWithdrawals((prev) => prev.map((x) => (x._id === id ? { ...x, status } : x)));
-      toast.success("Withdrawal updated");
-    } catch (e) {
-      toast.error(e?.response?.data?.msg || "Failed to update");
-    }
-  };
-
-  const openPayModal = (item) => {
-    setPayingItem(item);
-    setPayForm({
-      transactionId: "",
-      paidAmount: String(item?.amount || ""),
-      paidDate: new Date().toISOString().slice(0, 16),
-      accountName: item?.bankDetails?.accountHolderName || "",
-      accountNo: item?.bankDetails?.accountNumber || "",
-      screenshot: null,
-    });
-    setPayModalOpen(true);
-  };
-
-  const submitPay = async (e) => {
-    e.preventDefault();
-    if (!payingItem?._id) return;
-    if (!payForm.transactionId.trim()) return toast.error("Enter transaction id");
-    if (!payForm.paidAmount) return toast.error("Enter paid amount");
-
-    const fd = new FormData();
-    fd.append("transactionId", payForm.transactionId);
-    fd.append("paidAmount", payForm.paidAmount);
-    if (payForm.paidDate) fd.append("paidDate", payForm.paidDate);
-    if (payForm.accountName) fd.append("accountName", payForm.accountName);
-    if (payForm.accountNo) fd.append("accountNo", payForm.accountNo);
-    if (payForm.screenshot) fd.append("screenshot", payForm.screenshot);
-
-    try {
-      setPaySubmitting(true);
-      const res = await adminPayWithdrawalApi(payingItem._id, fd);
-      toast.success("Marked as paid");
-      setWithdrawals((prev) => prev.map((x) => (x._id === payingItem._id ? res?.item || x : x)));
-      setPayModalOpen(false);
-      setPayingItem(null);
-    } catch (err) {
-      toast.error(err?.response?.data?.msg || "Failed to pay");
-    } finally {
-      setPaySubmitting(false);
-    }
-  };
-
-  // initial load
   useEffect(() => {
-    fetchVerifications();
-    fetchEarnings();
-    fetchWithdrawals();
+    fetchItems();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const filteredVerifications = useMemo(() => {
-    const q = vQuery.trim().toLowerCase();
-    if (!q) return verifications;
-    return verifications.filter((p) =>
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return items;
+    return items.filter((p) =>
       [p.fullName, p.email, p.phone, p.transactionId].filter(Boolean).join(" ").toLowerCase().includes(q)
     );
-  }, [verifications, vQuery]);
+  }, [items, query]);
+
+  const updateStatus = async (id, status) => {
+    // legacy - keep UI simple: status is controlled by approve/reject now
+    toast("Use Approve/Reject buttons", { icon: "ℹ️" });
+  };
+
+  const openPayment = async (p) => {
+    setSelected(p);
+    const w = p?.user?.wallet || { balance: 0, pendingEarnings: 0, maxWithdrawal: 0 };
+    setWalletDraft({
+      balance: String(w.balance ?? 0),
+      pendingEarnings: String(w.pendingEarnings ?? 0),
+      maxWithdrawal: String(w.maxWithdrawal ?? 0),
+    });
+
+    if (p?.user?._id) {
+      try {
+        setTxLoading(true);
+        const res = await adminGetUserTransactionsApi(p.user._id);
+        setTransactions(res?.items || []);
+      } catch {
+        setTransactions([]);
+      } finally {
+        setTxLoading(false);
+      }
+    } else {
+      setTransactions([]);
+    }
+  };
+
+  const approve = async (p) => {
+    try {
+      await adminApprovePaymentApi(p._id, { note: "Approved by admin" });
+      toast.success("Payment approved & wallet credited");
+      await fetchItems();
+      if (selected?._id === p._id) openPayment({ ...p, status: "approved" });
+    } catch (e) {
+      toast.error(e?.response?.data?.msg || "Approve failed");
+    }
+  };
+
+  const reject = async (p) => {
+    const reason = window.prompt("Reject reason (optional):") || "";
+    try {
+      await adminRejectPaymentApi(p._id, { reason });
+      toast.success("Payment rejected");
+      await fetchItems();
+      if (selected?._id === p._id) openPayment({ ...p, status: "rejected" });
+    } catch (e) {
+      toast.error(e?.response?.data?.msg || "Reject failed");
+    }
+  };
+
+  const saveWallet = async () => {
+    if (!selected?.user?._id) return toast.error("No linked user found");
+    try {
+      await adminUpdateUserWalletApi(selected.user._id, {
+        balance: Number(walletDraft.balance) || 0,
+        pendingEarnings: Number(walletDraft.pendingEarnings) || 0,
+        maxWithdrawal: Number(walletDraft.maxWithdrawal) || 0,
+        note: "Admin wallet update",
+      });
+      toast.success("Wallet updated");
+      await fetchItems();
+      openPayment(items.find((x) => x._id === selected._id) || selected);
+    } catch (e) {
+      toast.error(e?.response?.data?.msg || "Wallet update failed");
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -222,437 +127,207 @@ export default function AdminPayments() {
         <div>
           <h1 className="text-xl font-semibold">Admin · Payments</h1>
           <p className="text-sm" style={{ color: "var(--muted)" }}>
-            Verify plan payments, set user earnings, and process withdrawals.
+            Payment verification form entries (transaction + screenshot).
           </p>
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
-          <button
-            type="button"
-            className={`dash-btn ${tab === "verifications" ? "dash-btn-primary" : ""}`}
-            onClick={() => setTab("verifications")}
-          >
-            Verifications
-          </button>
-          <button
-            type="button"
-            className={`dash-btn ${tab === "earnings" ? "dash-btn-primary" : ""}`}
-            onClick={() => setTab("earnings")}
-          >
-            Earnings
-          </button>
-          <button
-            type="button"
-            className={`dash-btn ${tab === "withdrawals" ? "dash-btn-primary" : ""}`}
-            onClick={() => setTab("withdrawals")}
-          >
-            Withdrawals
+          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search..." className="dash-input" />
+          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="dash-input">
+            <option value="all">All status</option>
+            {statusOptions.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+          <button className="dash-btn" type="button" onClick={fetchItems} disabled={loading}>
+            Refresh
           </button>
         </div>
       </div>
 
-      {/* =====================
-          TAB: VERIFICATIONS
-          ===================== */}
-      {tab === "verifications" && (
-        <>
-          <div className="flex items-center gap-2 flex-wrap">
-            <input value={vQuery} onChange={(e) => setVQuery(e.target.value)} placeholder="Search..." className="dash-input" />
-            <select value={vStatusFilter} onChange={(e) => setVStatusFilter(e.target.value)} className="dash-input">
-              <option value="all">All status</option>
-              {verificationStatusOptions.map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select>
-            <button className="dash-btn" type="button" onClick={fetchVerifications} disabled={vLoading}>
-              Refresh
-            </button>
-          </div>
-
-          <div className="dash-card p-3 rounded-2xl overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr style={{ color: "var(--muted)" }}>
-                  <th className="text-left p-2">User</th>
-                  <th className="text-left p-2">Transaction</th>
-                  <th className="text-left p-2">Amount</th>
-                  <th className="text-left p-2">UPI</th>
-                  <th className="text-left p-2">Screenshot</th>
-                  <th className="text-left p-2">Status</th>
+      <div className="dash-card p-3 rounded-2xl overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr style={{ color: "var(--muted)" }}>
+              <th className="text-left p-2">User</th>
+              <th className="text-left p-2">Transaction</th>
+              <th className="text-left p-2">Amount</th>
+              <th className="text-left p-2">UPI</th>
+              <th className="text-left p-2">Screenshot</th>
+              <th className="text-left p-2">Status</th>
+              <th className="text-left p-2">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              <tr>
+                <td className="p-2" colSpan={7}>
+                  Loading...
+                </td>
+              </tr>
+            ) : filtered.length === 0 ? (
+              <tr>
+                <td className="p-2" colSpan={7}>
+                  No payments found
+                </td>
+              </tr>
+            ) : (
+              filtered.map((p) => (
+                <tr key={p._id} style={{ borderTop: "1px solid var(--dash-border)" }}>
+                  <td className="p-2">
+                    <div className="font-medium">{p.fullName}</div>
+                    <div className="text-xs" style={{ color: "var(--muted)" }}>{p.email}</div>
+                    <div className="text-xs" style={{ color: "var(--muted)" }}>{p.phone}</div>
+                    {p?.user?.wallet ? (
+                      <div className="text-[11px] mt-1" style={{ color: "var(--muted)" }}>
+                        Wallet: ₹{Number(p.user.wallet.balance || 0).toFixed(2)}
+                      </div>
+                    ) : null}
+                  </td>
+                  <td className="p-2 whitespace-nowrap">{p.transactionId}</td>
+                  <td className="p-2 whitespace-nowrap">{p.amount || "-"}</td>
+                  <td className="p-2 whitespace-nowrap">{p.upiId || "-"}</td>
+                  <td className="p-2">
+                    {p.screenshotUrl ? (
+                      <button className="underline" type="button" onClick={() => setPreview(p.screenshotUrl)}>
+                        Preview
+                      </button>
+                    ) : (
+                      "-"
+                    )}
+                  </td>
+                  <td className="p-2 whitespace-nowrap">
+                    <span className={`inline-flex items-center px-3 py-1 rounded-full border text-xs capitalize ${badgeClass[p.status] || badgeClass.pending}`}>
+                      {p.status || "pending"}
+                    </span>
+                  </td>
+                  <td className="p-2 whitespace-nowrap">
+                    <div className="flex gap-2">
+                      <button className="dash-btn" type="button" onClick={() => openPayment(p)}>
+                        Manage
+                      </button>
+                      {p.status === "pending" ? (
+                        <>
+                          <button className="dash-btn" type="button" onClick={() => approve(p)}>
+                            Approve
+                          </button>
+                          <button className="dash-btn" type="button" onClick={() => reject(p)}>
+                            Reject
+                          </button>
+                        </>
+                      ) : null}
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {vLoading ? (
-                  <tr>
-                    <td className="p-2" colSpan={6}>
-                      Loading...
-                    </td>
-                  </tr>
-                ) : filteredVerifications.length === 0 ? (
-                  <tr>
-                    <td className="p-2" colSpan={6}>
-                      No payments found
-                    </td>
-                  </tr>
-                ) : (
-                  filteredVerifications.map((p) => (
-                    <tr key={p._id} style={{ borderTop: "1px solid var(--dash-border)" }}>
-                      <td className="p-2">
-                        <div className="font-medium">{p.fullName}</div>
-                        <div className="text-xs" style={{ color: "var(--muted)" }}>{p.email}</div>
-                        <div className="text-xs" style={{ color: "var(--muted)" }}>{p.phone}</div>
-                      </td>
-                      <td className="p-2 whitespace-nowrap">{p.transactionId}</td>
-                      <td className="p-2 whitespace-nowrap">{p.amount || "-"}</td>
-                      <td className="p-2 whitespace-nowrap">{p.upiId || "-"}</td>
-                      <td className="p-2">
-                        {p.screenshotUrl ? (
-                          <a className="underline" href={assetUrl(p.screenshotUrl)} target="_blank" rel="noreferrer">
-                            View
-                          </a>
-                        ) : (
-                          "-"
-                        )}
-                      </td>
-                      <td className="p-2 whitespace-nowrap">
-                        <select
-                          className="dash-input"
-                          value={p.status || "pending"}
-                          onChange={(e) => updateVerificationStatus(p._id, e.target.value)}
-                        >
-                          {verificationStatusOptions.map((s) => (
-                            <option key={s} value={s}>
-                              {s}
-                            </option>
-                          ))}
-                        </select>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Screenshot preview modal */}
+      {preview ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={() => setPreview(null)}>
+          <div className="dash-card p-3 rounded-2xl max-w-3xl w-full" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between">
+              <div className="font-semibold">Screenshot Preview</div>
+              <button className="dash-btn" type="button" onClick={() => setPreview(null)}>Close</button>
+            </div>
+            <div className="mt-3 overflow-auto max-h-[70vh]">
+              <img src={preview} alt="screenshot" className="w-full rounded-xl" />
+            </div>
           </div>
-        </>
-      )}
+        </div>
+      ) : null}
 
-      {/* =====================
-          TAB: EARNINGS
-          ===================== */}
-      {tab === "earnings" && (
-        <div className="space-y-4">
-          <div className="dash-card p-4 sm:p-6 rounded-2xl">
-            <h2 className="text-lg font-semibold">Set Earnings for User</h2>
-            <p className="text-sm" style={{ color: "var(--muted)" }}>
-              Admin can credit earnings to a user. User will see totals (monthly/yearly) and can request withdrawal.
-            </p>
-
-            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Manage modal */}
+      {selected ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={() => setSelected(null)}>
+          <div className="dash-card p-4 rounded-2xl max-w-4xl w-full" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between gap-2 flex-wrap">
               <div>
-                <label className="text-sm" style={{ color: "var(--muted)" }}>Find User (email/name)</label>
-                <div className="flex gap-2 mt-2">
-                  <input
-                    className="dash-input flex-1"
-                    value={userSearch}
-                    onChange={(e) => setUserSearch(e.target.value)}
-                    placeholder="Search user..."
-                  />
-                  <button className="dash-btn" type="button" onClick={fetchUsers}>
-                    Search
-                  </button>
-                </div>
+                <div className="text-lg font-semibold">Manage Payment</div>
+                <div className="text-xs" style={{ color: "var(--muted)" }}>{selected.email} · Txn: {selected.transactionId}</div>
+              </div>
+              <div className="flex gap-2">
+                {selected.status === "pending" ? (
+                  <>
+                    <button className="dash-btn" type="button" onClick={() => approve(selected)}>Approve</button>
+                    <button className="dash-btn" type="button" onClick={() => reject(selected)}>Reject</button>
+                  </>
+                ) : null}
+                <button className="dash-btn" type="button" onClick={() => setSelected(null)}>Close</button>
+              </div>
+            </div>
 
-                <div className="mt-2">
-                  <select
-                    className="dash-input w-full"
-                    value={selectedUser?._id || ""}
-                    onChange={(e) => {
-                      const u = userOptions.find((x) => x._id === e.target.value);
-                      setSelectedUser(u || null);
-                    }}
-                  >
-                    <option value="">Select user</option>
-                    {userOptions.map((u) => (
-                      <option key={u._id} value={u._id}>
-                        {u.fullName} · {u.email}
-                      </option>
-                    ))}
-                  </select>
-                  {selectedUser ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+              <div className="dash-card p-3 rounded-2xl">
+                <div className="font-semibold">Wallet</div>
+                <div className="mt-3 grid grid-cols-1 gap-2">
+                  <label className="text-xs" style={{ color: "var(--muted)" }}>Current Balance</label>
+                  <input className="dash-input" value={walletDraft.balance} onChange={(e) => setWalletDraft((s) => ({ ...s, balance: e.target.value }))} />
+                  <label className="text-xs" style={{ color: "var(--muted)" }}>Pending Earnings</label>
+                  <input className="dash-input" value={walletDraft.pendingEarnings} onChange={(e) => setWalletDraft((s) => ({ ...s, pendingEarnings: e.target.value }))} />
+                  <label className="text-xs" style={{ color: "var(--muted)" }}>Max Withdrawal</label>
+                  <input className="dash-input" value={walletDraft.maxWithdrawal} onChange={(e) => setWalletDraft((s) => ({ ...s, maxWithdrawal: e.target.value }))} />
+                  <button className="dash-btn mt-2" type="button" onClick={saveWallet}>
+                    Save Wallet
+                  </button>
+                  {!selected?.user?._id ? (
                     <div className="text-xs mt-2" style={{ color: "var(--muted)" }}>
-                      Selected: <span className="font-medium">{selectedUser.fullName}</span> ({selectedUser.email})
+                      This payment is not linked to a user automatically. Ensure the payment email matches the user email.
                     </div>
                   ) : null}
                 </div>
               </div>
 
-              <div>
-                <label className="text-sm" style={{ color: "var(--muted)" }}>Amount (INR)</label>
-                <input
-                  className="dash-input mt-2"
-                  type="number"
-                  min={0}
-                  step="0.01"
-                  value={earningForm.amount}
-                  onChange={(e) => setEarningForm((p) => ({ ...p, amount: e.target.value }))}
-                  placeholder="0"
-                />
-
-                <label className="text-sm mt-4 block" style={{ color: "var(--muted)" }}>Description</label>
-                <input
-                  className="dash-input mt-2"
-                  value={earningForm.description}
-                  onChange={(e) => setEarningForm((p) => ({ ...p, description: e.target.value }))}
-                  placeholder="Spotify royalties, YouTube CMS..."
-                />
-
-                <label className="text-sm mt-4 block" style={{ color: "var(--muted)" }}>Earning Date (optional)</label>
-                <input
-                  className="dash-input mt-2"
-                  type="datetime-local"
-                  value={earningForm.earningDate}
-                  onChange={(e) => setEarningForm((p) => ({ ...p, earningDate: e.target.value }))}
-                />
-
-                <button className="btn-primary mt-4" type="button" onClick={addEarning}>
-                  Add Earning
-                </button>
+              <div className="dash-card p-3 rounded-2xl">
+                <div className="font-semibold">Transaction History</div>
+                <div className="mt-3 max-h-64 overflow-auto">
+                  {txLoading ? (
+                    <div className="text-sm">Loading...</div>
+                  ) : transactions.length === 0 ? (
+                    <div className="text-sm" style={{ color: "var(--muted)" }}>No transactions</div>
+                  ) : (
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr style={{ color: "var(--muted)" }}>
+                          <th className="text-left p-2">Type</th>
+                          <th className="text-left p-2">Amount</th>
+                          <th className="text-left p-2">Balance After</th>
+                          <th className="text-left p-2">When</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {transactions.map((t) => (
+                          <tr key={t._id} style={{ borderTop: "1px solid var(--dash-border)" }}>
+                            <td className="p-2 capitalize">{t.type}</td>
+                            <td className="p-2">₹{Number(t.amount || 0).toFixed(2)}</td>
+                            <td className="p-2">₹{Number(t.balanceAfter || 0).toFixed(2)}</td>
+                            <td className="p-2 text-xs" style={{ color: "var(--muted)" }}>
+                              {new Date(t.createdAt).toLocaleString()}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="flex items-center gap-2 flex-wrap">
-            <input value={eQuery} onChange={(e) => setEQuery(e.target.value)} placeholder="Search earnings..." className="dash-input" />
-            <button className="dash-btn" type="button" onClick={fetchEarnings} disabled={eLoading}>
-              Refresh
-            </button>
-          </div>
-
-          <div className="dash-card p-3 rounded-2xl overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr style={{ color: "var(--muted)" }}>
-                  <th className="text-left p-2">User</th>
-                  <th className="text-left p-2">Amount</th>
-                  <th className="text-left p-2">Description</th>
-                  <th className="text-left p-2">Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {eLoading ? (
-                  <tr>
-                    <td className="p-2" colSpan={4}>Loading...</td>
-                  </tr>
-                ) : (earnings || []).length === 0 ? (
-                  <tr>
-                    <td className="p-2" colSpan={4}>No earnings</td>
-                  </tr>
-                ) : (
-                  (earnings || []).map((it) => (
-                    <tr key={it._id} style={{ borderTop: "1px solid var(--dash-border)" }}>
-                      <td className="p-2">
-                        <div className="font-medium">{it?.user?.fullName || "-"}</div>
-                        <div className="text-xs" style={{ color: "var(--muted)" }}>{it?.user?.email || "-"}</div>
-                      </td>
-                      <td className="p-2 whitespace-nowrap font-medium">{formatINR(it.amount)}</td>
-                      <td className="p-2">{it.description || "-"}</td>
-                      <td className="p-2 whitespace-nowrap">{it.earningDate ? new Date(it.earningDate).toLocaleString() : "-"}</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {/* =====================
-          TAB: WITHDRAWALS
-          ===================== */}
-      {tab === "withdrawals" && (
-        <>
-          <div className="flex items-center gap-2 flex-wrap">
-            <input value={wQuery} onChange={(e) => setWQuery(e.target.value)} placeholder="Search user..." className="dash-input" />
-            <select value={wStatusFilter} onChange={(e) => setWStatusFilter(e.target.value)} className="dash-input">
-              <option value="all">All status</option>
-              {withdrawalStatusOptions.map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select>
-            <button className="dash-btn" type="button" onClick={fetchWithdrawals} disabled={wLoading}>
-              Refresh
-            </button>
-          </div>
-
-          <div className="dash-card p-3 rounded-2xl overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr style={{ color: "var(--muted)" }}>
-                  <th className="text-left p-2">User</th>
-                  <th className="text-left p-2">Amount</th>
-                  <th className="text-left p-2">Bank Details</th>
-                  <th className="text-left p-2">Requested</th>
-                  <th className="text-left p-2">Status</th>
-                  <th className="text-left p-2">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {wLoading ? (
-                  <tr>
-                    <td className="p-2" colSpan={6}>Loading...</td>
-                  </tr>
-                ) : withdrawals.length === 0 ? (
-                  <tr>
-                    <td className="p-2" colSpan={6}>No withdrawals</td>
-                  </tr>
-                ) : (
-                  withdrawals.map((w) => (
-                    <tr key={w._id} style={{ borderTop: "1px solid var(--dash-border)" }}>
-                      <td className="p-2">
-                        <div className="font-medium">{w?.user?.fullName || "-"}</div>
-                        <div className="text-xs" style={{ color: "var(--muted)" }}>{w?.user?.email || "-"}</div>
-                      </td>
-                      <td className="p-2 whitespace-nowrap font-medium">{formatINR(w.amount)}</td>
-                      <td className="p-2">
-                        <div className="text-xs">Name: {w?.bankDetails?.accountHolderName || "-"}</div>
-                        <div className="text-xs">A/C: {w?.bankDetails?.accountNumber || "-"}</div>
-                        <div className="text-xs">IFSC: {w?.bankDetails?.ifscCode || "-"}</div>
-                        {w?.status === "paid" ? (
-                          <div className="text-xs mt-1" style={{ color: "var(--muted)" }}>
-                            Txn: {w?.adminPayout?.transactionId || "-"} · {w?.adminPayout?.screenshotUrl ? (
-                              <a className="underline" href={assetUrl(w.adminPayout.screenshotUrl)} target="_blank" rel="noreferrer">Screenshot</a>
-                            ) : "No screenshot"}
-                          </div>
-                        ) : null}
-                      </td>
-                      <td className="p-2 whitespace-nowrap">{new Date(w.createdAt).toLocaleString()}</td>
-                      <td className="p-2 whitespace-nowrap">
-                        <select className="dash-input" value={w.status || "pending"} onChange={(e) => updateWithdrawalStatus(w._id, e.target.value)}>
-                          {withdrawalStatusOptions.map((s) => (
-                            <option key={s} value={s}>{s}</option>
-                          ))}
-                        </select>
-                      </td>
-                      <td className="p-2 whitespace-nowrap">
-                        {w.status !== "paid" ? (
-                          <button className="btn-primary" type="button" onClick={() => openPayModal(w)}>
-                            Pay
-                          </button>
-                        ) : (
-                          "-"
-                        )}
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </>
-      )}
-
-      {/* Pay Modal */}
-      {payModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/60" onClick={() => setPayModalOpen(false)} />
-          <div className="relative w-full max-w-lg glass p-6 rounded-3xl">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <h3 className="text-xl font-semibold">Mark Withdrawal as Paid</h3>
-                <p className="text-sm mt-1" style={{ color: "var(--muted)" }}>
-                  User: <span className="font-medium">{payingItem?.user?.fullName || "-"}</span> · Amount: {formatINR(payingItem?.amount)}
-                </p>
-              </div>
-              <button
-                type="button"
-                className="h-9 w-9 rounded-full grid place-items-center bg-black/5 dark:bg-white/10"
-                onClick={() => setPayModalOpen(false)}
-                aria-label="Close"
-              >
-                ✕
-              </button>
-            </div>
-
-            <form className="mt-5 space-y-4" onSubmit={submitPay}>
-              <div>
-                <label className="text-sm" style={{ color: "var(--muted)" }}>Transaction ID</label>
-                <input
-                  className="dash-input mt-2"
-                  value={payForm.transactionId}
-                  onChange={(e) => setPayForm((p) => ({ ...p, transactionId: e.target.value }))}
-                  placeholder="UTR / Txn ID"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm" style={{ color: "var(--muted)" }}>Payment Amount</label>
-                  <input
-                    className="dash-input mt-2"
-                    type="number"
-                    step="0.01"
-                    value={payForm.paidAmount}
-                    onChange={(e) => setPayForm((p) => ({ ...p, paidAmount: e.target.value }))}
-                  />
-                </div>
-                <div>
-                  <label className="text-sm" style={{ color: "var(--muted)" }}>Payment Date</label>
-                  <input
-                    className="dash-input mt-2"
-                    type="datetime-local"
-                    value={payForm.paidDate}
-                    onChange={(e) => setPayForm((p) => ({ ...p, paidDate: e.target.value }))}
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm" style={{ color: "var(--muted)" }}>Account Name</label>
-                  <input
-                    className="dash-input mt-2"
-                    value={payForm.accountName}
-                    onChange={(e) => setPayForm((p) => ({ ...p, accountName: e.target.value }))}
-                    placeholder="Account holder"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm" style={{ color: "var(--muted)" }}>Account No</label>
-                  <input
-                    className="dash-input mt-2"
-                    value={payForm.accountNo}
-                    onChange={(e) => setPayForm((p) => ({ ...p, accountNo: e.target.value }))}
-                    placeholder="Account number"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-sm" style={{ color: "var(--muted)" }}>Screenshot (optional)</label>
-                <input
-                  className="dash-input mt-2"
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => setPayForm((p) => ({ ...p, screenshot: e.target.files?.[0] || null }))}
-                />
-              </div>
-
-              <div className="flex justify-end gap-3 pt-2">
-                <button type="button" className="dash-btn-secondary" onClick={() => setPayModalOpen(false)} disabled={paySubmitting}>
-                  Cancel
-                </button>
-                <button type="submit" className="btn-primary" disabled={paySubmitting}>
-                  {paySubmitting ? "Saving..." : "Confirm Paid"}
+            {selected?.screenshotUrl ? (
+              <div className="mt-4">
+                <button className="dash-btn" type="button" onClick={() => setPreview(selected.screenshotUrl)}>
+                  View Screenshot
                 </button>
               </div>
-            </form>
+            ) : null}
           </div>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

@@ -5,19 +5,6 @@ export const adminGetUsersApi = async (params = {}) => {
   return res.data;
 };
 
-export const adminDeleteClaimApi = async (id) => {
-  try {
-    const res = await AxiosIntance.delete(`/claims/admin/${id}`);
-    return res.data;
-  } catch (err) {
-    // Backward-compatible fallback if backend uses alternate admin route style
-    if (err?.response?.status === 404) {
-      const res = await AxiosIntance.delete(`/admin/claims/${id}`);
-      return res.data;
-    }
-    throw err;
-  }
-};
 export const adminUpdateUserRoleApi = async (userId, role) => {
   const res = await AxiosIntance.patch(`/admin/users/${userId}/role`, { role });
   return res.data;
@@ -49,8 +36,23 @@ export const adminGetPaymentsApi = async (params = {}) => {
   return res.data;
 };
 
-export const adminUpdatePaymentStatusApi = async (id, payload) => {
-  const res = await AxiosIntance.patch(`/payments/admin/${id}/status`, payload);
+export const adminApprovePaymentApi = async (id, payload = {}) => {
+  const res = await AxiosIntance.post(`/payments/admin/${id}/approve`, payload);
+  return res.data;
+};
+
+export const adminRejectPaymentApi = async (id, payload = {}) => {
+  const res = await AxiosIntance.post(`/payments/admin/${id}/reject`, payload);
+  return res.data;
+};
+
+export const adminGetUserTransactionsApi = async (userId) => {
+  const res = await AxiosIntance.get(`/payments/admin/user/${userId}/transactions`);
+  return res.data;
+};
+
+export const adminUpdateUserWalletApi = async (userId, payload) => {
+  const res = await AxiosIntance.patch(`/admin/users/${userId}/wallet`, payload);
   return res.data;
 };
 
@@ -90,33 +92,5 @@ export const adminSetNotificationApi = async (payload) => {
 
 export const adminGetNotificationsApi = async () => {
   const res = await AxiosIntance.get("/notification/admin/all");
-  return res.data;
-};
-
-// ===== Admin Finance (Earnings / Withdrawals) =====
-export const adminGetEarningsApi = async (params = {}) => {
-  const res = await AxiosIntance.get("/finance/admin/earnings", { params });
-  return res.data;
-};
-
-export const adminCreateEarningApi = async (payload) => {
-  const res = await AxiosIntance.post("/finance/admin/earnings", payload);
-  return res.data;
-};
-
-export const adminGetWithdrawalsApi = async (params = {}) => {
-  const res = await AxiosIntance.get("/finance/admin/withdrawals", { params });
-  return res.data;
-};
-
-export const adminUpdateWithdrawalStatusApi = async (id, payload) => {
-  const res = await AxiosIntance.patch(`/finance/admin/withdrawals/${id}/status`, payload);
-  return res.data;
-};
-
-export const adminPayWithdrawalApi = async (id, formData) => {
-  const res = await AxiosIntance.patch(`/finance/admin/withdrawals/${id}/pay`, formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
   return res.data;
 };

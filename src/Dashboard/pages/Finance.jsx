@@ -1,187 +1,140 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { useSelector } from "react-redux";
-import toast from "react-hot-toast";
-import {
-  DollarSign,
-  TrendingUp,
-  TrendingDown,
-  CreditCard,
-  Hash,
-  User,
-  Building2,
-  AlertCircle,
-} from "lucide-react";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
-
-import {
-  getFinanceSummaryApi,
-  getMyWithdrawalsApi,
-  requestWithdrawalApi,
-} from "../../apis/FinanceApis";
-
-const formatINR = (n) => {
-  const num = Number(n || 0);
-  try {
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-      maximumFractionDigits: 2,
-    }).format(num);
-  } catch {
-    return `INR ${num.toFixed(2)}`;
-  }
-};
-
-const statusBadge = (status) => {
-  const s = String(status || "").toLowerCase();
-  if (s === "paid" || s === "completed") return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
-  if (s === "approved") return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
-  if (s === "pending") return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
-  if (s === "rejected" || s === "failed") return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
-  return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
-};
-
-// Uploads are served from backend under /uploads (outside /api). Build absolute URLs for links.
-const backendOrigin = (import.meta.env.VITE_BACKEND_URL || "http://localhost:5000/api").replace(/\/?api\/?$/, "");
-const assetUrl = (p) => (p && String(p).startsWith("/uploads") ? `${backendOrigin}${p}` : p);
+import React, { useState } from 'react';
+import { DollarSign, TrendingUp, TrendingDown, Download, CreditCard, AlertCircle, Building2, User, Hash } from 'lucide-react';
 
 export default function Finance() {
-  const { user } = useSelector((state) => state.auth);
-
-  const [activeTab, setActiveTab] = useState("overview");
-  const [loading, setLoading] = useState(false);
-  const [summary, setSummary] = useState(null);
-  const [withdrawals, setWithdrawals] = useState([]);
-
+  const [activeTab, setActiveTab] = useState('overview');
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
   const [withdrawalRequest, setWithdrawalRequest] = useState({
-    amount: "",
-    method: "bank",
+    amount: 0,
+    method: 'bank',
     bankDetails: {
-      accountHolderName: user?.bankDetails?.accountHolderName || "",
-      accountNumber: user?.bankDetails?.accountNumber || "",
-      ifscCode: user?.bankDetails?.ifscCode || "",
-      bankName: user?.bankDetails?.bankName || "",
-      branchName: user?.bankDetails?.branchName || "",
+      accountNumber: '',
+      ifscCode: '',
+      accountHolderName: ''
     },
+    paypalEmail: '',
+    stripeAccountId: ''
   });
 
-  const load = async () => {
-    try {
-      setLoading(true);
-      const [s, w] = await Promise.all([getFinanceSummaryApi(), getMyWithdrawalsApi()]);
-      setSummary(s);
-      setWithdrawals(w?.items || []);
-    } catch (e) {
-      toast.error(e?.response?.data?.msg || "Failed to load finance data");
-    } finally {
-      setLoading(false);
+  const currentBalance = 0;
+  const maxWithdrawal = 0;
+  const pendingEarnings = 0;
+
+  const transactions = [
+    {
+      id: '1',
+      type: 'earning',
+      amount: 0,
+      description: 'Spotify streaming royalties',
+      date: '',
+      status: 'completed'
+    },
+    {
+      id: '2',
+      type: 'withdrawal',
+      amount: 0,
+      description: 'Bank transfer withdrawal',
+      date: '',
+      status: 'completed'
+    },
+    {
+      id: '3',
+      type: 'royalty',
+      amount: 0,
+      description: 'YouTube Content ID earnings',
+      date: '',
+      status: 'pending'
+    },
+    {
+      id: '4',
+      type: 'earning',
+      amount: 0,
+      description: 'Apple Music streaming',
+      date: '',
+      status: 'completed'
     }
-  };
+  ];
 
-  useEffect(() => {
-    load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const handleWithdrawal = (e) => {
+    e.preventDefault();
 
-  const totals = summary?.totals || {
-    totalEarnings: 0,
-    totalPaid: 0,
-    pendingWithdrawals: 0,
-    availableBalance: 0,
-  };
+    if (withdrawalRequest.amount > maxWithdrawal) {
+      alert(`Maximum withdrawal amount is $${maxWithdrawal}`);
+      return;
+    }
 
-  const monthly = summary?.monthly || [];
-  const yearly = summary?.yearly || [];
-  const transactions = summary?.recentTransactions || [];
+    if (withdrawalRequest.amount > currentBalance) {
+      alert('Insufficient balance');
+      return;
+    }
 
-  const maxWithdrawal = useMemo(() => totals.availableBalance || 0, [totals.availableBalance]);
+    if (withdrawalRequest.method === 'bank') {
+      const { accountNumber, ifscCode, accountHolderName } = withdrawalRequest.bankDetails;
+      if (!accountNumber || !ifscCode || !accountHolderName) {
+        alert('Please fill in all bank details');
+        return;
+      }
+    }
 
-  const updateBankDetails = (field, value) => {
-    setWithdrawalRequest((prev) => ({
-      ...prev,
-      bankDetails: { ...prev.bankDetails, [field]: value },
-    }));
+    // Process withdrawal request
+    console.log('Processing withdrawal:', withdrawalRequest);
+    setShowWithdrawModal(false);
+    resetWithdrawalForm();
   };
 
   const resetWithdrawalForm = () => {
     setWithdrawalRequest({
-      amount: "",
-      method: "bank",
+      amount: 0,
+      method: 'bank',
       bankDetails: {
-        accountHolderName: user?.bankDetails?.accountHolderName || "",
-        accountNumber: user?.bankDetails?.accountNumber || "",
-        ifscCode: user?.bankDetails?.ifscCode || "",
-        bankName: user?.bankDetails?.bankName || "",
-        branchName: user?.bankDetails?.branchName || "",
+        accountNumber: '',
+        ifscCode: '',
+        accountHolderName: ''
       },
+      paypalEmail: '',
+      stripeAccountId: ''
     });
   };
 
-  const handleWithdrawal = async (e) => {
-    e.preventDefault();
-
-    const amt = Number(withdrawalRequest.amount);
-    if (!amt || Number.isNaN(amt) || amt <= 0) {
-      return toast.error("Enter a valid amount");
-    }
-    if (amt > maxWithdrawal) {
-      return toast.error(`Maximum withdrawal amount is ${formatINR(maxWithdrawal)}`);
-    }
-
-    const { accountHolderName, accountNumber, ifscCode } = withdrawalRequest.bankDetails || {};
-    if (!accountHolderName || !accountNumber || !ifscCode) {
-      return toast.error("Please fill Account holder, Account number and IFSC");
-    }
-
-    try {
-      setSubmitting(true);
-      await requestWithdrawalApi({
-        amount: amt,
-        method: "bank",
-        bankDetails: withdrawalRequest.bankDetails,
-      });
-      toast.success("Withdrawal requested");
-      setShowWithdrawModal(false);
-      resetWithdrawalForm();
-      await load();
-    } catch (e2) {
-      toast.error(e2?.response?.data?.msg || "Failed to request withdrawal");
-    } finally {
-      setSubmitting(false);
-    }
+  const updateBankDetails = (field, value) => {
+    setWithdrawalRequest((prev) => ({
+      ...prev,
+      bankDetails: {
+        ...prev.bankDetails,
+        [field]: value
+      }
+    }));
   };
 
   const getTransactionIcon = (type) => {
     switch (type) {
-      case "earning":
+      case 'earning':
+      case 'royalty':
         return <TrendingUp className="w-4 h-4 text-green-500" />;
-      case "withdrawal":
+      case 'withdrawal':
         return <TrendingDown className="w-4 h-4 text-red-500" />;
       default:
         return <DollarSign className="w-4 h-4 text-gray-500" />;
     }
   };
 
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'completed':
+        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+      case 'failed':
+        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
+      default:
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
+    }
+  };
+
   return (
     <div className="p-6 min-h-screen text-[color:var(--text)]">
-      <div className="flex justify-between items-center mb-6 flex-wrap gap-3">
-        <div>
-          <h1 className="text-2xl font-semibold">Finance</h1>
-          <p className="text-sm mt-1" style={{ color: "var(--muted)" }}>
-            Your earnings, balance, and withdrawal history.
-          </p>
-        </div>
-
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-semibold dark:text-[color:var(--text)]">Finance Report</h1>
         <button
           onClick={() => setShowWithdrawModal(true)}
           className="bg-gradient-to-r from-green-500 to-emerald-500 text-[color:var(--text)] px-4 py-2 rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all duration-200 hover:scale-105 active:scale-95 flex items-center gap-2"
@@ -193,39 +146,32 @@ export default function Finance() {
 
       {/* Tab Navigation */}
       <div className="flex space-x-2 mb-6 glass-soft p-1 rounded-xl border border-[color:var(--border)] max-w-max">
-        {[
-          { key: "overview", label: "overview" },
-          { key: "transactions", label: "transactions" },
-          { key: "withdraw", label: "withdraw" },
-        ].map((tab) => (
+        {['overview', 'transactions', 'withdraw'].map((tab) => (
           <button
-            key={tab.key}
-            onClick={() => setActiveTab(tab.key)}
+            key={tab}
+            onClick={() => setActiveTab(tab)}
             className={`px-4 py-2 rounded-lg capitalize transition-all duration-200 ${
-              activeTab === tab.key
-                ? "bg-gradient-to-r from-[var(--accent-1)] to-[var(--accent-2)] text-white"
-                : "text-[color:var(--muted)] hover:bg-white/5"
+              activeTab === tab
+                ? 'bg-gradient-to-r from-[var(--accent-1)] to-[var(--accent-2)] text-white'
+                : 'text-[color:var(--muted)] hover:bg-white/5'
             }`}
           >
-            {tab.label}
+            {tab}
           </button>
         ))}
       </div>
 
-      {loading ? (
-        <div className="dash-card p-6 rounded-2xl">Loading...</div>
-      ) : null}
-
-      {/* Overview */}
-      {activeTab === "overview" && (
+      {/* Overview Tab */}
+      {activeTab === 'overview' && (
         <div className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="dash-card p-6 rounded-2xl">
+          {/* Balance Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-transparent p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm" style={{ color: "var(--muted)" }}>Available Balance</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Current Balance</p>
                   <p className="text-2xl font-bold text-green-600 dark:text-green-400">
-                    {formatINR(totals.availableBalance)}
+                    ${currentBalance.toFixed(2)}
                   </p>
                 </div>
                 <div className="p-3 bg-green-100 dark:bg-green-900/50 rounded-full">
@@ -234,358 +180,451 @@ export default function Finance() {
               </div>
             </div>
 
-            <div className="dash-card p-6 rounded-2xl">
+            <div className="bg-transparent p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm" style={{ color: "var(--muted)" }}>Total Earnings</p>
-                  <p className="text-2xl font-bold">{formatINR(totals.totalEarnings)}</p>
-                </div>
-                <div className="p-3 bg-blue-100 dark:bg-blue-900/50 rounded-full">
-                  <TrendingUp className="w-6 h-6 text-blue-600 dark:text-blue-300" />
-                </div>
-              </div>
-            </div>
-
-            <div className="dash-card p-6 rounded-2xl">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm" style={{ color: "var(--muted)" }}>Total Paid</p>
-                  <p className="text-2xl font-bold">{formatINR(totals.totalPaid)}</p>
-                </div>
-                <div className="p-3 bg-purple-100 dark:bg-purple-900/50 rounded-full">
-                  <TrendingDown className="w-6 h-6 text-purple-600 dark:text-purple-300" />
-                </div>
-              </div>
-            </div>
-
-            <div className="dash-card p-6 rounded-2xl">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm" style={{ color: "var(--muted)" }}>Pending Withdrawals</p>
-                  <p className="text-2xl font-bold">{formatINR(totals.pendingWithdrawals)}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Pending Earnings</p>
+                  <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
+                    ${pendingEarnings.toFixed(2)}
+                  </p>
                 </div>
                 <div className="p-3 bg-yellow-100 dark:bg-yellow-900/50 rounded-full">
-                  <AlertCircle className="w-6 h-6 text-yellow-600 dark:text-yellow-300" />
+                  <TrendingUp className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-transparent p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Max Withdrawal</p>
+                  <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                    ${maxWithdrawal.toFixed(2)}
+                  </p>
+                </div>
+                <div className="p-3 bg-blue-100 dark:bg-blue-900/50 rounded-full">
+                  <CreditCard className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="dash-card p-4 sm:p-6 rounded-2xl">
-            <div className="flex items-center justify-between flex-wrap gap-2">
+          {/* Withdrawal Limit Notice */}
+          <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5" />
               <div>
-                <h2 className="text-lg font-semibold">Monthly Earnings</h2>
-                <p className="text-sm" style={{ color: "var(--muted)" }}>
-                  Last 12 months (credited by admin).
+                <h3 className="font-medium text-amber-800 dark:text-amber-200">Withdrawal Limit</h3>
+                <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
+                  Maximum withdrawal amount is limited to ${maxWithdrawal} per transaction for security purposes.
                 </p>
               </div>
-            </div>
-
-            <div className="mt-4" style={{ width: "100%", height: 280 }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={monthly}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Area type="monotone" dataKey="amount" />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-
-          <div className="dash-card p-4 sm:p-6 rounded-2xl">
-            <h2 className="text-lg font-semibold">Yearly Totals</h2>
-            <p className="text-sm" style={{ color: "var(--muted)" }}>
-              Earnings grouped by year.
-            </p>
-
-            <div className="mt-4 overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr style={{ color: "var(--muted)" }}>
-                    <th className="text-left p-2">Year</th>
-                    <th className="text-left p-2">Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {yearly.length === 0 ? (
-                    <tr>
-                      <td className="p-2" colSpan={2}>No earnings yet</td>
-                    </tr>
-                  ) : (
-                    yearly
-                      .slice()
-                      .reverse()
-                      .map((y) => (
-                        <tr key={y.year} style={{ borderTop: "1px solid var(--dash-border)" }}>
-                          <td className="p-2">{y.year}</td>
-                          <td className="p-2 font-medium">{formatINR(y.amount)}</td>
-                        </tr>
-                      ))
-                  )}
-                </tbody>
-              </table>
             </div>
           </div>
         </div>
       )}
 
-      {/* Transactions */}
-      {activeTab === "transactions" && (
-        <div className="dash-card p-4 sm:p-6 rounded-2xl">
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <div>
-              <h2 className="text-lg font-semibold">Recent Transactions</h2>
-              <p className="text-sm" style={{ color: "var(--muted)" }}>
-                Earnings credits + withdrawal requests.
-              </p>
-            </div>
-            <button className="dash-btn" type="button" onClick={load}>
-              Refresh
+      {/* Transactions Tab */}
+      {activeTab === 'transactions' && (
+        <div className="bg-transparent rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+          <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+            <h2 className="text-lg font-semibold dark:text-[color:var(--text)]">Recent Transactions</h2>
+            <button className="flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300">
+              <Download className="w-4 h-4" />
+              Export
             </button>
           </div>
-
-          <div className="mt-4 overflow-x-auto">
-            <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full">
               <thead>
-                <tr style={{ color: "var(--muted)" }}>
-                  <th className="text-left p-2">Type</th>
-                  <th className="text-left p-2">Amount</th>
-                  <th className="text-left p-2">Description</th>
-                  <th className="text-left p-2">Date</th>
-                  <th className="text-left p-2">Status</th>
-                  <th className="text-left p-2">Proof</th>
+                <tr className="border-b border-gray-200 dark:border-gray-700">
+                  <th className="text-left p-4 dark:text-gray-200">Type</th>
+                  <th className="text-left p-4 dark:text-gray-200">Description</th>
+                  <th className="text-left p-4 dark:text-gray-200">Amount</th>
+                  <th className="text-left p-4 dark:text-gray-200">Date</th>
+                  <th className="text-left p-4 dark:text-gray-200">Status</th>
                 </tr>
               </thead>
               <tbody>
-                {transactions.length === 0 ? (
-                  <tr>
-                    <td className="p-2" colSpan={6}>No transactions</td>
+                {transactions.map((transaction) => (
+                  <tr key={transaction.id} className="border-b border-gray-100 dark:border-gray-700">
+                    <td className="p-4">
+                      <div className="flex items-center gap-2">
+                        {getTransactionIcon(transaction.type)}
+                        <span className="capitalize dark:text-gray-200">{transaction.type}</span>
+                      </div>
+                    </td>
+                    <td className="p-4 dark:text-gray-200">{transaction.description}</td>
+                    <td className="p-4">
+                      <span
+                        className={`font-medium ${
+                          transaction.amount > 0
+                            ? 'text-green-600 dark:text-green-400'
+                            : 'text-red-600 dark:text-red-400'
+                        }`}
+                      >
+                        {transaction.amount > 0 ? '+' : ''}${Math.abs(transaction.amount).toFixed(2)}
+                      </span>
+                    </td>
+                    <td className="p-4 dark:text-gray-200">{transaction.date}</td>
+                    <td className="p-4">
+                      <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(transaction.status)}`}>
+                        {transaction.status}
+                      </span>
+                    </td>
                   </tr>
-                ) : (
-                  transactions.map((t) => (
-                    <tr key={t.id} style={{ borderTop: "1px solid var(--dash-border)" }}>
-                      <td className="p-2 whitespace-nowrap">
-                        <div className="flex items-center gap-2">
-                          {getTransactionIcon(t.type)}
-                          <span className="capitalize">{t.type}</span>
-                        </div>
-                      </td>
-                      <td className="p-2 whitespace-nowrap font-medium">{formatINR(t.amount)}</td>
-                      <td className="p-2">{t.description || "-"}</td>
-                      <td className="p-2 whitespace-nowrap">
-                        {t.date ? new Date(t.date).toLocaleString() : "-"}
-                      </td>
-                      <td className="p-2 whitespace-nowrap">
-                        <span className={`px-2 py-1 rounded-lg text-xs ${statusBadge(t.status)}`}>
-                          {t.status}
-                        </span>
-                      </td>
-                      <td className="p-2">
-                        {t.type === "withdrawal" && t?.adminPayout?.screenshotUrl ? (
-                          <a className="underline" href={assetUrl(t.adminPayout.screenshotUrl)} target="_blank" rel="noreferrer">
-                            Screenshot
-                          </a>
-                        ) : (
-                          "-"
-                        )}
-                      </td>
-                    </tr>
-                  ))
-                )}
+                ))}
               </tbody>
             </table>
           </div>
         </div>
       )}
 
-      {/* Withdrawals */}
-      {activeTab === "withdraw" && (
-        <div className="space-y-6">
-          <div className="dash-card p-4 sm:p-6 rounded-2xl">
-            <div className="flex items-center justify-between flex-wrap gap-2">
+      {/* Withdraw Tab */}
+      {activeTab === 'withdraw' && (
+        <div className="max-w-2xl">
+          <div className="glass-soft rounded-lg border border-[color:var(--border)] p-6">
+            <h2 className="text-lg font-semibold mb-4 text-[color:var(--text)]">Request Withdrawal</h2>
+
+            <form onSubmit={handleWithdrawal} className="space-y-4">
               <div>
-                <h2 className="text-lg font-semibold">Withdrawal History</h2>
-                <p className="text-sm" style={{ color: "var(--muted)" }}>
-                  Track your withdrawal requests and payout proofs.
+                <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
+                  Amount (USD) <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  max={maxWithdrawal}
+                  value={withdrawalRequest.amount || ''}
+                  onChange={(e) =>
+                    setWithdrawalRequest({
+                      ...withdrawalRequest,
+                      amount: parseFloat(e.target.value) || 0
+                    })
+                  }
+                  className="input-ui w-full px-3 py-2"
+                  placeholder={`Max: $${maxWithdrawal}`}
+                  required
+                />
+                <p className="text-xs text-[color:var(--muted)] mt-1">
+                  Maximum withdrawal: ${maxWithdrawal} | Available balance: ${currentBalance}
                 </p>
               </div>
-              <button className="dash-btn" type="button" onClick={load}>
-                Refresh
-              </button>
-            </div>
 
-            <div className="mt-4 overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr style={{ color: "var(--muted)" }}>
-                    <th className="text-left p-2">Requested</th>
-                    <th className="text-left p-2">Amount</th>
-                    <th className="text-left p-2">Status</th>
-                    <th className="text-left p-2">Paid Amount</th>
-                    <th className="text-left p-2">Paid Date</th>
-                    <th className="text-left p-2">Transaction ID</th>
-                    <th className="text-left p-2">Account</th>
-                    <th className="text-left p-2">Screenshot</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {withdrawals.length === 0 ? (
-                    <tr>
-                      <td className="p-2" colSpan={8}>No withdrawals</td>
-                    </tr>
-                  ) : (
-                    withdrawals.map((w) => (
-                      <tr key={w._id} style={{ borderTop: "1px solid var(--dash-border)" }}>
-                        <td className="p-2 whitespace-nowrap">{new Date(w.createdAt).toLocaleString()}</td>
-                        <td className="p-2 whitespace-nowrap font-medium">{formatINR(w.amount)}</td>
-                        <td className="p-2 whitespace-nowrap">
-                          <span className={`px-2 py-1 rounded-lg text-xs ${statusBadge(w.status)}`}>
-                            {w.status}
-                          </span>
-                        </td>
-                        <td className="p-2 whitespace-nowrap">{w?.adminPayout?.paidAmount ? formatINR(w.adminPayout.paidAmount) : "-"}</td>
-                        <td className="p-2 whitespace-nowrap">{w?.adminPayout?.paidDate ? new Date(w.adminPayout.paidDate).toLocaleString() : "-"}</td>
-                        <td className="p-2 whitespace-nowrap">
-                          {w?.adminPayout?.transactionId || "-"}
-                        </td>
-                        <td className="p-2">
-                          <div className="text-xs">{w?.adminPayout?.accountName || w?.bankDetails?.accountHolderName || "-"}</div>
-                          <div className="text-xs" style={{ color: "var(--muted)" }}>
-                            {w?.adminPayout?.accountNo || w?.bankDetails?.accountNumber || ""}
-                          </div>
-                        </td>
-                        <td className="p-2">
-                          {w?.adminPayout?.screenshotUrl ? (
-                            <a className="underline" href={assetUrl(w.adminPayout.screenshotUrl)} target="_blank" rel="noreferrer">
-                              View
-                            </a>
-                          ) : (
-                            "-"
-                          )}
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+              <div>
+                <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
+                  Withdrawal Method <span className="text-red-500">*</span>
+                </label>
+                <select
+                  value={withdrawalRequest.method}
+                  onChange={(e) =>
+                    setWithdrawalRequest({
+                      ...withdrawalRequest,
+                      method: e.target.value
+                    })
+                  }
+                  className="input-ui w-full px-3 py-2"
+                  required
+                >
+                  <option value="bank">Bank Transfer</option>
+                  <option value="paypal">PayPal</option>
+                  <option value="stripe">Stripe</option>
+                </select>
+              </div>
+
+              {/* Bank Details Section */}
+              {withdrawalRequest.method === 'bank' && (
+                <div className="space-y-4 p-4 bg-white/5 rounded-lg border border-[color:var(--border)]">
+                  <h3 className="text-sm font-medium text-[color:var(--muted)] flex items-center gap-2">
+                    <Building2 className="w-4 h-4" />
+                    Bank Account Details
+                  </h3>
+
+                  <div>
+                    <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
+                      <User className="w-4 h-4 inline mr-1" />
+                      Account Holder Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={withdrawalRequest.bankDetails.accountHolderName}
+                      onChange={(e) => updateBankDetails('accountHolderName', e.target.value)}
+                      className="input-ui w-full px-3 py-2"
+                      placeholder="Enter full name as per bank records"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
+                      <Hash className="w-4 h-4 inline mr-1" />
+                      Account Number <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={withdrawalRequest.bankDetails.accountNumber}
+                      onChange={(e) => updateBankDetails('accountNumber', e.target.value)}
+                      className="input-ui w-full px-3 py-2"
+                      placeholder="Enter bank account number"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
+                      <Building2 className="w-4 h-4 inline mr-1" />
+                      IFSC Code <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={withdrawalRequest.bankDetails.ifscCode}
+                      onChange={(e) => updateBankDetails('ifscCode', e.target.value.toUpperCase())}
+                      className="input-ui w-full px-3 py-2"
+                      placeholder="Enter IFSC code (e.g., SBIN0001234)"
+                      pattern="[A-Z]{4}0[A-Z0-9]{6}"
+                      maxLength={11}
+                      required
+                    />
+                    <p className="text-xs text-[color:var(--muted)] mt-1">
+                      11-character IFSC code (e.g., SBIN0001234)
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* PayPal Details */}
+              {withdrawalRequest.method === 'paypal' && (
+                <div className="space-y-4 p-4 bg-white/5 rounded-lg border border-[color:var(--border)]">
+                  <h3 className="text-sm font-medium text-[color:var(--muted)]">PayPal Details</h3>
+                  <div>
+                    <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
+                      PayPal Email <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      value={withdrawalRequest.paypalEmail || ''}
+                      onChange={(e) =>
+                        setWithdrawalRequest({ ...withdrawalRequest, paypalEmail: e.target.value })
+                      }
+                      className="input-ui w-full px-3 py-2"
+                      placeholder="Enter PayPal email address"
+                      required
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Stripe Details */}
+              {withdrawalRequest.method === 'stripe' && (
+                <div className="space-y-4 p-4 bg-white/5 rounded-lg border border-[color:var(--border)]">
+                  <h3 className="text-sm font-medium text-[color:var(--muted)]">Stripe Details</h3>
+                  <div>
+                    <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
+                      Stripe Account ID <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={withdrawalRequest.stripeAccountId || ''}
+                      onChange={(e) =>
+                        setWithdrawalRequest({ ...withdrawalRequest, stripeAccountId: e.target.value })
+                      }
+                      className="input-ui w-full px-3 py-2"
+                      placeholder="Enter Stripe account ID"
+                      required
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div className="flex justify-end gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={resetWithdrawalForm}
+                  className="px-4 py-2 text-[color:var(--muted)] hover:text-[color:var(--text)]"
+                >
+                  Clear
+                </button>
+                <button
+                  type="submit"
+                  className="bg-gradient-to-r from-green-500 to-emerald-500 text-[color:var(--text)] px-4 py-2 rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all duration-200 hover:scale-105 active:scale-95"
+                >
+                  Submit Request
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
 
-      {/* Withdraw Modal */}
+      {/* Enhanced Withdrawal Modal */}
       {showWithdrawModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/60" onClick={() => setShowWithdrawModal(false)} />
-          <div className="relative w-full max-w-lg glass p-6 rounded-3xl">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <h3 className="text-xl font-semibold">Request Withdrawal</h3>
-                <p className="text-sm mt-1" style={{ color: "var(--muted)" }}>
-                  Available: <span className="font-medium">{formatINR(maxWithdrawal)}</span>
-                </p>
-              </div>
+        <div className="fixed inset-0 z-[100] bg-black/100 backdrop-blur-l flex items-center justify-center p-4">
+          <div className="dash-card text-[color:var(--text)] rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-[color:var(--border)] shadow-2xl">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold text-[color:var(--text)]">Quick Withdrawal</h2>
               <button
-                type="button"
-                className="h-9 w-9 rounded-full grid place-items-center bg-black/5 dark:bg-white/10"
                 onClick={() => setShowWithdrawModal(false)}
-                aria-label="Close"
+                className="text-[color:var(--muted)] hover:text-[color:var(--text)] text-2xl"
               >
-                ✕
+                ×
               </button>
             </div>
 
-            <form onSubmit={handleWithdrawal} className="mt-5 space-y-4">
+            <form onSubmit={handleWithdrawal} className="space-y-4">
               <div>
-                <label className="text-sm" style={{ color: "var(--muted)" }}>Amount</label>
+                <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
+                  Amount (USD) <span className="text-red-500">*</span>
+                </label>
                 <input
                   type="number"
-                  min={1}
                   step="0.01"
-                  value={withdrawalRequest.amount}
-                  onChange={(e) => setWithdrawalRequest((p) => ({ ...p, amount: e.target.value }))}
-                  className="dash-input mt-2"
-                  placeholder="Enter amount"
+                  max={maxWithdrawal}
+                  value={withdrawalRequest.amount || ''}
+                  onChange={(e) =>
+                    setWithdrawalRequest({
+                      ...withdrawalRequest,
+                      amount: parseFloat(e.target.value) || 0
+                    })
+                  }
+                  className="input-ui w-full px-3 py-2"
+                  placeholder={`Max: $${maxWithdrawal}`}
+                  required
                 />
-                <div className="text-xs mt-2" style={{ color: "var(--muted)" }}>
-                  Max withdraw: {formatINR(maxWithdrawal)}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm flex items-center gap-2" style={{ color: "var(--muted)" }}>
-                    <User className="w-4 h-4" /> Account Holder
-                  </label>
-                  <input
-                    className="dash-input mt-2"
-                    value={withdrawalRequest.bankDetails.accountHolderName}
-                    onChange={(e) => updateBankDetails("accountHolderName", e.target.value)}
-                    placeholder="Account holder name"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm flex items-center gap-2" style={{ color: "var(--muted)" }}>
-                    <Hash className="w-4 h-4" /> Account Number
-                  </label>
-                  <input
-                    className="dash-input mt-2"
-                    value={withdrawalRequest.bankDetails.accountNumber}
-                    onChange={(e) => updateBankDetails("accountNumber", e.target.value)}
-                    placeholder="Account number"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm" style={{ color: "var(--muted)" }}>IFSC</label>
-                  <input
-                    className="dash-input mt-2"
-                    value={withdrawalRequest.bankDetails.ifscCode}
-                    onChange={(e) => updateBankDetails("ifscCode", e.target.value)}
-                    placeholder="IFSC code"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm flex items-center gap-2" style={{ color: "var(--muted)" }}>
-                    <Building2 className="w-4 h-4" /> Bank Name
-                  </label>
-                  <input
-                    className="dash-input mt-2"
-                    value={withdrawalRequest.bankDetails.bankName}
-                    onChange={(e) => updateBankDetails("bankName", e.target.value)}
-                    placeholder="Bank name"
-                  />
-                </div>
+                <p className="text-xs text-[color:var(--muted)] mt-1">
+                  Available: ${currentBalance} | Max: ${maxWithdrawal}
+                </p>
               </div>
 
               <div>
-                <label className="text-sm" style={{ color: "var(--muted)" }}>Branch</label>
-                <input
-                  className="dash-input mt-2"
-                  value={withdrawalRequest.bankDetails.branchName}
-                  onChange={(e) => updateBankDetails("branchName", e.target.value)}
-                  placeholder="Branch name"
-                />
+                <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
+                  Method <span className="text-red-500">*</span>
+                </label>
+                <select
+                  value={withdrawalRequest.method}
+                  onChange={(e) =>
+                    setWithdrawalRequest({
+                      ...withdrawalRequest,
+                      method: e.target.value
+                    })
+                  }
+                  className="input-ui w-full px-3 py-2"
+                  required
+                >
+                  <option value="bank">Bank Transfer</option>
+                  <option value="paypal">PayPal</option>
+                  <option value="stripe">Stripe</option>
+                </select>
               </div>
 
-              <div className="flex justify-end gap-3 pt-2">
+              {/* Bank Details in Modal */}
+              {withdrawalRequest.method === 'bank' && (
+                <div className="space-y-3 p-3 bg-[color:var(--panel-soft)] rounded-xl border border-[color:var(--border)]">
+                  <h3 className="text-sm font-medium text-[color:var(--muted)] flex items-center gap-2">
+                    <Building2 className="w-4 h-4" />
+                    Bank Details
+                  </h3>
+
+                  <div>
+                    <label className="block text-xs font-medium text-[color:var(--muted)] mb-1">
+                      Account Holder Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={withdrawalRequest.bankDetails.accountHolderName}
+                      onChange={(e) => updateBankDetails('accountHolderName', e.target.value)}
+                      className="input-ui w-full px-2 py-1.5 text-sm"
+                      placeholder="Full name as per bank"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium text-[color:var(--muted)] mb-1">
+                      Account Number <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={withdrawalRequest.bankDetails.accountNumber}
+                      onChange={(e) => updateBankDetails('accountNumber', e.target.value)}
+                      className="input-ui w-full px-2 py-1.5 text-sm"
+                      placeholder="Bank account number"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium text-[color:var(--muted)] mb-1">
+                      IFSC Code <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={withdrawalRequest.bankDetails.ifscCode}
+                      onChange={(e) => updateBankDetails('ifscCode', e.target.value.toUpperCase())}
+                      className="input-ui w-full px-2 py-1.5 text-sm"
+                      placeholder="IFSC code (e.g., SBIN0001234)"
+                      pattern="[A-Z]{4}0[A-Z0-9]{6}"
+                      maxLength={11}
+                      required
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* PayPal in Modal */}
+              {withdrawalRequest.method === 'paypal' && (
+                <div className="space-y-3 p-3 bg-[color:var(--panel-soft)] rounded-xl border border-[color:var(--border)]">
+                  <div>
+                    <label className="block text-xs font-medium text-[color:var(--muted)] mb-1">
+                      PayPal Email <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      value={withdrawalRequest.paypalEmail || ''}
+                      onChange={(e) =>
+                        setWithdrawalRequest({ ...withdrawalRequest, paypalEmail: e.target.value })
+                      }
+                      className="input-ui w-full px-2 py-1.5 text-sm"
+                      placeholder="PayPal email address"
+                      required
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Stripe in Modal */}
+              {withdrawalRequest.method === 'stripe' && (
+                <div className="space-y-3 p-3 bg-[color:var(--panel-soft)] rounded-xl border border-[color:var(--border)]">
+                  <div>
+                    <label className="block text-xs font-medium text-[color:var(--muted)] mb-1">
+                      Stripe Account ID <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={withdrawalRequest.stripeAccountId || ''}
+                      onChange={(e) =>
+                        setWithdrawalRequest({ ...withdrawalRequest, stripeAccountId: e.target.value })
+                      }
+                      className="input-ui w-full px-2 py-1.5 text-sm"
+                      placeholder="Stripe account ID"
+                      required
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div className="flex justify-end gap-3 pt-4">
                 <button
                   type="button"
-                  className="dash-btn-secondary"
-                  onClick={() => {
-                    setShowWithdrawModal(false);
-                    resetWithdrawalForm();
-                  }}
-                  disabled={submitting}
+                  onClick={() => setShowWithdrawModal(false)}
+                  className="px-4 py-2 text-[color:var(--muted)] hover:text-[color:var(--text)]"
                 >
                   Cancel
                 </button>
-                <button type="submit" className="btn-primary" disabled={submitting}>
-                  {submitting ? "Submitting..." : "Submit Request"}
+                <button
+                  type="submit"
+                  className="bg-gradient-to-r from-green-500 to-emerald-500 text-[color:var(--text)] px-4 py-2 rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all duration-200"
+                >
+                  Submit
                 </button>
               </div>
             </form>
