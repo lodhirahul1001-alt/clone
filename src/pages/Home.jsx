@@ -322,7 +322,7 @@ export default function Home() {
 
               <div className="mt-6 flex gap-3 flex-wrap">
                 <a href="/services" className="btn-ghost">See More</a>
-                <a href="/signup" className="btn-primary">Start Free</a>
+                <a href="/signup" className="btn-primary">Start Free Now</a>
               </div>
             </div>
 
