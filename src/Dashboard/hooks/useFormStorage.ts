@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useLocalStorage } from './useLocalStorage';
+import { postFormEntryToGoogleSheet } from '../../utils/googleSheetsSync';
 
 interface FormData {
   [key: string]: any;
@@ -74,7 +75,7 @@ export function useFormStorage(formType: string) {
     const profileUpdates: UserProfile = {};
     
     // Define all possible profile fields that we want to capture
-    const profileFieldMappings = {
+    const profileFieldMappings: Record<string, keyof UserProfile> = {
       // Personal Info
       'firstName': 'firstName',
       'lastname': 'lastName',
@@ -229,6 +230,15 @@ export function useFormStorage(formType: string) {
     
     // Clear current form data after successful submission
     setCurrentFormData({});
+
+    // Sync submission to Google Sheet webhook (if configured)
+    void postFormEntryToGoogleSheet({
+      formType,
+      formTitle: submission.formTitle,
+      data: submission.data,
+      status: submission.status,
+      userInfo: submission.userInfo,
+    });
     
     return submission.id;
   }, [formType, saveFormData, userProfile, setFormSubmissions, setCurrentFormData]);

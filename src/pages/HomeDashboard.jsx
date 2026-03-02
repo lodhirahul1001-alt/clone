@@ -74,7 +74,7 @@ const features = [
 
 export default function HomeDashboard() {
   return (
-    <div className="min-h-screen bg-white text-black dark:bg-black dark:text-white pt-24 pb-16 transition-colors duration-300">
+    <div className="min-h-screen bg-white text-[color:var(--text)] dark:bg-black dark:text-[color:var(--text)] pt-24 pb-16 transition-colors duration-300">
       {/* Header Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-16">
         <motion.h1
@@ -102,10 +102,10 @@ export default function HomeDashboard() {
       {/* Toggle Section */}
       <div className="flex justify-center mb-16">
         <div className="bg-gray-200 dark:bg-gray-800 p-1 rounded-full inline-flex">
-          <button className="px-6 py-2 rounded-full bg-white text-black font-medium dark:bg-white dark:text-black">
+          <button className="px-6 py-2 rounded-full bg-white text-[color:var(--text)] font-medium dark:bg-white dark:text-[color:var(--text)]">
             UNLIMITED LABLE
           </button>
-          <button className="px-6 py-2 rounded-full text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors">
+          <button className="px-6 py-2 rounded-full text-gray-700 dark:text-gray-300 hover:text-[color:var(--text)] dark:hover:text-[color:var(--text)] transition-colors">
             UNLIMITED ARTIST
           </button>
         </div>
@@ -123,7 +123,7 @@ export default function HomeDashboard() {
               className="relative bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-lg"
             >
               {plan.highlight && (
-                <div className="absolute top-4 left-4 bg-yellow-400 text-black text-sm font-bold px-3 py-1 rounded-full">
+                <div className="absolute top-4 left-4 bg-yellow-400 text-[color:var(--text)] text-sm font-bold px-3 py-1 rounded-full">
                   {plan.highlight}
                 </div>
               )}
@@ -140,7 +140,7 @@ export default function HomeDashboard() {
                   {plan.description}
                 </p>
                 <button
-                  className={`w-full py-3 rounded-lg text-white font-medium mb-8 ${plan.buttonColor} hover:opacity-90 transition-opacity`}
+                  className={`w-full py-3 rounded-lg text-[color:var(--text)] font-medium mb-8 ${plan.buttonColor} hover:opacity-90 transition-opacity`}
                 >
                   GET STARTED
                 </button>

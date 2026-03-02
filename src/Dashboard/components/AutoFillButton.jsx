@@ -31,8 +31,8 @@ export function AutoFillButton({ onAutoFill, formType, className = '' }) {
       className={`
         flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200
         ${isAnimating
-          ? 'bg-green-500 text-white'
-          : 'bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white'}
+          ? 'bg-green-500 text-[color:var(--text)]'
+          : 'bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-[color:var(--text)]'}
         disabled:opacity-50 disabled:cursor-not-allowed
         ${className}
       `}

@@ -1,3 +1,4 @@
+import { Facebook, Instagram, MessageCircle, Youtube } from "lucide-react";
 import React from "react";
 
 const people = [
@@ -38,37 +39,43 @@ const people = [
   //   email: "james@prdigital.com",
   // },
   {
-    name: "Sarah Williams",
-    role: "Director of Sales",
-    photo: "https://images.unsplash.com/photo-1548142813-c348350df52b",
-    bio: "Sales strategist driving sustainable revenue growth.",
-    linkedin: "#",
-    twitter: "#",
-    email: "sarah@prdigital.com",
+    name: "Rahul Lodhi",
+    role: "Website Devloper",
+    photo: "https://i.pinimg.com/736x/e2/54/52/e254524205172a4716c61e6bbe6fc060.jpg",
+    bio: "Website Developer & Designer crafting modern, user-focused digital experiences.",
+    socials: {
+      instagram: "https://www.instagram.com/lodhi2449?igsh=NjE5NmcybnptdW1q",
+      youtube: "https://youtube.com/@indianavr?si=UITi8F2fazjvbCUr",
+      facebook: "https://www.facebook.com/share/1LJoWWwU24/",
+      whatsapp: "https://chat.whatsapp.com/BCuYjUJIArzJr8sjUy39cz",
+    },
+    linkedin: "",
+    Instagram: "@lodhi2449",
+    email: "Lodhirahul7002@.com",
   },
   {
-    name: "David Miller",
-    role: "Lead Software Engineer",
-    photo: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91",
-    bio: "Senior developer with a love for clean architecture.",
+    name: "R.K Yadav",
+    role: "Director Of Sales",
+    photo: "https://i.pinimg.com/736x/ef/dd/7e/efdd7ea17a90fe42a238b0cd11aac8fd.jpg",
+    bio: "Director of Sales with a strong focus on web solutions, growth strategy, and high-performing revenue teams.",
     linkedin: "#",
     twitter: "#",
     email: "david@prdigital.com",
   },
   {
-    name: "Emily Johnson",
-    role: "Marketing",
-    photo: "https://images.unsplash.com/photo-1546961329-78bef0414d7c",
-    bio: "Marketing expert specializing in SaaS brand growth.",
+    name: "Sagar Gupta",
+    role: "Manager",
+    photo: "https://i.pinimg.com/736x/4f/27/80/4f2780676e3703302c2adb8a0a91aba2.jpg",
+    bio: "Digital marketing specialist driving traffic, leads, and conversions through data-backed campaigns.",
     linkedin: "#",
     twitter: "#",
     email: "emily@prdigital.com",
   },
   {
-    name: "Jillie Bernard",
+    name: "A.K Yadav",
     role: "Founder & CEO",
-    photo: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e",
-    bio: "Visionary leader with 15+ years of industry experience.",
+    photo: "https://i.pinimg.com/736x/bb/ba/f2/bbbaf2989cb34bd317724a07ca350a0c.jpg",
+    bio: "Visionary leader with 10+ years of industry experience Web-focused company delivering modern, high-impact solutions..",
     linkedin: "#",
     twitter: "#",
     email: "jillie@prdigital.com",
@@ -81,7 +88,7 @@ export default function TeamSection({ compact = false }) {
       <div className="mx-auto max-w-6xl px-4">
         {/* Header */}
         <div className="text-center">
-          <h2 className="text-3xl md:text-5xl font-semibold text-pink-700 tracking-tight text-[var(--text)]">
+          <h2 className="text-3xl text-neon md:text-5xl font-semibold tracking-tight ]">
             Meet Our Team
           </h2>
           <p className="mt-3 text-sm md:text-base text-[var(--muted)] max-w-2xl mx-auto">
@@ -107,7 +114,7 @@ export default function TeamSection({ compact = false }) {
               />
               <div className="absolute inset-0 bg-black/30" />
               <div className="relative p-6 h-full flex flex-col justify-end">
-                <div className="text-white">
+                <div className="text-[color:var(--text)]">
                   <div className="font-medium">{p.name}</div>
                   <div className="text-xs opacity-80">{p.role}</div>
                 </div>
@@ -122,13 +129,7 @@ export default function TeamSection({ compact = false }) {
   {people.map((p) => (
     <div
       key={p.name}
-      className="group relative rounded-[28px] p-6
-                 bg-white dark:bg-zinc-900
-                 border border-zinc-200/70 dark:border-zinc-800
-                 shadow-[0_10px_30px_rgba(0,0,0,0.08)]
-                 dark:shadow-[0_20px_60px_rgba(0,0,0,0.6)]
-                 transition-all duration-500 ease-out
-                 hover:-translate-y-3 hover:scale-[1.02]"
+      className="group relative rounded-[28px] p-6 glass-soft shadow-[0_10px_30px_rgba(0,0,0,0.08)] transition-all duration-500 ease-out hover:-translate-y-3 hover:scale-[1.02]"
     >
       {/* Animated glow */}
       <div
@@ -149,40 +150,66 @@ export default function TeamSection({ compact = false }) {
         <img
           src={p.photo}
           alt={p.name}
-          className="w-full h-full rounded-full object-cover bg-white"
+          className="w-full h-full rounded-full object-cover bg-[color:var(--panel)]"
         />
       </div>
 
       {/* Content */}
       <div className="mt-6 text-center transition duration-500 group-hover:translate-y-[-2px]">
-        <h3 className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-white">
+        <h3 className="text-lg font-semibold tracking-tight text-[color:var(--text)]">
           {p.name}
         </h3>
 
-        <p className="text-sm font-medium text-purple-600 dark:text-purple-400 mt-1">
+        <p className="text-sm font-medium mt-1 text-neon">
           {p.role}
         </p>
 
-        <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+        <p className="mt-3 text-sm text-[color:var(--muted)] leading-relaxed">
           {p.bio}
         </p>
       </div>
 
       {/* Social icons */}
-      <div className="mt-7 flex justify-center gap-3">
-        {[1, 2, 3].map((i) => (
-          <span
-            key={i}
-            className="h-9 w-9 rounded-xl
-                       bg-zinc-100 dark:bg-zinc-800
-                       border border-zinc-200 dark:border-zinc-700
-                       opacity-0 translate-y-2
-                       group-hover:opacity-100 group-hover:translate-y-0
-                       transition-all duration-500 delay-100
-                       hover:scale-110 hover:shadow-lg"
-          />
-        ))}
-      </div>
+      {p.socials && (
+        <div className="mt-7 flex justify-center gap-3">
+          <a
+            href={p.socials.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${p.name} Instagram`}
+            className="h-9 w-9 rounded-xl bg-[color:var(--panel-soft)] border border-[color:var(--border)] flex items-center justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100 hover:scale-110 hover:shadow-lg"
+          >
+            <Instagram size={16} />
+          </a>
+          <a
+            href={p.socials.youtube}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${p.name} YouTube`}
+            className="h-9 w-9 rounded-xl bg-[color:var(--panel-soft)] border border-[color:var(--border)] flex items-center justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100 hover:scale-110 hover:shadow-lg"
+          >
+            <Youtube size={16} />
+          </a>
+          <a
+            href={p.socials.facebook}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${p.name} Facebook`}
+            className="h-9 w-9 rounded-xl bg-[color:var(--panel-soft)] border border-[color:var(--border)] flex items-center justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100 hover:scale-110 hover:shadow-lg"
+          >
+            <Facebook size={16} />
+          </a>
+          <a
+            href={p.socials.whatsapp}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${p.name} WhatsApp`}
+            className="h-9 w-9 rounded-xl bg-[color:var(--panel-soft)] border border-[color:var(--border)] flex items-center justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100 hover:scale-110 hover:shadow-lg"
+          >
+            <MessageCircle size={16} />
+          </a>
+        </div>
+      )}
 
       {/* Subtle shine */}
       <div

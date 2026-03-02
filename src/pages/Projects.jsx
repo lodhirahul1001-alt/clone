@@ -48,7 +48,7 @@ export default function Projects() {
           transition={{ duration: 0.5 }}
           className="text-4xl md:text-6xl font-semibold tracking-tight"
         >
-          Music distribution projects that <span className="text-neon">scale</span>.
+          Music Distribution Projects That <span className="text-neon">Scale</span>.
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 20 }}

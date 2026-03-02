@@ -4,7 +4,7 @@ import Section from "../components/Section";
 
 const stats = [
   { number: "150+", label: "Digital Platforms", icon: Globe },
-  { number: "1M+", label: "Content Creators", icon: Users },
+  { number: "50K+", label: "Audio Distributed", icon: Users },
   { number: "10+", label: "Years Experience", icon: Award },
 ];
 
@@ -16,12 +16,32 @@ const fadeUp = {
 const About = () => {
   return (
     <div className="overflow-x-hidden">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mt-25 mb-20">
+        <motion.h1
+          {...fadeUp}
+          transition={{ duration: 0.6 }}
+          className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6"
+        >
+          About <span className="text-neon">Silent Music Group</span>
+        </motion.h1>
+
+        <motion.p
+          {...fadeUp}
+          transition={{ duration: 0.6, delay: 0.15 }}
+          className="text-base sm:text-lg md:text-xl text-[color:var(--muted)] max-w-3xl mx-auto"
+        >
+          Silent Music Group is the leading independent development partner for content creators,
+          helping build audiences and careers through technology and services across distribution,
+          publishing administration, and promotional services.
+        </motion.p>
+      </section>
+
       <Section
         id="trust"
         title="Join thousands of satisfied customers"
         subtitle="Trusted by artists, labels and studios across regions."
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {stats.map((s) => (
             <div
               key={s.label}
@@ -61,27 +81,9 @@ const About = () => {
         </div>
       </Section>
 
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-20">
-        <motion.h1
-          {...fadeUp}
-          transition={{ duration: 0.6 }}
-          className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6"
-        >
-          About <span className="text-neon">PR DIGITAL CMS</span>
-        </motion.h1>
+      
 
-        <motion.p
-          {...fadeUp}
-          transition={{ duration: 0.6, delay: 0.15 }}
-          className="text-base sm:text-lg md:text-xl text-[color:var(--muted)] max-w-3xl mx-auto"
-        >
-          PR DIGITAL CMS is the leading independent development partner for content creators,
-          helping build audiences and careers through technology and services across distribution,
-          publishing administration, and promotional services.
-        </motion.p>
-      </section>
-
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
+      {/* <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {stats.map((stat, index) => (
             <motion.div
@@ -98,8 +100,8 @@ const About = () => {
             </motion.div>
           ))}
         </div>
-      </section>
-
+      </section> */}
+{/* 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-24">
         <motion.h2
           {...fadeUp}
@@ -114,11 +116,11 @@ const About = () => {
           transition={{ duration: 0.6, delay: 0.15 }}
           className="text-base sm:text-lg md:text-xl text-[color:var(--muted)] max-w-3xl mx-auto"
         >
-          PR DIGITAL CMS&apos;s mission is to best serve content creators and brands in the early
+          Silent Music Group&apos;s mission is to best serve content creators and brands in the early
           stages of their development in the digital ecosystem, with fairness, expertise, respect
           and transparency.
         </motion.p>
-      </section>
+      </section> */}
     </div>
   );
 };

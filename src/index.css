@@ -3,6 +3,13 @@
 /* ==================================================   Theme tokens (Light + Dark)
    ========================================================= */
 :root{
+  /* Hero overlays (light theme) */
+  --heroShadeTop: rgba(255,255,255,0.55);
+  --heroShadeMid: rgba(255,255,255,0.15);
+  --heroShadeBottom: rgba(15,23,42,0.08);
+  --heroShadeTop2: rgba(255,255,255,0.35);
+  --heroShadeMid2: rgba(255,255,255,0.08);
+
   --app-bg: radial-gradient(1200px 800px at 20% 10%, rgba(124,58,237,.18), transparent 55%),
             radial-gradient(900px 700px at 80% 20%, rgba(236,72,153,.12), transparent 55%),
             linear-gradient(180deg, #f7f7fb 0%, #f1f5f9 45%, #ffffff 100%);
@@ -29,6 +36,13 @@
 }
 
 .dark{
+  /* Hero overlays (dark theme) */
+  --heroShadeTop: rgba(0,0,0,0.15);
+  --heroShadeMid: rgba(0,0,0,0.38);
+  --heroShadeBottom: rgba(0,0,0,0.72);
+  --heroShadeTop2: rgba(0,0,0,0.60);
+  --heroShadeMid2: rgba(0,0,0,0.18);
+
   /* Dark mode should read as truly black while keeping subtle neon atmosphere */
   --app-bg: radial-gradient(1200px 800px at 20% 10%, rgba(124,58,237,.30), transparent 55%),
             radial-gradient(900px 700px at 80% 20%, rgba(236,72,153,.18), transparent 55%),
@@ -66,6 +80,8 @@
     color: var(--text);
     @apply antialiased transition-colors duration-300 min-h-screen;
   }
+  #root { min-height: 100vh; overflow-x: hidden; }
+  body { overflow-x: hidden; }
 
   h1, h2, h3, h4, h5, h6 { @apply font-sans; }
 }
@@ -140,7 +156,6 @@
 @layer components {
 
   .container-page { @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8; }
-  .container-page { @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-2; }
 
   .glass{
     background: var(--panel);
@@ -281,7 +296,7 @@
     radial-gradient(1000px 520px at 18% 10%, rgba(94, 17, 104, 0.18), transparent 60%),
     radial-gradient(900px 520px at 70% 5%, rgba(124,58,237,.18), transparent 60%),
     radial-gradient(900px 520px at 90% 60%, rgba(63, 6, 35, 0.1), transparent 60%),
-    var(--bg);
+    var(--dash-bg);
 }
 
 .dash-scope{
@@ -465,6 +480,23 @@
   padding: 10px 12px;
   color: var(--text);
   outline: none;
+}
+
+/* Themed select control for dashboard forms (Release Title / Claim Category etc.) */
+.dash-select-themed{
+  background: var(--panel-soft) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+}
+
+.dash-select-themed option{
+  background-color: #ffffff;
+  color: #111827;
+}
+
+html.dark .dash-select-themed option{
+  background-color: #0b1020;
+  color: #e5e7eb;
 }
 .dash-form input::placeholder,
 .dash-form textarea::placeholder{
@@ -679,21 +711,18 @@ html:not(.dark) .dash-btn {
   color: white !important;
   border: none !important;
 }
-main {
-  padding-top: 50px; /* prevents overlap under sticky header */
-}
 .dash-header {
   height: 72px;
 }
 
 
 .app-shell {
-  padding-top: 96px;
+  padding-top: calc(96px + env(safe-area-inset-top, 0px));
 }
 
 @media (max-width: 768px) {
   .app-shell {
-    padding-top: 84px;
+    padding-top: calc(88px + env(safe-area-inset-top, 0px));
   }
 }
 
@@ -708,7 +737,7 @@ main {
 }
 
 /* Dark Theme */
-[data-theme="dark"] {
+.dark {
   --dropdown-bg: #1e1e1e;
   --dropdown-text: #f5f5f5;
   --dropdown-hover-bg: #333333;
@@ -725,4 +754,80 @@ main {
 .drop-down:hover {
   background-color: var(--dropdown-hover-bg);
   color: var(--dropdown-hover-text);
+}
+
+/* Navbar surface tuned for both themes */
+.nav-surface{
+  background:
+    linear-gradient(90deg, rgba(124,58,237,.20), rgba(236,72,153,.14)),
+    rgba(255,255,255,.72);
+  border: 1px solid rgba(2,6,23,.12);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+html.dark .nav-surface{
+  background:
+    linear-gradient(90deg, rgba(124,58,237,.18), rgba(236,72,153,.12)),
+    rgba(0,0,0,.78);
+  border-color: rgba(255,255,255,.14);
+}
+
+/* Native select dropdown options: keep readable in both themes */
+select.input-ui option,
+select.dash-input option,
+select.dash-select option {
+  color: #111827 !important;
+  background-color: #ffffff !important;
+}
+
+html.dark select.input-ui option,
+html.dark select.dash-input option,
+html.dark select.dash-select option {
+  color: #f8fafc !important;
+  background-color: #0f172a !important;
+}
+
+/* Some browsers also need optgroup text/background explicitly */
+select.dash-input optgroup,
+select.dash-select optgroup {
+  color: #111827;
+  background-color: #ffffff;
+}
+
+html.dark select.dash-input optgroup,
+html.dark select.dash-select optgroup {
+  color: #f8fafc;
+  background-color: #0f172a;
+}
+
+/* ===== Dashboard dark-theme visibility + deeper black overrides ===== */
+.dash-nav-label{
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.dash-nav-item{
+  color: var(--text);
+  border: 1px solid transparent;
+}
+
+.dash-nav-item:hover{
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.10);
+}
+
+html.dark .dash-shell{
+  background:
+    radial-gradient(900px 520px at 18% 10%, rgba(124,58,237,.16), transparent 60%),
+    radial-gradient(900px 520px at 75% 15%, rgba(236,72,153,.10), transparent 60%),
+    var(--dash-bg);
+}
+
+html.dark .dash-sidebar{
+  background: rgba(0,0,0,.92) !important;
+  border-right: 1px solid rgba(255,255,255,.12) !important;
 }

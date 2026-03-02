@@ -25,7 +25,7 @@ export function AddReleaseButton({ onClick }) {
         px-4
         py-2
         rounded-lg
-        text-white
+        text-[color:var(--text)]
         font-medium
         transition-all
         duration-200

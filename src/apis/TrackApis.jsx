@@ -32,6 +32,12 @@ export const uploadTrackApi = async (data) => {
   );
   formData.append("isrcGeneration", data.isrcGeneration ? "true" : "false");
   formData.append("crbtCut", data.crbtCut ? "true" : "false");
+  formData.append("youTubecontentID", data.youTubecontentID ? "true" : "false");
+
+  if (Array.isArray(data.stores) && data.stores.length > 0) {
+    formData.append("stores", JSON.stringify(data.stores));
+    formData.append("store", data.stores.join(", "));
+  }
 
   if (data.audioFile) {
     formData.append("audioFile", data.audioFile);
@@ -116,6 +122,12 @@ export const updateTrackApi = async (id, data) => {
   );
   formData.append("isrcGeneration", data.isrcGeneration ? "true" : "false");
   formData.append("crbtCut", data.crbtCut ? "true" : "false");
+  formData.append("youTubecontentID", data.youTubecontentID ? "true" : "false");
+
+  if (Array.isArray(data.stores) && data.stores.length > 0) {
+    formData.append("stores", JSON.stringify(data.stores));
+    formData.append("store", data.stores.join(", "));
+  }
 
   if (data.coverArt instanceof File) {
     formData.append("coverArt", data.coverArt);

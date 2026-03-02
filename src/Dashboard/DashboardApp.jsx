@@ -44,6 +44,10 @@ import UserProfile from "./pages/UserProfile";
 import AdminRoute from "../components/AdminRoute";
 import AdminTracks from "./pages/AdminTracks";
 import AdminUsers from "./pages/AdminUsers";
+import AdminPayments from "./pages/AdminPayments";
+import AdminClaims from "./pages/AdminClaims";
+import AdminCallbacks from "./pages/AdminCallbacks";
+import AdminNotification from "./pages/AdminNotification";
 
 import { useSelector, useDispatch } from "react-redux";
 import { removeUser } from "../features/reducers/AuthSlice";
@@ -87,6 +91,7 @@ const menuItems = [
   { name: "Dashboard", path: "/cms", icon: LayoutDashboard },
 
   { name: "Release Music", path: "/cms/release-music", icon: Music },
+  { name: "Create Claim", path: "/cms/release-video", icon: Plus },
   { name: "Labels", path: "/cms/labels", icon: Tags },
   // ✅ Sub Labels
   { name: "Sub Labels", path: "/cms/sub-labels", icon: Tags },
@@ -100,6 +105,10 @@ const menuItems = [
   // ✅ ADMIN (rendered only if role=admin)
   { name: "Admin Tracks", path: "/cms/admin/tracks", icon: FileText, adminOnly: true },
   { name: "Admin Users", path: "/cms/admin/users", icon: Users, adminOnly: true },
+  { name: "Admin Claims", path: "/cms/admin/claims", icon: FileText, adminOnly: true },
+  { name: "Admin Payments", path: "/cms/admin/payments", icon: DollarSign, adminOnly: true },
+  { name: "Admin Callbacks", path: "/cms/admin/callbacks", icon: Users, adminOnly: true },
+  { name: "Admin Notice", path: "/cms/admin/notification", icon: FileText, adminOnly: true },
 ];
 
 
@@ -123,7 +132,7 @@ const menuItems = [
     <>
       {/* Mobile backdrop */}
       <div
-        className={`fixed inset-0 z-50 md:hidden transition-opacity ${
+        className={`fixed inset-0 z-40 md:hidden transition-opacity ${
           isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
         style={{ background: "rgba(0,0,0,.55)" }}
@@ -132,7 +141,7 @@ const menuItems = [
 
       {/* Sidebar drawer */}
       <aside
-        className={`dash-sidebar fixed left-0 top-0 z-40 h-full w-[280px] md:w-[300px] p-5 transform transition-transform duration-200 md:translate-x-0 ${
+        className={`dash-sidebar fixed left-0 top-0 z-50 h-full w-[280px] md:w-[300px] p-5 overflow-y-auto transform transition-transform duration-200 md:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -140,16 +149,22 @@ const menuItems = [
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-2xl grid place-items-center dash-badge">
-              <Music className="w-5 h-5" />
-            </div>
+              
+  <div className="h-9 w-9 rounded-full grid place-items-center border border-white/10 bg-white/5">
+              <img
+                src="/newlogo.jpeg"
+                alt="Silent Music Group logo"
+                className="h-7 w-7 object-contain"
+              />
+            </div>            </div>
             <div>
-              <div className="text-sm font-semibold">PR DIGITAL CMS</div>
+              <div className="text-sm font-semibold">Silent Music Group</div>
               <div className="text-xs" style={{ color: "var(--muted)" }}>Artist Console</div>
             </div>
           </div>
         </div>
 
-        <div className="mt-5 flex items-center gap-3 rounded-2xl p-3 dash-card">
+        {/* <div className="mt-5 flex items-center gap-3 rounded-2xl p-3 dash-card">
           {profilePhoto ? (
             <img
               src={profilePhoto}
@@ -166,7 +181,7 @@ const menuItems = [
             <div className="text-sm font-semibold truncate">{user?.fullName || "User"}</div>
             <div className="text-xs truncate" style={{ color: "var(--muted)" }}>{user?.email || ""}</div>
           </div>
-        </div>
+        </div> */}
 
         {/* Search
         <div className="mt-4 relative">
@@ -179,14 +194,16 @@ const menuItems = [
         </div> */}
 
         {/* Create */}
-        <button
-          onClick={handleCreate}
-          className="mt-4 w-full dash-btn dash-btn-primary"
-          type="button"
-        >
-          <Plus className="w-4 h-4" />
-          Create Release
-        </button>
+        <div className="mt-4 w-full mt-10 space-y-3">
+          <button
+            onClick={handleCreate}
+            className="w-full dash-btn dash-btn-primary"
+            type="button"
+          >
+            <Plus className="w-4 h-4" />
+            Create Release
+          </button>
+        </div>
 
         {/* Nav */}
         <nav className="mt-6 space-y-1">
@@ -200,6 +217,7 @@ const menuItems = [
   .filter((m) =>
     [
       "/cms/release-music",
+      "/cms/release-video",
       "/cms/labels",
       "/cms/sub-labels",
       "/cms/my-artists",
@@ -282,14 +300,16 @@ function DashboardApp() {
   const { user } = useSelector((state) => state.auth);
   const [holidayBanner, setHolidayBanner] = useState(true);
 
+  const holidayBannerKey = "cms_holiday_banner_dismissed_v2";
+
   useEffect(() => {
-    const v = localStorage.getItem("cms_holiday_banner_dismissed");
+    const v = localStorage.getItem(holidayBannerKey);
     if (v === "1") setHolidayBanner(false);
   }, []);
 
   const dismissHolidayBanner = () => {
     setHolidayBanner(false);
-    localStorage.setItem("cms_holiday_banner_dismissed", "1");
+    localStorage.setItem(holidayBannerKey, "1");
   };
 
   const profilePhoto = user?.dp;
@@ -299,7 +319,7 @@ function DashboardApp() {
     "U";
 
   return (
-      <div className="dash-shell dash-scope min-h-screen flex text-[color:var(--text)]">
+      <div className="dash-shell dash-scope min-h-screen flex text-[color:var(--text)] overflow-x-hidden">
         {/* Sidebar (mobile + desktop) */}
         <Sidebar
           isOpen={sidebarOpen}
@@ -308,7 +328,7 @@ function DashboardApp() {
 
         <NotificationsDrawer open={notifOpen} onClose={() => setNotifOpen(false)} />
         {/* Right side content */}
-        <div className="flex-1 flex flex-col min-h-screen md:ml-[300px] ml-0 mt-1">
+        <div className="flex-1 min-w-0 flex flex-col min-h-screen md:ml-[300px] ml-0">
           {/* Top bar */}
           <header className="dash-header sticky top-0 z-20 flex items-center justify-between px-3 sm:px-6 py-3">
             {/* Hamburger only on mobile */}
@@ -324,16 +344,17 @@ function DashboardApp() {
               </div>
             </button>
 
-            <h1 className="text-sm ml-5 sm:text-base font-semibold dash-nav-label mb-1">Dashboard</h1>
+            <h1 className="text-sm sm:text-base font-semibold dash-nav-label mb-1 truncate max-w-[40vw] sm:max-w-none">Dashboard</h1>
 
             <div className="flex items-center gap-3">
               <button
                 type="button"
                 onClick={() => setNotifOpen(true)}
-                className="h-10 w-10 rounded-full grid place-items-center dash-icon-btn"
+                className="relative h-10 w-10 rounded-full grid place-items-center dash-card-soft text-[color:var(--text)] hover:opacity-90 -items-center dash-icon-btn"
                 aria-label="Open notifications"
               >
                 <Bell className="h-5 w-5" />
+              <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-[color:var(--accent-1)]"></span>
               </button>
 
               {/* User info (right side) */}
@@ -367,7 +388,7 @@ function DashboardApp() {
           {/* Holiday update banner (protected routes) */}
           {holidayBanner && (
             <div className="px-3 sm:px-6 mt-3">
-              <div className="dash-card-soft p-3 rounded-2xl flex items-start justify-between gap-3">
+              <div className="dash-card-soft p-3 rounded-2xl flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                 <div>
                   <div className="text-sm font-semibold">🎉 Holiday Update</div>
                   <div className="text-xs mt-1" style={{ color: "var(--muted)" }}>
@@ -387,7 +408,7 @@ function DashboardApp() {
           )}
 
           {/* Main content */}
-          <main className="flex-1 px-3 sm:px-6 py-4 sm:py-6 overflow-y-auto">
+          <main className="flex-1 min-w-0 overflow-x-hidden px-3 sm:px-6 py-4 sm:py-6 overflow-y-auto">
             {/* Yaha /cms/* ke nested routes */}
             <Routes>
               {/* /cms */}
@@ -432,6 +453,46 @@ function DashboardApp() {
                 element={
                   <AdminRoute>
                     <AdminUsers />
+                  </AdminRoute>
+                }
+              />
+
+              {/* /cms/admin/claims */}
+              <Route
+                path="admin/claims"
+                element={
+                  <AdminRoute>
+                    <AdminClaims />
+                  </AdminRoute>
+                }
+              />
+
+              {/* /cms/admin/payments */}
+              <Route
+                path="admin/payments"
+                element={
+                  <AdminRoute>
+                    <AdminPayments />
+                  </AdminRoute>
+                }
+              />
+
+              {/* /cms/admin/callbacks */}
+              <Route
+                path="admin/callbacks"
+                element={
+                  <AdminRoute>
+                    <AdminCallbacks />
+                  </AdminRoute>
+                }
+              />
+
+              {/* /cms/admin/notification */}
+              <Route
+                path="admin/notification"
+                element={
+                  <AdminRoute>
+                    <AdminNotification />
                   </AdminRoute>
                 }
               />

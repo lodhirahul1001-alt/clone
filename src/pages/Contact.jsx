@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import emailjs from "@emailjs/browser";
 import { EMAILJS_CONFIG } from "../config/emailjs/emailjs";
 import { Mail, Phone, MapPin } from "lucide-react";
+import { postFormEntryToGoogleSheet } from "../utils/googleSheetsSync";
 
 export default function Contact() {
   const form = useRef(null);
@@ -23,6 +24,26 @@ export default function Contact() {
         form.current,
         EMAILJS_CONFIG.PUBLIC_KEY
       );
+
+      const formElement = form.current;
+      const payload = {
+        user_name: formElement.user_name?.value || "",
+        user_email: formElement.user_email?.value || "",
+        user_website: formElement.user_website?.value || "",
+        message: formElement.message?.value || "",
+      };
+
+      void postFormEntryToGoogleSheet({
+        formType: "contact-form",
+        formTitle: "Website Contact Form",
+        data: payload,
+        status: "submitted",
+        userInfo: {
+          name: payload.user_name,
+          email: payload.user_email,
+        },
+      });
+
       setIsSent(true);
       form.current.reset();
     } catch (err) {
@@ -59,7 +80,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <div className="font-medium">Email</div>
-                    <div className="text-[color:var(--muted)]">example@teamwebflow.com</div>
+                    <div className="text-[color:var(--muted)]">info@silentmusicgroup.com</div>
                   </div>
                 </div>
 
@@ -69,7 +90,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <div className="font-medium">Address</div>
-                    <div className="text-[color:var(--muted)]">4074 Ebert Summit Suite 375, Lake Leonardchester</div>
+                    <div className="text-[color:var(--muted)]">01, Sagar House, Bara Ayma, Khadagpur (West Bengal) 721304</div>
                   </div>
                 </div>
 
@@ -79,7 +100,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <div className="font-medium">Phone</div>
-                    <div className="text-[color:var(--muted)]">+44 123 654 7890</div>
+                    <div className="text-[color:var(--muted)]">+91 9060070222 , +91 9734235095</div>
                   </div>
                 </div>
               </div>

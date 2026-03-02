@@ -37,60 +37,77 @@ export default function Pricing() {
     const yearly = billing === "yearly";
     return [
       {
-        tag: "Basic Plan",
+        tag: "Free Plan",
         popular: false,
-        price: yearly ? "$39" : "$49",
-        cadence: yearly ? "/mo (billed yearly)" : "/month",
+        price: yearly ? "₹0" : "₹0",
+        cadence: yearly ? "/yearly" : "/monthly",
         description: "Perfect for artists starting distribution.",
         features: [
-          "Unlimited releases",
-          "Delivery to major DSPs",
-          "Basic royalty reporting",
-          "Artist profile & links",
-          "Email support",
+       "Upload unlimited releases",
+"75% Revenue",
+"No take down after plan expires",
+"Monthly Analytics & Revenue",
+"Spotify Verification",
+"Live automatically on new stores",
+"Approval in min 7 working days",
+"Customer support in 48 hours",
+"Free Backlinks",
+"Access to promotional tools",
+// "Instagram Account Linking",
+// "YouTube Official Artist Channel",
+// "Free YouTube Content ID"
+
         ],
       },
       {
-        tag: "Popular Plan",
+        tag: "Paid Plan",
         popular: true,
-        price: yearly ? "$99" : "$124",
-        cadence: yearly ? "/mo (billed yearly)" : "/month",
+        price: yearly ? " ₹49999" : "₹4999",
+        cadence: yearly ? "/ (billed yearly)" : "/yearly",
         description: "For growing catalogs and teams.",
         features: [
-          "Everything in Basic",
-          "Advanced analytics",
-          "Release scheduling",
-          "Split payments (teams)",
-          "Priority support",
+      "Upload unlimited releases",
+        "100% Revenue",
+"No take down after plan expires",
+"Monthly Analytics & Revenue",
+"Spotify Verification",
+"Live automatically on new stores",
+"Approval in min 4 working days",
+"Customer support in 24 hours",
+"Free Backlinks",
+"Access to promotional tools",
+"Instagram Account Linking",
+"YouTube Official Artist Channel",
+"Free YouTube Content ID",
         ],
       },
-      {
-        tag: "Pro Plan",
-        popular: false,
-        price: yearly ? "$239" : "$299",
-        cadence: yearly ? "/mo (billed yearly)" : "/month",
-        description: "For labels, studios & high volume distribution.",
-        features: [
-          "Everything in Popular",
-          "YouTube Content ID",
-          "Custom reporting exports",
-          "Dedicated account manager",
-          "24/7 studio support",
-        ],
-      },
+      // {
+      //   tag: "Pro Plan",
+      //   popular: false,
+      //   price: yearly ? "₹2999" : "₹2999",
+      //   cadence: yearly ? "/mo (billed yearly)" : "/month",
+      //   description: "For labels, studios & high volume distribution.",
+      //   features: [
+      //     "Everything in Popular",
+      //     "YouTube Content ID",
+      //     "Custom reporting exports",
+      //     "Dedicated account manager",
+      //     "24/7 studio support",
+      //   ],
+      // },
     ];
   }, [billing]);
 
   return (
-    <div className="container-page pt-14 pb-24">
+    <div className="container-page pt-10 sm:pt-14 pb-16 sm:pb-24">
       <div className="text-center">
-        <h1 className="text-4xl md:text-5xl font-semibold tracking-tight">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight leading-tight">
           Try it first, then <span className="text-neon">choose a plan</span>.
         </h1>
         <p className="mt-4 text-[color:var(--muted)] max-w-2xl mx-auto">
           Simple pricing for music distribution and analytics. Change or cancel anytime.
         </p>
-
+{/* 
         <div className="mt-8 inline-flex items-center gap-3 glass-soft px-4 py-2">
           <span className={classNames("text-sm", billing === "monthly" ? "text-[color:var(--text)]" : "text-[color:var(--muted)]")}>
             Monthly
@@ -112,16 +129,16 @@ export default function Pricing() {
           <span className={classNames("text-sm", billing === "yearly" ? "text-[color:var(--text)]" : "text-[color:var(--muted)]")}>
             Yearly
           </span>
-        </div>
+        </div> */}
       </div>
 
       {/* Pricing cards */}
-      <div className="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="mt-10 sm:mt-12 grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
         {planCards.map((p, idx) => (
           <div
             key={idx}
             className={classNames(
-              "glass p-7 relative overflow-hidden",
+              "glass p-5 sm:p-7 relative overflow-hidden h-full",
               p.popular ? "ring-2 ring-[color:var(--accent-1)]" : ""
             )}
           >
@@ -158,15 +175,17 @@ export default function Pricing() {
             </div>
 
             <Link
-              to={`/pricing-details?plan=${encodeURIComponent(
-                p.tag.split(" ")[0]
-              )}&billing=${billing}`}
+              to={p.tag === "Free Plan"
+                ? "/signup"
+                : `/pricing-details?plan=${encodeURIComponent(
+                    p.tag.split(" ")[0]
+                  )}&billing=${billing}`}
               className={classNames(
                 "mt-8 w-full text-center",
                 p.popular ? "btn-primary" : "btn-ghost"
               )}
             >
-              View payment details
+              {p.tag === "Free Plan" ? "Free Signup Now" : "View payment details"}
             </Link>
           </div>
         ))}

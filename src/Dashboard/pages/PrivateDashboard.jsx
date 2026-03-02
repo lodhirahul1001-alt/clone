@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 import {
   AreaChart,
   Area,
@@ -19,6 +20,8 @@ import {
   Video,
   Award,
 } from "lucide-react";
+import { AxiosIntance } from "../../config/Axios.Intance";
+import { getFinanceSummaryApi } from "../../apis/FinanceApis";
 
 function StatCard({ icon: Icon, title, value, sub }) {
   return (
@@ -48,8 +51,8 @@ function GradientCard({ title, value, icon: Icon, variant = "a" }) {
     <div className={`dash-gradient dash-gradient-${variant}`}>
       <div className="flex items-start justify-between gap-4">
         <div>
-          <div className="text-sm font-semibold text-white/90">{title}</div>
-          <div className="mt-3 text-3xl font-bold text-white">{value}</div>
+          <div className="text-sm font-semibold text-[color:var(--text)]/90">{title}</div>
+          <div className="mt-3 text-3xl font-bold text-[color:var(--text)]">{value}</div>
         </div>
         <div className="dash-gradient-icon">
           <Icon size={18} />
@@ -60,34 +63,81 @@ function GradientCard({ title, value, icon: Icon, variant = "a" }) {
 }
 
 export default function PrivateDashboard() {
-  const [userName] = useState("User");
+  const { user } = useSelector((state) => state.auth);
+  const userName = user?.fullName || user?.name || user?.email?.split("@")[0] || "User";
 
-  // Demo numbers (wire with real API later)
+  const [activeNotice, setActiveNotice] = useState(null);
+
+  const [financeLoading, setFinanceLoading] = useState(false);
+  const [financeSummary, setFinanceSummary] = useState(null);
+
+  useEffect(() => {
+    const loadNotice = async () => {
+      try {
+        const res = await AxiosIntance.get("/notification/active");
+        setActiveNotice(res?.data?.notification || null);
+      } catch {
+        // ignore
+      }
+    };
+    loadNotice();
+  }, []);
+
+  useEffect(() => {
+    const loadFinance = async () => {
+      try {
+        setFinanceLoading(true);
+        const res = await getFinanceSummaryApi();
+        setFinanceSummary(res);
+      } catch {
+        // ignore (dashboard should still render)
+      } finally {
+        setFinanceLoading(false);
+      }
+    };
+    loadFinance();
+  }, []);
+
+  const formatINR = (n) => {
+    const num = Number(n || 0);
+    try {
+      return new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: "INR",
+        maximumFractionDigits: 2,
+      }).format(num);
+    } catch {
+      return `INR ${num.toFixed(2)}`;
+    }
+  };
+
+  const totals = financeSummary?.totals || {
+    totalEarnings: 0,
+    totalPaid: 0,
+    pendingWithdrawals: 0,
+    availableBalance: 0,
+  };
+
   const summary = useMemo(
     () => ({
-      totalEarnings: "INR 0.00",
-      totalPayout: "INR 0.00",
-      pendingPayout: "INR 0.00",
+      totalEarnings: formatINR(totals.totalEarnings),
+      totalPayout: formatINR(totals.totalPaid),
+      pendingPayout: formatINR(totals.pendingWithdrawals),
       topPlatform: "YouTube",
       musicCreated: 0,
       musicReleased: 0,
       videosCreated: 0,
       videosReleased: 0,
     }),
-    []
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [totals.totalEarnings, totals.totalPaid, totals.pendingWithdrawals]
   );
 
-  const earningData = useMemo(
-    () => [
-      { name: "Jan", amount: 0 },
-      { name: "Feb", amount: 0 },
-      { name: "Mar", amount: 0 },
-      { name: "Apr", amount: 0 },
-      { name: "May", amount: 0 },
-      { name: "Jun", amount: 0 },
-    ],
-    []
-  );
+  const earningData = useMemo(() => {
+    const months = financeSummary?.monthly || [];
+    const last6 = months.slice(-6);
+    return last6.map((m) => ({ name: m.name, amount: m.amount || 0 }));
+  }, [financeSummary]);
 
   const news = useMemo(
     () => [
@@ -123,6 +173,12 @@ export default function PrivateDashboard() {
 
   return (
     <div className="dash-page mt-0 mb-1">
+      {activeNotice?.message ? (
+        <div className="mb-4 rounded-2xl p-3 glass-soft" style={{ border: "1px solid rgba(59,130,246,.35)" }}>
+          <div className="text-sm font-medium">Update</div>
+          <div className="text-sm mt-1" style={{ color: "var(--muted)" }}>{activeNotice.message}</div>
+        </div>
+      ) : null}
       <div className="dash-page-head">
         <div>
           <div
@@ -132,44 +188,70 @@ export default function PrivateDashboard() {
             Dashboard
           </div>
           <h1 className="text-2xl md:text-3xl font-semibold">Welcome, {userName}</h1>
-          <p className="mt-1 text-sm" style={{ color: "var(--muted)" }}>
+          <p className="mt-0 text-sm" style={{ color: "var(--muted)" }}>
             Track earnings, releases, and requests across your catalog.
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        {/* <div className="flex items-center gap-3">
           <Link to="/cms/create-release" className="dash-btn">
             + Create Release
           </Link>
-        </div>
+        </div> */}
       </div>
 
       {/* TOP KPI ROW (like your screenshot) */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard
-          icon={Wallet}
-          title="Total Earnings"
-          value={summary.totalEarnings}
-          sub="Across all platforms"
-        />
-        <StatCard
-          icon={Receipt}
-          title="Total Payout"
-          value={summary.totalPayout}
-          sub="Successfully paid"
-        />
-        <StatCard
-          icon={Clock}
-          title="Pending Payout"
-          value={summary.pendingPayout}
-          sub="In review"
-        />
-        <StatCard
-          icon={Trophy}
-          title="Top in 3 months"
-          value={summary.topPlatform}
-          sub="Best performing DSP"
-        />
+<div className="grid gap-4  sm:grid-cols-2 lg:grid-cols-4">
+
+  {/* Card 1 */}
+  <div className="rounded-2xl  p-5 text-black bg-gradient-to-br from-pink-500 via-red-400 to-yellow-300 shadow-lg">
+    <div className="flex justify-between items-center">
+      <div>
+        <p className="text-sm opacity-90">Total Earnings</p>
+        <h2 className="text-2xl font-bold">{summary.totalEarnings}</h2>
+        <p className="text-xs opacity-80">Across all platforms</p>
       </div>
+      <Wallet className="w-8 h-8 opacity-90" />
+    </div>
+  </div>
+
+  {/* Card 2 */}
+  <div className="rounded-2xl p-5 text-black bg-gradient-to-br from-blue-500 via-cyan-300 to-emerald-500 shadow-lg">
+    <div className="flex justify-between items-center">
+      <div>
+        <p className="text-sm opacity-90">Total Payout</p>
+        <h2 className="text-2xl font-bold">{summary.totalPayout}</h2>
+        <p className="text-xs opacity-80">Successfully paid</p>
+      </div>
+      <Receipt className="w-8 h-8 opacity-90" />
+    </div>
+  </div>
+
+  {/* Card 3 */}
+  <div className="rounded-2xl p-5 text-black bg-gradient-to-br from-purple-500 via-fuchsia-400 to-pink-400 shadow-lg">
+    <div className="flex justify-between items-center">
+      <div>
+        <p className="text-sm opacity-90">Pending Payout</p>
+        <h2 className="text-2xl font-bold">{summary.pendingPayout}</h2>
+        <p className="text-xs opacity-80">In review</p>
+      </div>
+      <Clock className="w-8 h-8 opacity-90" />
+    </div>
+  </div>
+
+  {/* Card 4 */}
+  <div className="rounded-2xl p-5 text-black bg-gradient-to-br from-orange-500 via-amber-300 to-lime-400 shadow-lg">
+    <div className="flex justify-between items-center">
+      <div>
+        <p className="text-sm opacity-90">Top in 3 months</p>
+        <h2 className="text-2xl font-bold">{summary.topPlatform}</h2>
+        <p className="text-xs opacity-80">Best performing DSP</p>
+      </div>
+      <Trophy className="w-8 h-8 opacity-90" />
+    </div>
+  </div>
+
+</div>
+
 
       {/* SECOND ROW COLORED STATS */}
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -234,7 +316,7 @@ export default function PrivateDashboard() {
           </div>
 
           {/* PERFORMANCE (kept, but cleaner) */}
-          <div className="dash-card p-6">
+          {/* <div className="dash-card p-6">
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
               <div>
                 <h2 className="text-lg font-semibold">Earnings trend</h2>
@@ -279,7 +361,7 @@ export default function PrivateDashboard() {
                 </AreaChart>
               </ResponsiveContainer>
             </div>
-          </div>
+          </div> */}
 
           {/* NEWS */}
           <div className="dash-card p-6">
