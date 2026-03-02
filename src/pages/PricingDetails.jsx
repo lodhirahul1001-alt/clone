@@ -161,7 +161,7 @@ export default function PricingDetails() {
                       loading="lazy"
                     />
                   </div> */}
-                  <div className="bg-white p-15 m-8 rounded-3xl  p-8 shadow-lg">
+                  <div className="bg-white p-4 rounded-3xl mt-3   shadow-lg">
 <QRCodeCanvas
   value={upiUrl}
   size={240}
