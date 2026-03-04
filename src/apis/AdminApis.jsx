@@ -56,6 +56,24 @@ export const adminUpdateUserWalletApi = async (userId, payload) => {
   return res.data;
 };
 
+// ===== Withdrawals =====
+export const adminGetWithdrawalsApi = async (params = {}) => {
+  const res = await AxiosIntance.get("/finance/admin/withdrawals", { params });
+  return res.data;
+};
+
+export const adminApproveWithdrawalApi = async (withdrawalId, payload = {}) => {
+  const res = await AxiosIntance.post(`/finance/admin/withdrawals/${withdrawalId}/approve`, payload);
+  return res.data;
+};
+
+export const adminRejectWithdrawalApi = async (withdrawalId, payload = {}) => {
+  const res = await AxiosIntance.post(`/finance/admin/withdrawals/${withdrawalId}/reject`, payload);
+  return res.data;
+};
+
+
+
 // ===== Claims =====
 export const adminGetClaimsApi = async (params = {}) => {
   const res = await AxiosIntance.get("/claims/admin/all", { params });
@@ -93,4 +111,21 @@ export const adminSetNotificationApi = async (payload) => {
 export const adminGetNotificationsApi = async () => {
   const res = await AxiosIntance.get("/notification/admin/all");
   return res.data;
+};
+
+export const adminCreateManualPaymentApi = async (payload) => {
+  try {
+    const { data } = await axios.post(
+      "/api/admin/payments/manual",
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    return data;
+  } catch (error) {
+    throw error;
+  }
 };

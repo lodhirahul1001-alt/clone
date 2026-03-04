@@ -1,3 +1,4 @@
+
 import React, { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import {
@@ -104,7 +105,7 @@ export default function AdminTracks() {
           >
             <option className='drop-down'  value="all">All status</option>
             {statusOptions.map((s) => (
-              <option key={s} value={s}>
+              <option key={s} value={s} className="drop-down">
                 {s}
               </option>
             ))}

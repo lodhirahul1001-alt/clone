@@ -60,7 +60,7 @@ export default function AdminCallbacks() {
           <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="dash-input">
             <option value="all">All status</option>
             {statusOptions.map((s) => (
-              <option key={s} value={s}>
+              <option key={s} value={s} className="drop-down">
                 {s}
               </option>
             ))}
