@@ -322,37 +322,88 @@ export default function ReleaseVideo() {
           </div>
         </form>
       </div>
+<div className="dash-card">
+  {claims.length === 0 ? (
+    <div className="text-center py-8 dash-muted">No data available</div>
+  ) : (
+    <>
+      {/* Desktop Table */}
+      <div className="hidden md:block overflow-x-auto">
+        <table className="dash-table w-full min-w-[750px]">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Release</th>
+              <th>URL</th>
+              <th>ISRC</th>
+              <th>CMS</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {claims.map((claim) => (
+              <tr key={claim._id}>
+                <td className="uppercase whitespace-nowrap">
+                  {claim.claimCategory || "-"}
+                </td>
+                <td className="whitespace-nowrap">
+                  {claim.releaseTitle || "-"}
+                </td>
+                <td className="max-w-[240px]">
+                  {claim.claimUrl ? (
+                    <a
+                      href={claim.claimUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="block truncate text-cyan-400 hover:underline"
+                      title={claim.claimUrl}
+                    >
+                      {claim.claimUrl}
+                    </a>
+                  ) : (
+                    "-"
+                  )}
+                </td>
+                <td className="whitespace-nowrap">{claim.isrc || "-"}</td>
+                <td className="whitespace-nowrap">{claim.cmsName || "-"}</td>
+                <td className="whitespace-nowrap">
+                  <span
+                    className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium border ${
+                      claim.status === "approved"
+                        ? "bg-green-500/15 text-green-600 border-green-500/30 dark:text-green-400"
+                        : claim.status === "rejected"
+                        ? "bg-red-500/15 text-red-600 border-red-500/30 dark:text-red-400"
+                        : "bg-yellow-500/15 text-yellow-600 border-yellow-500/30 dark:text-yellow-400"
+                    }`}
+                  >
+                    {claim.status || "pending"}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-      <div className="dash-card">
-  <table className="dash-table">
-    <thead>
-      <tr>
-        <th>Category</th>
-        <th>Release</th>
-        <th>URL</th>
-        <th>ISRC</th>
-        <th>CMS</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      {claims.length === 0 ? (
-        <tr>
-          <td colSpan={6} className="text-center  py-8 dash-muted">
-            No data available
-          </td>
-        </tr>
-      ) : (
-        claims.map((claim) => (
-          <tr key={claim._id}>
-            <td className="uppercase">{claim.claimCategory || "-"}</td>
-            <td>{claim.releaseTitle || "-"}</td>
-            <td className="break-all">{claim.claimUrl || "-"}</td>
-            <td>{claim.isrc || "-"}</td>
-            <td>{claim.cmsName || "-"}</td>
-            <td>
+      {/* Mobile Cards */}
+      <div className="grid gap-4 md:hidden">
+        {claims.map((claim) => (
+          <div
+            key={claim._id}
+            className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-4 shadow-sm"
+          >
+            <div className="flex items-start justify-between gap-3 mb-3">
+              <div>
+                <p className="text-xs dash-muted uppercase tracking-wide">
+                  Category
+                </p>
+                <p className="text-sm font-semibold uppercase">
+                  {claim.claimCategory || "-"}
+                </p>
+              </div>
+
               <span
-                className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium border ${
+                className={`inline-flex items-center rounded-full px-3 py-1 text-[11px] font-medium border ${
                   claim.status === "approved"
                     ? "bg-green-500/15 text-green-600 border-green-500/30 dark:text-green-400"
                     : claim.status === "rejected"
@@ -362,12 +413,59 @@ export default function ReleaseVideo() {
               >
                 {claim.status || "pending"}
               </span>
-            </td>
-          </tr>
-        ))
-      )}
-    </tbody>
-  </table>
+            </div>
+
+            <div className="space-y-3 text-sm">
+              <div>
+                <p className="text-xs dash-muted uppercase tracking-wide">
+                  Release
+                </p>
+                <p className="font-medium break-words">
+                  {claim.releaseTitle || "-"}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-xs dash-muted uppercase tracking-wide">
+                  URL
+                </p>
+                {claim.claimUrl ? (
+                  <a
+                    href={claim.claimUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="block break-all text-cyan-400 hover:underline"
+                  >
+                    {claim.claimUrl}
+                  </a>
+                ) : (
+                  <p>-</p>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <p className="text-xs dash-muted uppercase tracking-wide">
+                    ISRC
+                  </p>
+                  <p className="font-medium break-words">{claim.isrc || "-"}</p>
+                </div>
+
+                <div>
+                  <p className="text-xs dash-muted uppercase tracking-wide">
+                    CMS
+                  </p>
+                  <p className="font-medium break-words">
+                    {claim.cmsName || "-"}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
+  )}
 </div>
     </div>
   );
