@@ -1,7 +1,6 @@
-import React from "react";
-
-const partnerLogos =  [
-   { src: "https://gallery.vision/wp-content/themes/Gallery-Vision/assets/images/apple.webp", name: "Apple" },
+import React from 'react';
+const logos = [
+  { src: "https://gallery.vision/wp-content/themes/Gallery-Vision/assets/images/apple.webp", name: "Apple" },
   { src: "https://gallery.vision/wp-content/themes/Gallery-Vision/assets/images/Spotify.webp", name: "Spotify" },
   { src: "https://gallery.vision/wp-content/themes/Gallery-Vision/assets/images/amazon.webp", name: "Amazon" },
   { src: "https://gallery.vision/wp-content/themes/Gallery-Vision/assets/images/tidal-b.webp", name: "Tidal" },
@@ -16,36 +15,31 @@ const partnerLogos =  [
 ];
 
 export default function Marquee() {
-  const logos = [...partnerLogos, ...partnerLogos];
+ return (
+  <section className="relative w-full py-10">
+    {/* Full-width glass strip */}
+    <div className="relative w-full overflow-hidden">
+      {/* Strong background strip */}
+      <div className="mx-0 w-full rounded-none marquee-strip">
+        {/* Edge fade */}
+        <div className="marquee-edge-fade" />
 
-  return (
-    <section
-      className="
-        w-screen relative left-1/2 -translate-x-1/2
-        overflow-hidden py-6
-        bg-white/5 dark:bg-black/20
-        border-y border-black/10 dark:border-white/10
-      "
-    >
-      {/* edge fade left */}
-      <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-24 bg-gradient-to-r from-white/5 to-transparent dark:from-black/90" />
-      {/* edge fade right */}
-      <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-24 bg-gradient-to-l from-white/5 to-transparent dark:from-black/90" />
-
-      <div className="flex w-max items-center gap-14 px-20 animate-[marquee_28s_linear_infinite]">
-        {logos.map((logo, i) => (
-          <div key={i} className="flex-shrink-0">
-            <img
-              src={logo.src}
-              alt={logo.name}
-              title={logo.name}
-              className="h-8 w-auto object-contain opacity-90 grayscale brightness-50 dark:brightness-200"
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
-        ))}
+        <div className="marquee-track" aria-hidden="true">
+          {[...logos, ...logos].map((logo, i) => (
+            <div className="marquee-item" key={i}>
+              <img
+                src={logo.src}
+                alt={logo.name}
+                className="marquee-img marquee-img-white"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          ))}
+        </div>
       </div>
-    </section>
-  );
+    </div>
+  </section>
+);
+
 }

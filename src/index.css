@@ -784,39 +784,6 @@ html.dark select.input-ui option {
   background-color: #ffffff;
 }
 
-/* Dashboard select dropdown options: ensure visibility in both themes */
-select.dash-input option {
-  color: #111827;
-  background-color: #ffffff;
-}
-
-html.dark select.dash-input option {
-  color: #111827;
-  background-color: #ffffff;
-}
-
-/* Ensure all select dropdowns in admin pages have proper visibility */
-select.dash-input,
-select.dash-select {
-  background: rgba(255,255,255,.78);
-  border: 1px solid rgba(2,6,23,.12);
-  color: #0b1220;
-}
-
-html.dark select.dash-input,
-html.dark select.dash-select {
-  background: rgba(255,255,255,.06);
-  border: 1px solid rgba(255,255,255,.12);
-  color: rgba(255,255,255,.92);
-}
-
-/* Fix dropdown arrow visibility in dark theme */
-html.dark select.dash-input::-ms-expand,
-html.dark select.dash-select::-ms-expand {
-  background-color: rgba(255,255,255,.06);
-  color: rgba(255,255,255,.92);
-}
-
 /* ===== Dashboard dark-theme visibility + deeper black overrides ===== */
 .dash-nav-label{
   color: var(--muted);

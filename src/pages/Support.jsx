@@ -1,3 +1,4 @@
+import CallbackModal from "../components/CallbackModal";
 // pages/Support.jsx
 import { useState } from 'react';
 import {
@@ -29,6 +30,7 @@ export default function Support() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [expandedFAQ, setExpandedFAQ] = useState(null);
+    
 
   const [newTicket, setNewTicket] = useState({
     subject: '',
@@ -36,6 +38,8 @@ export default function Support() {
     priority: 'Medium',
     category: 'General',
   });
+    const [callbackOpen, setCallbackOpen] = useState(false);
+
 
   // Mock data
   const tickets = [
@@ -202,6 +206,7 @@ export default function Support() {
             <p className="text-[color:var(--muted)]">
               Get help, find answers, and connect with our support team
             </p>
+            
           </div>
           <motion.button
             whileHover={{ scale: 1.05 }}
@@ -210,12 +215,25 @@ export default function Support() {
             className="bg-gradient-to-r from-blue-600 to-purple-600 text-[color:var(--text)] px-6 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 flex items-center gap-2 shadow-lg"
           >
             <Plus className="w-5 h-5" />
-            Create Ticket
+            Create Ticket 
+            <div></div>
           </motion.button>
+          
         </motion.div>
+        
 
         {/* Tab Navigation */}
         <div className="flex space-x-1 mb-8 glass-soft p-1 rounded-lg border border-[color:var(--border)]">
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => setCallbackOpen(true)}
+            className="flex items-center gap-2 px-6 py-3 rounded-lg transition-all duration-200 flex-1 justify-center bg-gradient-to-r from-[var(--accent-1)] to-[var(--accent-2)] text-white shadow-md"
+          >
+            <Phone className="w-5 h-5" />
+            Request Callback
+          </motion.button>
+          
           {[
             { id: 'overview', label: 'Overview', icon: BookOpen },
             { id: 'tickets', label: 'My Tickets', icon: FileText },
@@ -238,6 +256,7 @@ export default function Support() {
             </motion.button>
           ))}
         </div>
+              
 
         {/* Overview Tab */}
         {activeTab === 'overview' && (
@@ -850,6 +869,9 @@ export default function Support() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Callback Modal */}
+        <CallbackModal open={callbackOpen} onClose={() => setCallbackOpen(false)} />
       </div>
     </div>
   );

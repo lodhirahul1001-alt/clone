@@ -67,3 +67,76 @@ export const uploadProfilePictureApi = async (file) => {
 
   return res.data; // { msg, dp }
 };
+
+// ===================== FINANCE (USER) =====================
+// These routes should be available on backend for showing wallet + transactions + withdrawals.
+
+// GET /api/finance/summary
+export const getFinanceSummaryApi = async () => {
+  const res = await AxiosIntance.get("/finance/summary");
+  const data = res.data || {};
+  const totals = data?.totals || {};
+
+  // Normalize to the frontend contract used by Finance.jsx
+  const balance =
+    data?.balance ??
+    data?.walletBalance ??
+    totals?.availableBalance ??
+    0;
+
+  const pendingEarnings =
+    data?.pendingEarnings ??
+    totals?.pendingWithdrawals ??
+    0;
+
+  const maxWithdrawal =
+    data?.maxWithdrawal ??
+    balance ??
+    0;
+
+  return {
+    ...data,
+    totals,
+    balance,
+    walletBalance: balance,
+    pendingEarnings,
+    maxWithdrawal,
+  };
+};
+
+// GET /api/finance/transactions
+export const getFinanceTransactionsApi = async (params = {}) => {
+  const res = await AxiosIntance.get("/finance/transactions", { params });
+  const data = res.data || {};
+  const list = data?.items || data?.transactions || data?.data || [];
+  return {
+    ...data,
+    items: Array.isArray(list) ? list : [],
+    transactions: Array.isArray(list) ? list : [],
+  };
+};
+
+// GET /api/finance/withdrawals
+export const getMyWithdrawalsApi = async (params = {}) => {
+  const res = await AxiosIntance.get("/finance/withdrawals", { params });
+  const data = res.data || {};
+  const list = data?.items || data?.withdrawals || data?.data || [];
+  return {
+    ...data,
+    items: Array.isArray(list) ? list : [],
+    withdrawals: Array.isArray(list) ? list : [],
+  };
+};
+
+// POST /api/finance/withdrawals
+export const createWithdrawalRequestApi = async (payload) => {
+  // Backend currently supports only bank withdrawals.
+  const cleaned = {
+    amount: payload?.amount,
+    method: "bank",
+    bankDetails: payload?.bankDetails,
+    currency: payload?.currency,
+  };
+  const res = await AxiosIntance.post("/finance/withdrawals", cleaned);
+  return res.data;
+};

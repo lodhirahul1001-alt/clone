@@ -1,8 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { adminGetCallbacksApi, adminUpdateCallbackStatusApi } from "../../apis/AdminApis";
+import { AxiosIntance } from "../../config/Axios.Intance";
 
 const statusOptions = ["new", "contacted", "closed"];
+
 
 export default function AdminCallbacks() {
   const [loading, setLoading] = useState(false);
@@ -34,6 +36,18 @@ export default function AdminCallbacks() {
       [c.name, c.phone, c.email, c.enquiryFor].filter(Boolean).join(" ").toLowerCase().includes(q)
     );
   }, [items, query]);
+
+
+  const deleteCallback = async (id) => {
+    if (!window.confirm("Delete this callback request?")) return;
+    try {
+      await AxiosIntance.delete(`/callbacks/admin/${id}`);
+      setItems((prev) => prev.filter((x) => x._id !== id));
+      toast.success("Callback deleted");
+    } catch (e) {
+      toast.error(e?.response?.data?.msg || "Failed to delete");
+    }
+  };
 
   const updateStatus = async (id, status) => {
     try {
@@ -81,18 +95,19 @@ export default function AdminCallbacks() {
               <th className="text-left p-2">Enquiry</th>
               <th className="text-left p-2">Preferred Time</th>
               <th className="text-left p-2">Status</th>
+              <th className="text-left p-2">Actions</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td className="p-2" colSpan={6}>
+                <td className="p-2" colSpan={7}>
                   Loading...
                 </td>
               </tr>
             ) : filtered.length === 0 ? (
               <tr>
-                <td className="p-2" colSpan={6}>
+                <td className="p-2" colSpan={7}>
                   No requests found
                 </td>
               </tr>
@@ -113,6 +128,7 @@ export default function AdminCallbacks() {
                       ))}
                     </select>
                   </td>
+                  <td className="p-2 whitespace-nowrap"><button className="dash-btn" type="button" onClick={() => deleteCallback(c._id)}>Delete</button></td>
                 </tr>
               ))
             )}

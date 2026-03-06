@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { fetchTracksApi } from "../../apis/TrackApis";
 import { UploadTrack } from "../components/UploadTrack";
 import { Edit2, Search } from "lucide-react";
+import Marquee from "../../components/Marquee";
 
 
 const statusOptions = [
@@ -317,11 +318,9 @@ const ReleaseMusic = () => {
             </div>
 
             <div className="p-4 flex justify-center">
-              <img
-                src={previewImage}
-                alt="Store Preview"
-                className="w-full max-h-[75vh] rounded-lg object-contain"
-              />
+              <div className="w-full rounded-lg overflow-hidden">
+                <Marquee />
+              </div>
             </div>
           </div>
         </div>

@@ -3,15 +3,28 @@ import { useSelector } from "react-redux";
 import { fetchTracksApi } from "../../apis/TrackApis";
 import { AxiosIntance } from "../../config/Axios.Intance";
 
+const normalizeClaim = (claim) => ({
+  _id: claim?._id || Math.random().toString(36).slice(2),
+  claimCategory: claim?.claimCategory || claim?.claim_category || "",
+  claimUrl: claim?.claimUrl || claim?.claim_url || "",
+  releaseTitle: claim?.releaseTitle || claim?.release_title || "",
+  releasePublicId: claim?.releasePublicId || claim?.release_public_id || "",
+  isrc: claim?.isrc || "",
+  cmsName: claim?.cmsName || claim?.cms_name || "",
+  status: claim?.status || "pending",
+  createdAt: claim?.createdAt || claim?.created_at || "",
+});
+
 export default function ReleaseVideo() {
   const { user } = useSelector((state) => state.auth);
+
   const [isLoadingReleases, setIsLoadingReleases] = useState(false);
   const [releaseOptions, setReleaseOptions] = useState([]);
+  const [claims, setClaims] = useState([]);
   const [isSending, setIsSending] = useState(false);
   const [feedback, setFeedback] = useState({ type: "", message: "" });
-  const [claims, setClaims] = useState([]);
 
-  const GOOGLE_SHEET_WEBHOOK = import.meta.env.VITE_CREATE_CLAIM_GOOGLE_SHEET; // paste url here
+  const GOOGLE_SHEET_WEBHOOK = import.meta.env.VITE_CREATE_CLAIM_GOOGLE_SHEET;
 
   const [formData, setFormData] = useState({
     claimCategory: "",
@@ -20,6 +33,21 @@ export default function ReleaseVideo() {
     isrc: "",
     cmsName: "WMG",
   });
+
+  const selectedRelease = useMemo(
+    () => releaseOptions.find((r) => r._id === formData.releaseId),
+    [releaseOptions, formData.releaseId]
+  );
+
+  const loadMyClaims = async () => {
+    try {
+      const res = await AxiosIntance.get("/claims/my");
+      const items = res?.data?.items || res?.data?.claims || [];
+      setClaims(items.map(normalizeClaim));
+    } catch (error) {
+      console.error("Failed to load claims:", error?.response?.data || error.message);
+    }
+  };
 
   useEffect(() => {
     const loadUserReleases = async () => {
@@ -33,35 +61,17 @@ export default function ReleaseVideo() {
           sortBy: "createdAt",
           sortOrder: "desc",
         });
-
         setReleaseOptions(res?.tracks || []);
       } catch (error) {
-        console.error("Failed to load releases for claim form:", error);
+        console.error("Failed to load releases:", error);
       } finally {
         setIsLoadingReleases(false);
       }
     };
 
     loadUserReleases();
-  }, []);
-
-  // ✅ FIX: Load claims from MongoDB (so it won't disappear after relogin)
-  useEffect(() => {
-    const loadMyClaims = async () => {
-      try {
-        const res = await AxiosIntance.get("/claims/my");
-        setClaims(res?.data?.claims || []);
-      } catch (e) {
-        // ignore if not logged in / api not available
-      }
-    };
     loadMyClaims();
   }, []);
-
-  const selectedRelease = useMemo(
-    () => releaseOptions.find((r) => r._id === formData.releaseId),
-    [releaseOptions, formData.releaseId],
-  );
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -92,54 +102,55 @@ export default function ReleaseVideo() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setFeedback({ type: "", message: "" });
     setIsSending(true);
-const payload = {
-  claim_category: formData.claimCategory || "",
-  claim_url: formData.claimUrl || "",
-  release_title:
-    selectedRelease?.title ||
-    selectedRelease?.album ||
-    "",
-  release_public_id:
-    selectedRelease?.publicId || "",
-  isrc: formData.isrc || "",
-  cms_name: formData.cmsName || "",
-  user_email: user?.email || "",
-  user_name: user?.fullName || "",
-  requested_at: new Date().toLocaleString(),
-};
-
-
 
     try {
-      // ✅ 1) Save to MongoDB (primary)
-      const mongoRes = await AxiosIntance.post("/claims/create", {
+      const mongoPayload = {
         claimCategory: formData.claimCategory,
         claimUrl: formData.claimUrl,
-        releaseId: formData.releaseId,
+        releaseId: formData.releaseId || null,
+        releaseTitle: selectedRelease?.title || selectedRelease?.album || "",
+        releasePublicId: selectedRelease?.publicId || "",
         isrc: formData.isrc,
         cmsName: formData.cmsName,
-        releaseTitle: payload.release_title,
-        releasePublicId: payload.release_public_id,
-      });
+        note: "",
+      };
 
-      // ✅ 2) Save to Google Sheet (best-effort)
+      const mongoRes = await AxiosIntance.post("/claims/create", mongoPayload);
+
+      const rawClaim =
+        mongoRes?.data?.claim ||
+        mongoRes?.data?.item ||
+        mongoRes?.data?.data ||
+        mongoRes?.data;
+
+      const savedClaim = normalizeClaim(rawClaim);
+
       if (GOOGLE_SHEET_WEBHOOK) {
         try {
           await fetch(GOOGLE_SHEET_WEBHOOK, {
             method: "POST",
+            mode: "no-cors",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
+            body: JSON.stringify({
+              claim_category: formData.claimCategory || "",
+              claim_url: formData.claimUrl || "",
+              release_title: selectedRelease?.title || selectedRelease?.album || "",
+              release_public_id: selectedRelease?.publicId || "",
+              isrc: formData.isrc || "",
+              cms_name: formData.cmsName || "",
+              user_email: user?.email || "",
+              user_name: user?.fullName || "",
+              requested_at: new Date().toLocaleString(),
+            }),
           });
-        } catch {
-          // ignore
+        } catch (sheetError) {
+          console.error("Google Sheet save failed:", sheetError);
         }
       }
 
-      const savedClaim = mongoRes?.data?.claim;
-      if (savedClaim) setClaims((prev) => [savedClaim, ...prev]);
+      setClaims((prev) => [savedClaim, ...prev]);
 
       setFeedback({
         type: "success",
@@ -148,11 +159,13 @@ const payload = {
 
       handleReset();
     } catch (error) {
-      console.error("Google Sheet submit error:", error);
-
+      console.error("Claim submit error:", error?.response?.data || error.message);
       setFeedback({
         type: "error",
-        message: "Could not save claim. Please try again.",
+        message:
+          error?.response?.data?.msg ||
+          error?.response?.data?.message ||
+          "Could not save claim. Please try again.",
       });
     } finally {
       setIsSending(false);
@@ -166,8 +179,7 @@ const payload = {
           <div className="text-sm dash-nav-label">YouTube</div>
           <h1 className="text-xl sm:text-2xl font-semibold">Create Claim</h1>
           <p className="text-sm mt-1 dash-muted">
-            Submit claim requests with category, release title and ISRC in one
-            place.
+            Submit claim requests with category, release title and ISRC in one place.
           </p>
         </div>
       </div>
@@ -196,7 +208,7 @@ const payload = {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
-                Claim Category <span className="text-red-500 text-">*</span>
+                Claim Category <span className="text-red-500">*</span>
               </label>
               <select
                 name="claimCategory"
@@ -238,16 +250,11 @@ const payload = {
                 required
               >
                 <option value="">
-                  {isLoadingReleases
-                    ? "Loading releases..."
-                    : "- Select Release -"}
+                  {isLoadingReleases ? "Loading releases..." : "- Select Release -"}
                 </option>
                 {releaseOptions.map((release) => (
                   <option key={release._id} value={release._id}>
-                    {release.title ||
-                      release.album ||
-                      release.publicId ||
-                      "Untitled Release"}
+                    {release.title || release.album || release.publicId || "Untitled Release"}
                   </option>
                 ))}
               </select>
@@ -283,6 +290,7 @@ const payload = {
                 required
               />
             </div>
+
             <div>
               <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
                 User Email
@@ -316,78 +324,51 @@ const payload = {
       </div>
 
       <div className="dash-card">
-        <table className="dash-table">
-          <thead>
-            <tr>
-              <th>Category</th>
-              <th>Release</th>
-              <th>URL</th>
-              <th>ISRC</th>
-              <th>CMS</th>
-            </tr>
-          </thead>
-          <tbody>
-            {claims.length === 0 ? (
-              <tr>
-                <td colSpan={5} className="text-center py-8 dash-muted">
-                  No data available
-                </td>
-              </tr>
-            ) : (
-              claims.map((claim, index) => (
-                <tr key={`${claim.claim_url}-${index}`}>
-                  <td className="uppercase">{claim.claim_category}</td>
-                  <td>{claim.release_title || "-"}</td>
-                  <td>{claim.claim_url}</td>
-                  <td>{claim.isrc || "-"}</td>
-                  <td>{claim.cms_name || "-"}</td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {/* ✅ Recent claims */}
-      <div className="dash-card p-4 sm:p-6">
-        <h2 className="text-lg font-semibold">My Claims</h2>
-        <p className="text-sm dash-muted">Your recent claim requests saved in your account.</p>
-
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr style={{ color: "var(--muted)" }}>
-                <th className="text-left p-2">Category</th>
-                <th className="text-left p-2">Release</th>
-                <th className="text-left p-2">ISRC</th>
-                <th className="text-left p-2">URL</th>
-                <th className="text-left p-2">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {claims.length === 0 ? (
-                <tr>
-                  <td className="p-2" colSpan={5}>No claims yet</td>
-                </tr>
-              ) : (
-                claims.slice(0, 20).map((c, i) => (
-                  <tr key={c._id || i} style={{ borderTop: "1px solid var(--dash-border)" }}>
-                    <td className="p-2">{c.claimCategory || c.claim_category || "-"}</td>
-                    <td className="p-2">{c.releaseTitle || c.release_title || "-"}</td>
-                    <td className="p-2">{c.isrc || "-"}</td>
-                    <td className="p-2 max-w-[280px] truncate">
-                      <a className="underline" href={c.claimUrl || c.claim_url} target="_blank" rel="noreferrer">
-                        {c.claimUrl || c.claim_url}
-                      </a>
-                    </td>
-                    <td className="p-2"><span className="px-2 py-1 rounded-lg dash-badge">{c.status || "pending"}</span></td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+  <table className="dash-table">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Release</th>
+        <th>URL</th>
+        <th>ISRC</th>
+        <th>CMS</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {claims.length === 0 ? (
+        <tr>
+          <td colSpan={6} className="text-center  py-8 dash-muted">
+            No data available
+          </td>
+        </tr>
+      ) : (
+        claims.map((claim) => (
+          <tr key={claim._id}>
+            <td className="uppercase">{claim.claimCategory || "-"}</td>
+            <td>{claim.releaseTitle || "-"}</td>
+            <td className="break-all">{claim.claimUrl || "-"}</td>
+            <td>{claim.isrc || "-"}</td>
+            <td>{claim.cmsName || "-"}</td>
+            <td>
+              <span
+                className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium border ${
+                  claim.status === "approved"
+                    ? "bg-green-500/15 text-green-600 border-green-500/30 dark:text-green-400"
+                    : claim.status === "rejected"
+                    ? "bg-red-500/15 text-red-600 border-red-500/30 dark:text-red-400"
+                    : "bg-yellow-500/15 text-yellow-600 border-yellow-500/30 dark:text-yellow-400"
+                }`}
+              >
+                {claim.status || "pending"}
+              </span>
+            </td>
+          </tr>
+        ))
+      )}
+    </tbody>
+  </table>
+</div>
     </div>
   );
 }

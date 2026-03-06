@@ -45,10 +45,17 @@ import AdminRoute from "../components/AdminRoute";
 import AdminTracks from "./pages/AdminTracks";
 import AdminUsers from "./pages/AdminUsers";
 import AdminPayments from "./pages/AdminPayments";
+import AdminOverview from "./pages/AdminOverview";
 import AdminClaims from "./pages/AdminClaims";
 import AdminCallbacks from "./pages/AdminCallbacks";
 import AdminNotification from "./pages/AdminNotification";
-import AdminOverview from "./pages/AdminOverview";
+
+import {
+  getMyNotificationsApi,
+  markAllNotificationsReadApi,
+  markNotificationReadApi,
+  getActiveDashboardNoticeApi,
+} from "../apis/NotificationApis";
 
 import { useSelector, useDispatch } from "react-redux";
 import { removeUser } from "../features/reducers/AuthSlice";
@@ -104,13 +111,13 @@ const menuItems = [
   { name: "User Profile", path: "/cms/user-profile", icon: UserIcon },
 
   // ✅ ADMIN (rendered only if role=admin)
-  { name: "Admin Overview", path: "/cms/admin", icon: LayoutDashboard, adminOnly: true },
+  { name: "Admin Overview", path: "/cms/admin/overview", icon: LayoutDashboard, adminOnly: true },
   { name: "Admin Tracks", path: "/cms/admin/tracks", icon: FileText, adminOnly: true },
   { name: "Admin Users", path: "/cms/admin/users", icon: Users, adminOnly: true },
   { name: "Admin Claims", path: "/cms/admin/claims", icon: FileText, adminOnly: true },
   { name: "Admin Payments", path: "/cms/admin/payments", icon: DollarSign, adminOnly: true },
-  { name: "Admin Callbacks", path: "/cms/admin/callbacks", icon: Users, adminOnly: true },
-  { name: "Admin Notice", path: "/cms/admin/notification", icon: FileText, adminOnly: true },
+  { name: "Admin Callbacks", path: "/cms/admin/callbacks", icon: Bell, adminOnly: true },
+  { name: "Admin Notice", path: "/cms/admin/notification", icon: Bell, adminOnly: true },
 ];
 
 
@@ -298,20 +305,42 @@ const menuItems = [
 function DashboardApp() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
+  const [notifLoading, setNotifLoading] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const lastNotifIdsRef = useState(() => new Set())[0];
 
   const { user } = useSelector((state) => state.auth);
-  const [holidayBanner, setHolidayBanner] = useState(true);
+  const [activeNotice, setActiveNotice] = useState(null);
+  const [showNoticeBanner, setShowNoticeBanner] = useState(false);
+  const dismissedNoticeKey = "cms_dismissed_notice_id";
 
-  const holidayBannerKey = "cms_holiday_banner_dismissed_v2";
+  const fetchActiveNotice = async () => {
+    try {
+      const data = await getActiveDashboardNoticeApi();
+      const notice = data?.notification || data?.item || null;
 
-  useEffect(() => {
-    const v = localStorage.getItem(holidayBannerKey);
-    if (v === "1") setHolidayBanner(false);
-  }, []);
+      if (!notice?._id) {
+        setActiveNotice(null);
+        setShowNoticeBanner(false);
+        return;
+      }
+
+      setActiveNotice(notice);
+      const dismissedId = localStorage.getItem(dismissedNoticeKey);
+      setShowNoticeBanner(dismissedId !== String(notice._id));
+    } catch (e) {
+      // keep silent if backend notice endpoint fails
+      setActiveNotice(null);
+      setShowNoticeBanner(false);
+    }
+  };
 
   const dismissHolidayBanner = () => {
-    setHolidayBanner(false);
-    localStorage.setItem(holidayBannerKey, "1");
+    if (activeNotice?._id) {
+      localStorage.setItem(dismissedNoticeKey, String(activeNotice._id));
+    }
+    setShowNoticeBanner(false);
   };
 
   const profilePhoto = user?.dp;
@@ -319,6 +348,56 @@ function DashboardApp() {
     (user?.fullName && user.fullName[0]) ||
     (user?.email && user.email[0]) ||
     "U";
+
+  const fetchNotifications = async ({ silent } = {}) => {
+    try {
+      if (!silent) setNotifLoading(true);
+      const data = await getMyNotificationsApi({ limit: 30 });
+      const list = data?.notifications || data?.items || data?.data || [];
+
+      // Show toast only for NEW unread notifications (nice UX, not spammy)
+      const nextIds = new Set();
+      let unread = 0;
+      (Array.isArray(list) ? list : []).forEach((n) => {
+        const id = n?._id || n?.id;
+        if (id) nextIds.add(id);
+        if (!n?.read) unread += 1;
+        if (id && !n?.read && !lastNotifIdsRef.has(id)) {
+          toast.success(n?.title || "New notification");
+        }
+      });
+
+      // replace tracking set
+      lastNotifIdsRef.clear();
+      nextIds.forEach((id) => lastNotifIdsRef.add(id));
+
+      setNotifications(Array.isArray(list) ? list : []);
+      setUnreadCount(unread);
+    } catch (e) {
+      // If backend doesn't have notifications yet, don't break the UI.
+      // Keep it silent to avoid spamming errors.
+    } finally {
+      if (!silent) setNotifLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // Initial fetch + polling so user/admin gets updates after payment status changes
+    fetchNotifications({ silent: true });
+    fetchActiveNotice();
+    const t = setInterval(() => fetchNotifications({ silent: true }), 20000);
+    const noticeTimer = setInterval(() => fetchActiveNotice(), 20000);
+    return () => {
+      clearInterval(t);
+      clearInterval(noticeTimer);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (notifOpen) fetchNotifications();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [notifOpen]);
 
   return (
       <div className="dash-shell dash-scope min-h-screen flex text-[color:var(--text)] overflow-x-hidden">
@@ -328,7 +407,31 @@ function DashboardApp() {
           onClose={() => setSidebarOpen(false)}
         />
 
-        <NotificationsDrawer open={notifOpen} onClose={() => setNotifOpen(false)} />
+        <NotificationsDrawer
+          open={notifOpen}
+          onClose={() => setNotifOpen(false)}
+          notifications={notifications}
+          loading={notifLoading}
+          onMarkRead={async (id) => {
+            if (!id) return;
+            try {
+              await markNotificationReadApi(id);
+              setNotifications((prev) => prev.map((n) => ((n._id || n.id) === id ? { ...n, read: true } : n)));
+              setUnreadCount((c) => Math.max(0, c - 1));
+            } catch (e) {
+              // ignore
+            }
+          }}
+          onMarkAllRead={async () => {
+            try {
+              await markAllNotificationsReadApi();
+              setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+              setUnreadCount(0);
+            } catch (e) {
+              // ignore
+            }
+          }}
+        />
         {/* Right side content */}
         <div className="flex-1 min-w-0 flex flex-col min-h-screen md:ml-[300px] ml-0">
           {/* Top bar */}
@@ -356,7 +459,11 @@ function DashboardApp() {
                 aria-label="Open notifications"
               >
                 <Bell className="h-5 w-5" />
-              <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-[color:var(--accent-1)]"></span>
+                {unreadCount > 0 ? (
+                  <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full text-[11px] grid place-items-center bg-[color:var(--accent-1)] text-white">
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </span>
+                ) : null}
               </button>
 
               {/* User info (right side) */}
@@ -387,14 +494,14 @@ function DashboardApp() {
             </div>
           </header>
 
-          {/* Holiday update banner (protected routes) */}
-          {holidayBanner && (
+          {/* Scrolling notices banner (protected routes) */}
+          {showNoticeBanner && activeNotice?.message && (
             <div className="px-3 sm:px-6 mt-3">
               <div className="dash-card-soft p-3 rounded-2xl flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                 <div>
-                  <div className="text-sm font-semibold">🎉 Holiday Update</div>
+                  <div className="text-sm font-semibold">📢 Admin Notice</div>
                   <div className="text-xs mt-1" style={{ color: "var(--muted)" }}>
-                    We’ve improved payouts, faster verification, and added Sub-Labels management. If you face any issue, raise a support ticket.
+                    {activeNotice.message}
                   </div>
                 </div>
                 <button
@@ -405,6 +512,26 @@ function DashboardApp() {
                 >
                   Dismiss
                 </button>
+              </div>
+            </div>
+          )}
+
+          {/* Scrolling notices for all users */}
+          {notifications.length > 0 && (
+            <div className="px-3 sm:px-6 mt-3">
+              <div className="dash-card-soft p-3 rounded-2xl">
+                <div className="text-sm font-semibold mb-2">📢 Recent Notifications</div>
+                <div className="space-y-2 max-h-[120px] overflow-y-auto pr-2">
+                  {notifications.slice(0, 5).map((notif) => (
+                    <div key={notif._id || notif.id} className="text-xs">
+                      <span className={`inline-block w-2 h-2 rounded-full mr-2 ${notif.read ? 'bg-gray-300' : 'bg-blue-500'}`}></span>
+                      <span className="text-sm">{notif.title || notif.message || 'Notification'}</span>
+                      <span className="ml-2 text-xs" style={{ color: "var(--muted)" }}>
+                        {new Date(notif.createdAt || notif.createdAt).toLocaleString()}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           )}
@@ -439,9 +566,9 @@ function DashboardApp() {
               {/* /cms/user-profile */}
               <Route path="user-profile" element={<UserProfile />} />
 
-              {/* /cms/admin */}
+              {/* /cms/admin/tracks */}
               <Route
-                path="admin"
+                path="admin/overview"
                 element={
                   <AdminRoute>
                     <AdminOverview />
@@ -469,22 +596,22 @@ function DashboardApp() {
                 }
               />
 
-              {/* /cms/admin/claims */}
-              <Route
-                path="admin/claims"
-                element={
-                  <AdminRoute>
-                    <AdminClaims />
-                  </AdminRoute>
-                }
-              />
-
               {/* /cms/admin/payments */}
               <Route
                 path="admin/payments"
                 element={
                   <AdminRoute>
                     <AdminPayments />
+                  </AdminRoute>
+                }
+              />
+
+              {/* /cms/admin/claims */}
+              <Route
+                path="admin/claims"
+                element={
+                  <AdminRoute>
+                    <AdminClaims />
                   </AdminRoute>
                 }
               />

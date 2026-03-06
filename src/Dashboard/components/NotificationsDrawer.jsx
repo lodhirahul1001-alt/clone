@@ -1,12 +1,23 @@
-import { X, Bell } from "lucide-react";
+import { X, Bell, CheckCheck } from "lucide-react";
 
-const demoNotifications = [
-  { id: 1, title: "New release submitted", desc: "Your release is in review.", time: "Just now" },
-  { id: 2, title: "Payout processed", desc: "Your payout request was approved.", time: "Today" },
-  { id: 3, title: "Support update", desc: "A support agent replied to your ticket.", time: "Yesterday" },
-];
+function formatTime(ts) {
+  try {
+    const d = new Date(ts);
+    if (Number.isNaN(d.getTime())) return "";
+    return d.toLocaleString();
+  } catch {
+    return "";
+  }
+}
 
-export default function NotificationsDrawer({ open, onClose }) {
+export default function NotificationsDrawer({
+  open,
+  onClose,
+  notifications = [],
+  loading = false,
+  onMarkRead,
+  onMarkAllRead,
+}) {
   return (
     <>
       {/* Backdrop */}
@@ -32,26 +43,56 @@ export default function NotificationsDrawer({ open, onClose }) {
               <Bell className="h-5 w-5" />
               <div className="font-semibold">Notifications</div>
             </div>
-            <button
-              type="button"
-              onClick={onClose}
-              className="h-10 w-10 rounded-full grid place-items-center border border-white/10 bg-white/5 hover:bg-white/10 transition-colors"
-              aria-label="Close notifications"
-            >
-              <X className="h-5 w-5" />
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={onMarkAllRead}
+                className="h-10 px-3 rounded-full inline-flex items-center gap-2 border border-white/10 bg-white/5 hover:bg-white/10 transition-colors text-sm"
+                aria-label="Mark all as read"
+                disabled={!notifications?.length}
+              >
+                <CheckCheck className="h-4 w-4" />
+                Read all
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                className="h-10 w-10 rounded-full grid place-items-center border border-white/10 bg-white/5 hover:bg-white/10 transition-colors"
+                aria-label="Close notifications"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
           </div>
 
           <div className="flex-1 overflow-y-auto p-4 space-y-3 pb-[calc(env(safe-area-inset-bottom)+16px)]">
-            {demoNotifications.map((n) => (
-              <div key={n.id} className="glass-soft p-4">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="font-medium">{n.title}</div>
-                  <div className="text-xs text-[color:var(--muted)]">{n.time}</div>
-                </div>
-                <div className="mt-1 text-sm text-[color:var(--muted)]">{n.desc}</div>
-              </div>
-            ))}
+            {loading ? (
+              <div className="text-sm text-[color:var(--muted)]">Loading...</div>
+            ) : notifications?.length ? (
+              notifications.map((n) => (
+                <button
+                  key={n._id || n.id}
+                  type="button"
+                  onClick={() => onMarkRead?.(n._id || n.id)}
+                  className={
+                    "w-full text-left glass-soft p-4 transition " +
+                    (n.read ? "opacity-80" : "ring-1 ring-[color:var(--accent-1)]/30")
+                  }
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="font-medium">{n.title || "Notification"}</div>
+                    <div className="text-xs text-[color:var(--muted)]">
+                      {n.time || formatTime(n.createdAt)}
+                    </div>
+                  </div>
+                  <div className="mt-1 text-sm text-[color:var(--muted)]">
+                    {n.desc || n.message || ""}
+                  </div>
+                </button>
+              ))
+            ) : (
+              <div className="text-sm text-[color:var(--muted)]">No notifications yet.</div>
+            )}
           </div>
         </div>
       </aside>

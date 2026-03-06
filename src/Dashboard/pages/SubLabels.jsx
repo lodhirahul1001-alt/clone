@@ -207,107 +207,208 @@ export default function SubLabels() {
       </div>
 
       {/* Modal */}
-      {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/60" onClick={onClose} />
+    {open && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div
+      className="absolute inset-0 bg-black/60 backdrop-blur-[2px]"
+      onClick={onClose}
+    />
 
-          <div className="relative w-full max-w-xl rounded-2xl border border-[color:var(++border)] bg-[color:var(++panel)] bg-black shadow-xl overflow-hidden">
-            <div className="px-5 py-4 border-b border-[color:var(--border)] flex items-center justify-between">
-              <h2 className="font-semibold text-[color:var(--text)]">
-                {editing?._id ? "Edit Sub Label" : "Create Sub Label"}
-              </h2>
-              <button
-                onClick={onClose}
-                className="p-2 rounded-lg hover:bg-[color:var(--panel-soft)] text-[color:var(--muted)]"
-                title="Close"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
+    <div
+      className="
+        relative w-full max-w-xl rounded-2xl overflow-hidden shadow-2xl
+        border border-[color:var(--border)]
+        bg-[color:var(--panel)]
+        text-[color:var(--text)]
+      "
+    >
+      <div className="px-5 py-4 border-b border-[color:var(--border)] flex items-center justify-between">
+        <h2 className="font-semibold text-[color:var(--text)]">
+          {editing?._id ? "Edit Sub Label" : "Create Sub Label"}
+        </h2>
 
-            <form onSubmit={submit} className="p-5 space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-bla">
-                <div>
-                  <label className="text-xs text-[color:var(--muted)]">Name *</label>
-                  <input
-                    value={form.name}
-                    onChange={(e) => onChange("name", e.target.value)}
-                    className="mt-1 w-full px-3 py-2 rounded-xl border border-[color:var(--border)] bg-[color:var(--panel-soft)] text-[color:var(--text)]"
-                    placeholder="Sub label name"
-                  />
-                </div>
+        <button
+          onClick={onClose}
+          className="
+            p-2 rounded-lg
+            text-[color:var(--muted)]
+            hover:bg-[color:var(--panel-soft)]
+            hover:text-[color:var(--text)]
+            transition
+          "
+          title="Close"
+        >
+          <X className="w-4 h-4" />
+        </button>
+      </div>
 
-                <div>
-                  <label className="text-xs text-[color:var(--muted)]">Email</label>
-                  <input
-                    value={form.email}
-                    onChange={(e) => onChange("email", e.target.value)}
-                    className="mt-1 w-full px-3 py-2 rounded-xl border border-[color:var(--border)] bg-[color:var(--panel-soft)] text-[color:var(--text)]"
-                    placeholder="email@domain.com"
-                  />
-                </div>
+      <form onSubmit={submit} className="p-5 space-y-4">
+        <div
+          className="
+            grid grid-cols-1 md:grid-cols-2 gap-4
+            bg-[color:var(--panel-soft)]
+            border border-[color:var(--border)]
+            p-4 rounded-xl
+          "
+        >
+          <div>
+            <label className="text-xs font-medium text-[color:var(--muted)]">
+              Name *
+            </label>
+            <input
+              value={form.name}
+              onChange={(e) => onChange("name", e.target.value)}
+              className="
+                mt-1 w-full px-3 py-2 rounded-xl
+                border border-[color:var(--border)]
+                bg-[color:var(--panel)]
+                text-[color:var(--text)]
+                placeholder:text-[color:var(--muted)]
+                outline-none
+                focus:border-fuchsia-500
+                focus:ring-2 focus:ring-fuchsia-500/20
+              "
+              placeholder="Sub label name"
+            />
+          </div>
 
-                <div>
-                  <label className="text-xs text-[color:var(--muted)]">Phone</label>
-                  <input
-                    value={form.phone}
-                    onChange={(e) => onChange("phone", e.target.value)}
-                    className="mt-1 w-full px-3 py-2 rounded-xl border border-[color:var(--border)] bg-[color:var(--panel-soft)] text-[color:var(--text)]"
-                    placeholder="+91..."
-                  />
-                </div>
+          <div>
+            <label className="text-xs font-medium text-[color:var(--muted)]">
+              Email
+            </label>
+            <input
+              value={form.email}
+              onChange={(e) => onChange("email", e.target.value)}
+              className="
+                mt-1 w-full px-3 py-2 rounded-xl
+                border border-[color:var(--border)]
+                bg-[color:var(--panel)]
+                text-[color:var(--text)]
+                placeholder:text-[color:var(--muted)]
+                outline-none
+                focus:border-fuchsia-500
+                focus:ring-2 focus:ring-fuchsia-500/20
+              "
+              placeholder="email@domain.com"
+            />
+          </div>
 
-                <div>
-                  <label className="text-xs text-[color:var(--muted)]">Website</label>
-                  <input
-                    value={form.website}
-                    onChange={(e) => onChange("website", e.target.value)}
-                    className="mt-1 w-full px-3 py-2 rounded-xl border border-[color:var(--border)] bg-[color:var(--panel-soft)] text-[color:var(--text)]"
-                    placeholder="https://"
-                  />
-                </div>
+          <div>
+            <label className="text-xs font-medium text-[color:var(--muted)]">
+              Phone
+            </label>
+            <input
+              value={form.phone}
+              onChange={(e) => onChange("phone", e.target.value)}
+              className="
+                mt-1 w-full px-3 py-2 rounded-xl
+                border border-[color:var(--border)]
+                bg-[color:var(--panel)]
+                text-[color:var(--text)]
+                placeholder:text-[color:var(--muted)]
+                outline-none
+                focus:border-fuchsia-500
+                focus:ring-2 focus:ring-fuchsia-500/20
+              "
+              placeholder="+91..."
+            />
+          </div>
 
-                <div>
-                  <label className="text-xs text-[color:var(--muted)]">City</label>
-                  <input
-                    value={form.city}
-                    onChange={(e) => onChange("city", e.target.value)}
-                    className="mt-1 w-full px-3 py-2 rounded-xl border border-[color:var(--border)] bg-[color:var(--panel-soft)] text-[color:var(--text)]"
-                    placeholder="City"
-                  />
-                </div>
+          <div>
+            <label className="text-xs font-medium text-[color:var(--muted)]">
+              Website
+            </label>
+            <input
+              value={form.website}
+              onChange={(e) => onChange("website", e.target.value)}
+              className="
+                mt-1 w-full px-3 py-2 rounded-xl
+                border border-[color:var(--border)]
+                bg-[color:var(--panel)]
+                text-[color:var(--text)]
+                placeholder:text-[color:var(--muted)]
+                outline-none
+                focus:border-fuchsia-500
+                focus:ring-2 focus:ring-fuchsia-500/20
+              "
+              placeholder="https://"
+            />
+          </div>
 
-                <div>
-                  <label className="text-xs text-[color:var(--muted)]">State</label>
-                  <input
-                    value={form.state}
-                    onChange={(e) => onChange("state", e.target.value)}
-                    className="mt-1 w-full px-3 py-2 rounded-xl border border-[color:var(--border)] bg-[color:var(--panel-soft)] text-[color:var(--text)]"
-                    placeholder="State"
-                  />
-                </div>
-              </div>
+          <div>
+            <label className="text-xs font-medium text-[color:var(--muted)]">
+              City
+            </label>
+            <input
+              value={form.city}
+              onChange={(e) => onChange("city", e.target.value)}
+              className="
+                mt-1 w-full px-3 py-2 rounded-xl
+                border border-[color:var(--border)]
+                bg-[color:var(--panel)]
+                text-[color:var(--text)]
+                placeholder:text-[color:var(--muted)]
+                outline-none
+                focus:border-fuchsia-500
+                focus:ring-2 focus:ring-fuchsia-500/20
+              "
+              placeholder="City"
+            />
+          </div>
 
-              <div className="flex items-center justify-end gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="px-4 py-2 rounded-xl border border-[color:var(--border)] text-[color:var(--text)] hover:bg-[color:var(--panel-soft)]"
-                >
-                  Cancel
-                </button>
-
-                <button
-                  type="submit"
-                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-primary to-purple-600 text-[color:var(--text)] shadow hover:opacity-95"
-                >
-                  {editing?._id ? "Update" : "Create"}
-                </button>
-              </div>
-            </form>
+          <div>
+            <label className="text-xs font-medium text-[color:var(--muted)]">
+              State
+            </label>
+            <input
+              value={form.state}
+              onChange={(e) => onChange("state", e.target.value)}
+              className="
+                mt-1 w-full px-3 py-2 rounded-xl
+                border border-[color:var(--border)]
+                bg-[color:var(--panel)]
+                text-[color:var(--text)]
+                placeholder:text-[color:var(--muted)]
+                outline-none
+                focus:border-fuchsia-500
+                focus:ring-2 focus:ring-fuchsia-500/20
+              "
+              placeholder="State"
+            />
           </div>
         </div>
-      )}
+
+        <div className="flex items-center justify-end gap-2 pt-2">
+          <button
+            type="button"
+            onClick={onClose}
+            className="
+              px-4 py-2 rounded-xl
+              border border-[color:var(--border)]
+              bg-[color:var(--panel-soft)]
+              text-[color:var(--text)]
+              hover:opacity-90 transition
+            "
+          >
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            className="
+              px-4 py-2 rounded-xl
+              bg-gradient-to-r from-fuchsia-600 to-purple-600
+              text-white
+              shadow-md hover:opacity-95 transition
+            "
+          >
+            {editing?._id ? "Update" : "Create"}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
     </div>
   );
 }

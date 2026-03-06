@@ -1,4 +1,3 @@
-
 import React, { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import {
@@ -7,14 +6,7 @@ import {
   adminUpdateTrackStatusApi,
 } from "../../apis/AdminApis";
 
-const statusOptions = ["pending", "active", "rejected"];
-
-const badgeClass = (status) => {
-  const s = String(status || "pending").toLowerCase();
-  if (s === "active") return "bg-green-500/15 border border-green-500/30 text-green-200";
-  if (s === "rejected") return "bg-red-500/15 border border-red-500/30 text-red-200";
-  return "bg-yellow-500/15 border border-yellow-500/30 text-yellow-200";
-};
+const statusOptions = ["pending", "approve", "reject"];
 
 export default function AdminTracks() {
   const [loading, setLoading] = useState(false);
@@ -86,7 +78,7 @@ export default function AdminTracks() {
         <div>
           <h1 className="text-xl font-semibold">Admin · Tracks</h1>
           <p className="text-sm" style={{ color: "var(--muted)" }}>
-            Review uploads, update ISRC/UPC and set status (pending / active / rejected).
+            Approve (live), reject, hold, or suspend uploaded tracks.
           </p>
         </div>
 
@@ -103,9 +95,9 @@ export default function AdminTracks() {
             onChange={(e) => setStatusFilter(e.target.value)}
             className="dash-input"
           >
-            <option className='drop-down'  value="all">All status</option>
+            <option className='drop-down' value="all">All status</option>
             {statusOptions.map((s) => (
-              <option key={s} value={s} className="drop-down">
+              <option className='drop-down' key={s} value={s}>
                 {s}
               </option>
             ))}
@@ -121,12 +113,10 @@ export default function AdminTracks() {
         <table className="w-full text-sm">
           <thead>
             <tr style={{ color: "var(--muted)" }}>
-              <th className="text-left p-2">Cover</th>
               <th className="text-left p-2">Track</th>
               <th className="text-left p-2">Artist</th>
               <th className="text-left p-2">Uploader</th>
               <th className="text-left p-2">Public ID</th>
-              <th className="text-left p-2">Audio</th>
               <th className="text-left p-2">ISRC/UPC Code</th>
               <th className="text-left p-2">Album/Song Link</th>
               <th className="text-left p-2">Status</th>
@@ -136,44 +126,23 @@ export default function AdminTracks() {
           <tbody>
             {loading ? (
               <tr>
-                <td className="p-2" colSpan={10}>
+                <td className="p-2" colSpan={8}>
                   Loading...
                 </td>
               </tr>
             ) : filtered.length === 0 ? (
               <tr>
-                <td className="p-2" colSpan={10}>
+                <td className="p-2" colSpan={8}>
                   No tracks found
                 </td>
               </tr>
             ) : (
               filtered.map((t) => (
                 <tr key={t._id} style={{ borderTop: "1px solid var(--dash-border)" }}>
-                  <td className="p-2">
-                    {t.coverArtUrl ? (
-                      <img
-                        src={t.coverArtUrl}
-                        alt="cover"
-                        className="h-10 w-10 rounded-xl object-cover border"
-                        style={{ borderColor: "var(--dash-border)" }}
-                      />
-                    ) : (
-                      "-"
-                    )}
-                  </td>
                   <td className="p-2 whitespace-nowrap">{t.title || "-"}</td>
                   <td className="p-2 whitespace-nowrap">{t.primaryArtist || "-"}</td>
                   <td className="p-2 whitespace-nowrap">{t?.user?.email || "-"}</td>
                   <td className="p-2 whitespace-nowrap">{t.publicId || "-"}</td>
-                  <td className="p-2">
-                    {t.audioUrl ? (
-                      <a className="underline" href={t.audioUrl} target="_blank" rel="noreferrer">
-                        Open
-                      </a>
-                    ) : (
-                      "-"
-                    )}
-                  </td>
                   <td className="p-2 min-w-[220px]">
                     <input
                       value={t.isrcUpcCode || t.isrc || t.upcEan || ""}
@@ -210,7 +179,7 @@ export default function AdminTracks() {
                     />
                   </td>
                   <td className="p-2 whitespace-nowrap">
-                    <span className={`px-2 py-1 rounded-lg inline-block ${badgeClass(t.status)}`}>{t.status || "pending"}</span>
+                    <span className="px-2 py-1 rounded-lg dash-badge">{t.status || "pending"}</span>
                   </td>
                   <td className="p-2 whitespace-nowrap">
                     <div className="flex items-center gap-2">
@@ -220,7 +189,7 @@ export default function AdminTracks() {
                         className="dash-input"
                       >
                         {statusOptions.map((s) => (
-                          <option className='drop-down'  key={s} value={s}>
+                          <option className='drop-down' key={s} value={s}>
                             {s}
                           </option>
                         ))}

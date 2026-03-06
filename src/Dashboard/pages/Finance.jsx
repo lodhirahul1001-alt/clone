@@ -1,5 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import toast from "react-hot-toast";
 import { DollarSign, TrendingUp, TrendingDown, Download, CreditCard, AlertCircle, Building2, User, Hash } from 'lucide-react';
+
+import {
+  createWithdrawalRequestApi,
+  getFinanceSummaryApi,
+  getFinanceTransactionsApi,
+  getMyWithdrawalsApi,
+} from "../../apis/UserApis";
 
 export default function Finance() {
   const [activeTab, setActiveTab] = useState('overview');
@@ -11,51 +19,80 @@ export default function Finance() {
       accountNumber: '',
       ifscCode: '',
       accountHolderName: ''
-    },
-    paypalEmail: '',
-    stripeAccountId: ''
+    }
   });
 
-  const currentBalance = 0;
-  const maxWithdrawal = 0;
-  const pendingEarnings = 0;
+  const [loading, setLoading] = useState(false);
+  const [summary, setSummary] = useState({
+    balance: 0,
+    maxWithdrawal: 0,
+    pendingEarnings: 0,
+  });
+  const [transactions, setTransactions] = useState([]);
+  const [withdrawals, setWithdrawals] = useState([]);
 
-  const transactions = [
-    {
-      id: '1',
-      type: 'earning',
-      amount: 0,
-      description: 'Spotify streaming royalties',
-      date: '',
-      status: 'completed'
-    },
-    {
-      id: '2',
-      type: 'withdrawal',
-      amount: 0,
-      description: 'Bank transfer withdrawal',
-      date: '',
-      status: 'completed'
-    },
-    {
-      id: '3',
-      type: 'royalty',
-      amount: 0,
-      description: 'YouTube Content ID earnings',
-      date: '',
-      status: 'pending'
-    },
-    {
-      id: '4',
-      type: 'earning',
-      amount: 0,
-      description: 'Apple Music streaming',
-      date: '',
-      status: 'completed'
+  const currentBalance = Number(summary?.balance || 0);
+  const maxWithdrawal = Number(summary?.maxWithdrawal || 0);
+  const pendingEarnings = Number(summary?.pendingEarnings || 0);
+
+  const mergedTransactions = useMemo(() => {
+    const t = Array.isArray(transactions) ? transactions : [];
+    const w = Array.isArray(withdrawals)
+      ? withdrawals.map((x) => ({
+          ...x,
+          type: "withdrawal",
+          description:
+            x.description || x.method
+              ? `${x.method || "Withdrawal"} withdrawal`
+              : "Withdrawal",
+          date: x.createdAt || x.date,
+          // withdrawals should appear as negative amounts in the table
+          amount: -Math.abs(Number(x.amount || 0)),
+          status: x.status,
+        }))
+      : [];
+    return [...t, ...w].sort((a, b) => {
+      const da = new Date(a.date || a.createdAt || 0).getTime();
+      const db = new Date(b.date || b.createdAt || 0).getTime();
+      return db - da;
+    });
+  }, [transactions, withdrawals]);
+
+  const fetchFinance = async () => {
+    try {
+      setLoading(true);
+      const [s, tx, wd] = await Promise.all([
+        getFinanceSummaryApi(),
+        getFinanceTransactionsApi({ limit: 50 }),
+        getMyWithdrawalsApi({ limit: 50 }),
+      ]);
+      setSummary({
+        balance: s?.balance ?? s?.walletBalance ?? 0,
+        maxWithdrawal: s?.maxWithdrawal ?? 0,
+        pendingEarnings: s?.pendingEarnings ?? 0,
+      });
+      // Some backends return combined transactions; we keep earnings here and
+      // render withdrawals from the dedicated withdrawals list to avoid duplicates.
+      const txList = tx?.transactions || tx?.items || [];
+      setTransactions(
+        Array.isArray(txList)
+          ? txList.filter((t) => String(t?.type || "earning") !== "withdrawal")
+          : []
+      );
+      setWithdrawals(wd?.withdrawals || wd?.items || []);
+    } catch (e) {
+      toast.error(e?.response?.data?.msg || "Finance data not available");
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
-  const handleWithdrawal = (e) => {
+  useEffect(() => {
+    fetchFinance();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleWithdrawal = async (e) => {
     e.preventDefault();
 
     if (withdrawalRequest.amount > maxWithdrawal) {
@@ -76,10 +113,15 @@ export default function Finance() {
       }
     }
 
-    // Process withdrawal request
-    console.log('Processing withdrawal:', withdrawalRequest);
-    setShowWithdrawModal(false);
-    resetWithdrawalForm();
+    try {
+      await createWithdrawalRequestApi(withdrawalRequest);
+      toast.success("Withdrawal request submitted");
+      setShowWithdrawModal(false);
+      resetWithdrawalForm();
+      fetchFinance();
+    } catch (err) {
+      toast.error(err?.response?.data?.msg || "Failed to submit withdrawal");
+    }
   };
 
   const resetWithdrawalForm = () => {
@@ -90,9 +132,7 @@ export default function Finance() {
         accountNumber: '',
         ifscCode: '',
         accountHolderName: ''
-      },
-      paypalEmail: '',
-      stripeAccountId: ''
+      }
     });
   };
 
@@ -121,9 +161,13 @@ export default function Finance() {
   const getStatusColor = (status) => {
     switch (status) {
       case 'completed':
+      case 'paid':
         return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+      case 'approved':
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
       case 'pending':
         return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+      case 'rejected':
       case 'failed':
         return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
       default:
@@ -246,8 +290,11 @@ export default function Finance() {
                 </tr>
               </thead>
               <tbody>
-                {transactions.map((transaction) => (
-                  <tr key={transaction.id} className="border-b border-gray-100 dark:border-gray-700">
+                {(mergedTransactions || []).map((transaction) => (
+                  <tr
+                    key={transaction._id || transaction.id}
+                    className="border-b border-gray-100 dark:border-gray-700"
+                  >
                     <td className="p-4">
                       <div className="flex items-center gap-2">
                         {getTransactionIcon(transaction.type)}
@@ -266,7 +313,9 @@ export default function Finance() {
                         {transaction.amount > 0 ? '+' : ''}${Math.abs(transaction.amount).toFixed(2)}
                       </span>
                     </td>
-                    <td className="p-4 dark:text-gray-200">{transaction.date}</td>
+                    <td className="p-4 dark:text-gray-200">
+                      {transaction.date ? new Date(transaction.date).toLocaleString() : "-"}
+                    </td>
                     <td className="p-4">
                       <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(transaction.status)}`}>
                         {transaction.status}
@@ -327,8 +376,6 @@ export default function Finance() {
                   required
                 >
                   <option value="bank">Bank Transfer</option>
-                  <option value="paypal">PayPal</option>
-                  <option value="stripe">Stripe</option>
                 </select>
               </div>
 
@@ -392,49 +439,7 @@ export default function Finance() {
                 </div>
               )}
 
-              {/* PayPal Details */}
-              {withdrawalRequest.method === 'paypal' && (
-                <div className="space-y-4 p-4 bg-white/5 rounded-lg border border-[color:var(--border)]">
-                  <h3 className="text-sm font-medium text-[color:var(--muted)]">PayPal Details</h3>
-                  <div>
-                    <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
-                      PayPal Email <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="email"
-                      value={withdrawalRequest.paypalEmail || ''}
-                      onChange={(e) =>
-                        setWithdrawalRequest({ ...withdrawalRequest, paypalEmail: e.target.value })
-                      }
-                      className="input-ui w-full px-3 py-2"
-                      placeholder="Enter PayPal email address"
-                      required
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* Stripe Details */}
-              {withdrawalRequest.method === 'stripe' && (
-                <div className="space-y-4 p-4 bg-white/5 rounded-lg border border-[color:var(--border)]">
-                  <h3 className="text-sm font-medium text-[color:var(--muted)]">Stripe Details</h3>
-                  <div>
-                    <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
-                      Stripe Account ID <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={withdrawalRequest.stripeAccountId || ''}
-                      onChange={(e) =>
-                        setWithdrawalRequest({ ...withdrawalRequest, stripeAccountId: e.target.value })
-                      }
-                      className="input-ui w-full px-3 py-2"
-                      placeholder="Enter Stripe account ID"
-                      required
-                    />
-                  </div>
-                </div>
-              )}
+              {/* PayPal/Stripe removed — backend supports only bank transfers */}
 
               <div className="flex justify-end gap-3 pt-4">
                 <button
@@ -511,8 +516,6 @@ export default function Finance() {
                   required
                 >
                   <option value="bank">Bank Transfer</option>
-                  <option value="paypal">PayPal</option>
-                  <option value="stripe">Stripe</option>
                 </select>
               </div>
 
@@ -570,47 +573,7 @@ export default function Finance() {
                 </div>
               )}
 
-              {/* PayPal in Modal */}
-              {withdrawalRequest.method === 'paypal' && (
-                <div className="space-y-3 p-3 bg-[color:var(--panel-soft)] rounded-xl border border-[color:var(--border)]">
-                  <div>
-                    <label className="block text-xs font-medium text-[color:var(--muted)] mb-1">
-                      PayPal Email <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="email"
-                      value={withdrawalRequest.paypalEmail || ''}
-                      onChange={(e) =>
-                        setWithdrawalRequest({ ...withdrawalRequest, paypalEmail: e.target.value })
-                      }
-                      className="input-ui w-full px-2 py-1.5 text-sm"
-                      placeholder="PayPal email address"
-                      required
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* Stripe in Modal */}
-              {withdrawalRequest.method === 'stripe' && (
-                <div className="space-y-3 p-3 bg-[color:var(--panel-soft)] rounded-xl border border-[color:var(--border)]">
-                  <div>
-                    <label className="block text-xs font-medium text-[color:var(--muted)] mb-1">
-                      Stripe Account ID <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={withdrawalRequest.stripeAccountId || ''}
-                      onChange={(e) =>
-                        setWithdrawalRequest({ ...withdrawalRequest, stripeAccountId: e.target.value })
-                      }
-                      className="input-ui w-full px-2 py-1.5 text-sm"
-                      placeholder="Stripe account ID"
-                      required
-                    />
-                  </div>
-                </div>
-              )}
+              {/* PayPal/Stripe removed — backend supports only bank transfers */}
 
               <div className="flex justify-end gap-3 pt-4">
                 <button

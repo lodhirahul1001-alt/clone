@@ -5,14 +5,9 @@ import { QRCodeCanvas } from "qrcode.react";
 
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-// Google Sheet Web App (Claim / Payment Confirmation)
-const CLAIM_SHEET_URL =
-  import.meta.env.VITE_GOOGLE_SHEET_WEBHOOK_PAYMENT_CLAIM ||
-  "https://script.google.com/macros/s/AKfycbzsHWzLQylBzIdh0_w31WXJtKmigAwY-Mfib59xEKcG5xoO0Wh1JPDxhB0AkmQnCIs7ww/exec";
 
 const UPI = {
-  // Default UPI ID used across payment UI
-  id: "prdigitalcms@upi",
+  id: "", // ✅ change if needed
   name: "Silent Music Group",
 };
 
@@ -71,30 +66,6 @@ export default function PricingDetails() {
         withCredentials: true,
         headers: { "Content-Type": "multipart/form-data" },
       });
-
-      // Also push claim data to Google Sheet (best effort; doesn't block user)
-      try {
-        const screenshotFile = form.get("screenshot");
-        const payload = {
-          fullName: String(form.get("fullName") || ""),
-          email: String(form.get("email") || ""),
-          phone: String(form.get("phone") || ""),
-          whatsApp: String(form.get("whatsapp") || ""),
-          transactionId: String(form.get("transactionId") || ""),
-          upiId: String(form.get("upiId") || UPI.id || ""),
-          plan,
-          billing,
-          amount: String(amount),
-          screenshotName: screenshotFile instanceof File ? screenshotFile.name : "",
-          createdAt: new Date().toISOString(),
-        };
-        await axios.post(CLAIM_SHEET_URL, payload, {
-          headers: { "Content-Type": "application/json" },
-        });
-      } catch (sheetErr) {
-        console.warn("Google Sheet push failed:", sheetErr?.message || sheetErr);
-      }
-
       setSuccess(true);
       e.currentTarget.reset();
     } catch (err) {

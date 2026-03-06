@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
 import {
   AreaChart,
@@ -20,7 +20,6 @@ import {
   Video,
   Award,
 } from "lucide-react";
-import { AxiosIntance } from "../../config/Axios.Intance";
 
 function StatCard({ icon: Icon, title, value, sub }) {
   return (
@@ -64,20 +63,6 @@ function GradientCard({ title, value, icon: Icon, variant = "a" }) {
 export default function PrivateDashboard() {
   const { user } = useSelector((state) => state.auth);
   const userName = user?.fullName || user?.name || user?.email?.split("@")[0] || "User";
-
-  const [activeNotice, setActiveNotice] = useState(null);
-
-  useEffect(() => {
-    const loadNotice = async () => {
-      try {
-        const res = await AxiosIntance.get("/notification/active");
-        setActiveNotice(res?.data?.item || null);
-      } catch {
-        // ignore
-      }
-    };
-    loadNotice();
-  }, []);
 
   // Demo numbers (wire with real API later)
   const summary = useMemo(
@@ -140,12 +125,6 @@ export default function PrivateDashboard() {
 
   return (
     <div className="dash-page mt-0 mb-1">
-      {activeNotice?.message ? (
-        <div className="mb-4 rounded-2xl p-3 glass-soft" style={{ border: "1px solid rgba(59,130,246,.35)" }}>
-          <div className="text-sm font-medium">Update</div>
-          <div className="text-sm mt-1" style={{ color: "var(--muted)" }}>{activeNotice.message}</div>
-        </div>
-      ) : null}
       <div className="dash-page-head">
         <div>
           <div
