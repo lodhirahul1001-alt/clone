@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background-color: #218838; }
+        input, select {
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <h1>Finance Payment Creation Test</h1>
+    
+    <div class="card">
+        <h2>Test Instructions</h2>
+        <p>This test verifies that the payment creation functionality is working correctly. The mock backend simulates a real payment system.</p>
+    </div>
+
+    <div class="card">
+        <h2>Current Status</h2>
+        <div id="status" class="info">System ready for testing</div>
+    </div>
+
+    <div class="card">
+        <h2>Test Actions</h2>
+        <button onclick="testFinanceSummary()">Test Finance Summary</button>
+        <button onclick="testWithdrawal()">Test Valid Withdrawal</button>
+        <button onclick="testInvalidAmount()">Test Invalid Amount</button>
+        <button onclick="testInsufficientBalance()">Test Insufficient Balance</button>
+        <button onclick="testMissingBankDetails()">Test Missing Bank Details</button>
+    </div>
+
+    <div class="card">
+        <h2>Test Results</h2>
+        <div id="results"></div>
+    </div>
+
+    <script type="module">
+        // Import the mock API functions
+        import { mockFinanceSummary, mockRequestWithdrawal } from './src/mocks/mockFinanceApi.js';
+
+        const resultsDiv = document.getElementById('results');
+        const statusDiv = document.getElementById('status');
+
+        function logResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}:</strong> ${message}`;
+            resultsDiv.appendChild(div);
+        }
+
+        window.testFinanceSummary = async function() {
+            statusDiv.className = 'info';
+            statusDiv.textContent = 'Testing finance summary...';
+            
+            try {
+                const result = await mockFinanceSummary();
+                if (result.success) {
+                    logResult(`✅ Finance summary loaded successfully: $${result.data.currentBalance}`, 'success');
+                    statusDiv.className = 'success';
+                    statusDiv.textContent = 'Finance summary test passed';
+                } else {
+                    throw new Error('Finance summary failed');
+                }
+            } catch (error) {
+                logResult(`❌ Finance summary test failed: ${error.message}`, 'error');
+                statusDiv.className = 'error';
+                statusDiv.textContent = 'Finance summary test failed';
+            }
+        };
+
+        window.testWithdrawal = async function() {
+            statusDiv.className = 'info';
+            statusDiv.textContent = 'Testing valid withdrawal...';
+            
+            try {
+                const result = await mockRequestWithdrawal({
+                    amount: 50,
+                    method: 'bank',
+                    bankDetails: {
+                        accountNumber: '1234567890',
+                        ifscCode: 'SBIN0001234',
+                        accountHolderName: 'Test User'
+                    }
+                });
+                
+                if (result.success) {
+                    logResult(`✅ Valid withdrawal successful: $${result.data.request.amount}`, 'success');
+                    statusDiv.className = 'success';
+                    statusDiv.textContent = 'Valid withdrawal test passed';
+                } else {
+                    throw new Error('Withdrawal failed');
+                }
+            } catch (error) {
+                logResult(`❌ Valid withdrawal test failed: ${error.message}`, 'error');
+                statusDiv.className = 'error';
+                statusDiv.textContent = 'Valid withdrawal test failed';
+            }
+        };
+
+        window.testInvalidAmount = async function() {
+            statusDiv.className = 'info';
+            statusDiv.textContent = 'Testing invalid amount...';
+            
+            try {
+                await mockRequestWithdrawal({
+                    amount: 1000, // Exceeds max withdrawal
+                    method: 'bank',
+                    bankDetails: {
+                        accountNumber: '1234567890',
+                        ifscCode: 'SBIN0001234',
+                        accountHolderName: 'Test User'
+                    }
+                });
+                logResult(`❌ Invalid amount test should have failed but didn't`, 'error');
+                statusDiv.className = 'error';
+                statusDiv.textContent = 'Invalid amount test failed - should have thrown error';
+            } catch (error) {
+                logResult(`✅ Invalid amount correctly rejected: ${error.message}`, 'success');
+                statusDiv.className = 'success';
+                statusDiv.textContent = 'Invalid amount test passed';
+            }
+        };
+
+        window.testInsufficientBalance = async function() {
+            statusDiv.className = 'info';
+            statusDiv.textContent = 'Testing insufficient balance...';
+            
+            try {
+                await mockRequestWithdrawal({
+                    amount: 2000, // Exceeds balance
+                    method: 'bank',
+                    bankDetails: {
+                        accountNumber: '1234567890',
+                        ifscCode: 'SBIN0001234',
+                        accountHolderName: 'Test User'
+                    }
+                });
+                logResult(`❌ Insufficient balance test should have failed but didn't`, 'error');
+                statusDiv.className = 'error';
+                statusDiv.textContent = 'Insufficient balance test failed - should have thrown error';
+            } catch (error) {
+                logResult(`✅ Insufficient balance correctly rejected: ${error.message}`, 'success');
+                statusDiv.className = 'success';
+                statusDiv.textContent = 'Insufficient balance test passed';
+            }
+        };
+
+        window.testMissingBankDetails = async function() {
+            statusDiv.className = 'info';
+            statusDiv.textContent = 'Testing missing bank details...';
+            
+            try {
+                await mockRequestWithdrawal({
+                    amount: 50,
+                    method: 'bank',
+                    bankDetails: {
+                        accountNumber: '', // Missing required field
+                        ifscCode: 'SBIN0001234',
+                        accountHolderName: 'Test User'
+                    }
+                });
+                logResult(`❌ Missing bank details test should have failed but didn't`, 'error');
+                statusDiv.className = 'error';
+                statusDiv.textContent = 'Missing bank details test failed - should have thrown error';
+            } catch (error) {
+                logResult(`✅ Missing bank details correctly rejected: ${error.message}`, 'success');
+                statusDiv.className = 'success';
+                statusDiv.textContent = 'Missing bank details test passed';
+            }
+        };
+
+        // Initialize
+        logResult('Finance payment creation system initialized', 'success');
+    </script>
+</body>
+</html>
