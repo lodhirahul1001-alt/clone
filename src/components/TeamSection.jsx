@@ -171,45 +171,50 @@ export default function TeamSection({ compact = false }) {
 
       {/* Social icons */}
       {p.socials && (
-        <div className="mt-7 flex justify-center gap-3">
-          <a
-            href={p.socials.instagram}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`${p.name} Instagram`}
-            className="h-9 w-9 rounded-xl bg-[color:var(--panel-soft)] border border-[color:var(--border)] flex items-center justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100 hover:scale-110 hover:shadow-lg"
-          >
-            <Instagram size={16} />
-          </a>
-          <a
-            href={p.socials.youtube}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`${p.name} YouTube`}
-            className="h-9 w-9 rounded-xl bg-[color:var(--panel-soft)] border border-[color:var(--border)] flex items-center justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100 hover:scale-110 hover:shadow-lg"
-          >
-            <Youtube size={16} />
-          </a>
-          <a
-            href={p.socials.facebook}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`${p.name} Facebook`}
-            className="h-9 w-9 rounded-xl bg-[color:var(--panel-soft)] border border-[color:var(--border)] flex items-center justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100 hover:scale-110 hover:shadow-lg"
-          >
-            <Facebook size={16} />
-          </a>
-          <a
-            href={p.socials.whatsapp}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`${p.name} WhatsApp`}
-            className="h-9 w-9 rounded-xl bg-[color:var(--panel-soft)] border border-[color:var(--border)] flex items-center justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100 hover:scale-110 hover:shadow-lg"
-          >
-            <MessageCircle size={16} />
-          </a>
-        </div>
-      )}
+  <div className="mt-7 flex justify-center gap-3 opacity-100 md:opacity-0 md:translate-y-2 md:group-hover:opacity-100 md:group-hover:translate-y-0 transition-all duration-500">
+    
+    <a
+      href={p.socials.instagram}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`${p.name} Instagram`}
+      className="h-9 w-9 rounded-xl bg-[color:var(--panel-soft)] border border-[color:var(--border)] flex items-center justify-center hover:scale-110 hover:shadow-lg transition"
+    >
+      <Instagram size={16} />
+    </a>
+
+    <a
+      href={p.socials.youtube}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`${p.name} YouTube`}
+      className="h-9 w-9 rounded-xl bg-[color:var(--panel-soft)] border border-[color:var(--border)] flex items-center justify-center hover:scale-110 hover:shadow-lg transition"
+    >
+      <Youtube size={16} />
+    </a>
+
+    <a
+      href={p.socials.facebook}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`${p.name} Facebook`}
+      className="h-9 w-9 rounded-xl bg-[color:var(--panel-soft)] border border-[color:var(--border)] flex items-center justify-center hover:scale-110 hover:shadow-lg transition"
+    >
+      <Facebook size={16} />
+    </a>
+
+    <a
+      href={p.socials.whatsapp}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`${p.name} WhatsApp`}
+      className="h-9 w-9 rounded-xl bg-[color:var(--panel-soft)] border border-[color:var(--border)] flex items-center justify-center hover:scale-110 hover:shadow-lg transition"
+    >
+      <MessageCircle size={16} />
+    </a>
+
+  </div>
+)}
 
       {/* Subtle shine */}
       <div
