@@ -3,11 +3,22 @@ import { Route, BrowserRouter as Router, Routes, Navigate } from "react-router";
 import App from "./App";
 import DashboardApp from "./Dashboard/DashboardApp";
 import PrivateRoute from "./components/PrivateRoute";
+import RefundPolicy from "./pages/RefundPolicy";
+import Disclaimer from "./pages/Disclaimer";
+import CookiePolicy from "./pages/CookiePolicy";
+import Terms from "./pages/Terms";
+
 
 const MainRoutes = () => {
   return (
     <Router>
     <Routes>
+        <Route path="/refund-policy" element={<RefundPolicy />} />
+        <Route path="/disclaimer" element={<Disclaimer />} />
+        <Route path="/cookie-policy" element={<CookiePolicy />} />
+        <Route path="/cookies-policy" element={<CookiePolicy />} />
+        <Route path="/terms" element={<Terms />} />
+
         {/* Routes from Landing App */}
         <Route path="/*" element={<App />} />
 

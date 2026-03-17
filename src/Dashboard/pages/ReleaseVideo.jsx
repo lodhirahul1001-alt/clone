@@ -71,6 +71,19 @@ export default function ReleaseVideo() {
 
     loadUserReleases();
     loadMyClaims();
+
+    // Load existing claims from localStorage to persist across refreshes
+    const savedClaims = localStorage.getItem('user_claims');
+    if (savedClaims) {
+      try {
+        setClaims(JSON.parse(savedClaims));
+      } catch (e) {
+        console.error("Failed to parse saved claims:", e);
+      }
+    }
+
+    loadUserReleases();
+
   }, []);
 
   const handleInputChange = (e) => {
@@ -127,6 +140,28 @@ export default function ReleaseVideo() {
 
       const savedClaim = normalizeClaim(rawClaim);
 
+
+      // 1) Save to MongoDB (NEW)
+      const mongoPayload = {
+        claimCategory: formData.claimCategory || "",
+        claimUrl: formData.claimUrl || "",
+        releaseTitle: selectedRelease?.title || selectedRelease?.album || "",
+        releasePublicId: selectedRelease?.publicId || "",
+        isrc: formData.isrc || "",
+        cmsName: formData.cmsName || "",
+        user: {
+          email: user?.email || "",
+          fullName: user?.fullName || "",
+        },
+        status: "pending",
+        createdAt: new Date().toISOString(),
+      };
+
+      const mongoRes = await AxiosIntance.post("/claims", mongoPayload);
+      console.log("Claim saved to MongoDB:", mongoRes.data);
+
+      // 2) Save to Google Sheets (keep)
+
       if (GOOGLE_SHEET_WEBHOOK) {
         try {
           await fetch(GOOGLE_SHEET_WEBHOOK, {
@@ -138,6 +173,10 @@ export default function ReleaseVideo() {
               claim_url: formData.claimUrl || "",
               release_title: selectedRelease?.title || selectedRelease?.album || "",
               release_public_id: selectedRelease?.publicId || "",
+
+              release_title: mongoPayload.releaseTitle,
+              release_public_id: mongoPayload.releasePublicId,
+
               isrc: formData.isrc || "",
               cms_name: formData.cmsName || "",
               user_email: user?.email || "",
@@ -152,9 +191,23 @@ export default function ReleaseVideo() {
 
       setClaims((prev) => [savedClaim, ...prev]);
 
+          console.log("Claim saved to Google Sheets");
+        } catch (sheetError) {
+          console.error("Google Sheet save failed:", sheetError);
+          // Don't fail the whole operation for sheet error
+        }
+      }
+      
+      // Save claim to localStorage to persist across refreshes
+      const savedClaim = mongoRes?.data?.claim || mongoRes?.data;
+      const updatedClaims = [savedClaim || payload, ...claims];
+      setClaims(updatedClaims);
+      localStorage.setItem('user_claims', JSON.stringify(updatedClaims));
+
+
       setFeedback({
         type: "success",
-        message: "Claim created successfully.",
+        message: "Claim created successfully and saved to both MongoDB and Google Sheet.",
       });
 
       handleReset();
@@ -166,6 +219,14 @@ export default function ReleaseVideo() {
           error?.response?.data?.msg ||
           error?.response?.data?.message ||
           "Could not save claim. Please try again.",
+
+      console.error("Claim submit error:", error);
+      console.error("Error details:", error.response?.data || error.message);
+
+      setFeedback({
+        type: "error",
+        message: error.response?.data?.msg || error.message || "Could not save claim. Please try again.",
+
       });
     } finally {
       setIsSending(false);
@@ -467,6 +528,8 @@ export default function ReleaseVideo() {
     </>
   )}
 </div>
+
+
     </div>
   );
 }

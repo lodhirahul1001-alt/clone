@@ -85,6 +85,30 @@ export default function CreateClaim() {
       };
       const mongoRes = await AxiosIntance.post("/claims/create", payload);
       const savedClaim = mongoRes?.data?.claim;
+
+
+    const payload = {
+      claimCategory: formData.claimCategory || "",
+      claimUrl: formData.claimUrl || "",
+      releaseTitle: selectedRelease?.title || selectedRelease?.album || "",
+      releasePublicId: selectedRelease?.publicId || "",
+      isrc: formData.isrc || "",
+      cmsName: formData.cmsName || "",
+      user: {
+        email: user?.email || "",
+        fullName: user?.fullName || "",
+      },
+      status: "pending",
+      createdAt: new Date().toISOString(),
+    };
+
+    try {
+      // ✅ 1) Save to MongoDB (primary)
+      const mongoRes = await AxiosIntance.post("/claims", payload);
+      console.log("Claim saved to MongoDB:", mongoRes.data);
+
+      // ✅ 2) Save to Google Sheet (best-effort)
+
       if (GOOGLE_SHEET_WEBHOOK) {
         try {
           await fetch(GOOGLE_SHEET_WEBHOOK, {
@@ -98,6 +122,14 @@ export default function CreateClaim() {
               release_public_id: payload.releasePublicId,
               isrc: formData.isrc,
               cms_name: formData.cmsName,
+
+              claim_category: formData.claimCategory || "",
+              claim_url: formData.claimUrl || "",
+              release_title: payload.releaseTitle,
+              release_public_id: payload.releasePublicId,
+              isrc: formData.isrc || "",
+              cms_name: formData.cmsName || "",
+
               user_email: user?.email || "",
               user_name: user?.fullName || "",
               requested_at: new Date().toLocaleString(),
@@ -111,6 +143,34 @@ export default function CreateClaim() {
     } catch (error) {
       console.error("Claim submit error:", error);
       toast.error(error?.response?.data?.msg || "Could not save claim. Please try again.");
+
+          console.log("Claim saved to Google Sheets");
+        } catch (sheetError) {
+          console.error("Google Sheet save failed:", sheetError);
+          // Don't fail the whole operation for sheet error
+        }
+      }
+
+      const savedClaim = mongoRes?.data?.claim || mongoRes?.data;
+      if (savedClaim) {
+        setClaims((prev) => [savedClaim, ...prev]);
+      }
+
+      setFeedback({
+        type: "success",
+        message: "Claim created successfully and saved to both MongoDB and Google Sheet.",
+      });
+
+      handleReset();
+    } catch (error) {
+      console.error("Claim submit error:", error);
+      console.error("Error details:", error.response?.data || error.message);
+
+      setFeedback({
+        type: "error",
+        message: error.response?.data?.msg || error.message || "Could not save claim. Please try again.",
+      });
+
     } finally {
       setIsSending(false);
     }

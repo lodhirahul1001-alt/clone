@@ -30,7 +30,7 @@ export const adminUpdateTrackMetaApi = async (trackId, payload) => {
   return res.data;
 };
 
-// ===================== ADMIN OVERVIEW / CLAIMS / CALLBACKS / NOTICE =====================
+//  ADMIN OVERVIEW / CLAIMS / CALLBACKS / NOTICE 
 
 // GET /api/admin/stats
 export const adminGetStatsApi = async () => {
@@ -80,7 +80,7 @@ export const adminDeleteNotificationApi = async (notificationId) => {
   return res.data;
 };
 
-// ===================== PAYMENTS / WALLET / WITHDRAWALS =====================
+//  PAYMENTS / WALLET / WITHDRAWALS 
 // The dashboard uses these exports in AdminPayments.
 
 // GET /api/admin/payments?search=&status=&limit=&page=

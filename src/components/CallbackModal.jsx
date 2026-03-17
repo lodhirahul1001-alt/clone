@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
 import { AxiosIntance } from "../config/Axios.Intance";
+
+
 import { postFormEntryToGoogleSheet } from "../utils/googleSheetsSync";
 
 const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
@@ -52,6 +54,18 @@ export default function CallbackModal({ open, onClose }) {
         }
       } catch (err) { console.error('EmailJS error:', err); }
 
+      await emailjs.send(SERVICE_ID, TEMPLATE_ID, payload, { publicKey: PUBLIC_KEY });
+
+      void postFormEntryToGoogleSheet({
+        formType: "callback-modal",
+        formTitle: "Callback Request Form",
+        data: payload,
+        status: "submitted",
+        userInfo: {
+          name: payload.name,
+        },
+      });
+      
       void postFormEntryToGoogleSheet({ formType: 'callback-modal', formTitle: 'Callback Request Form', data: payload, status: 'submitted', userInfo: { name: payload.name } });
       setSuccess(true);
       form.reset();

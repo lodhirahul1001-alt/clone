@@ -341,6 +341,26 @@ export default function AdminPayments() {
 </div>
       </div>
 
+
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            type="button"
+            className={"dash-btn " + (tab === "withdrawals" ? "dash-btn-primary" : "")}
+            onClick={() => setTab("withdrawals")}
+          >
+            Withdrawals
+          </button>
+          <button
+            type="button"
+            className={"dash-btn " + (tab === "earnings" ? "dash-btn-primary" : "")}
+            onClick={() => setTab("earnings")}
+          >
+            Credit Earnings
+          </button>
+        </div>
+      </div>
+
+
       {tab === "withdrawals" ? (
         <>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
@@ -388,11 +408,26 @@ export default function AdminPayments() {
                     onChange={(e) => setQ(e.target.value)}
                     placeholder=" Search user / amount..."
                     className="dash-input pl-9 "
+
+          <div className="dash-card p-4 rounded-2xl">
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <div className="flex items-center gap-2 flex-wrap">
+                <div className="relative">
+                  <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "var(--muted)" }} />
+                  <input
+                    value={q}
+                    onChange={(e) => setQ(e.target.value)}
+                    placeholder="Search user / txn / bank / amount..."
+                    className="dash-input pl-9"
+
                   />
                 </div>
 
                 <div className="relative">
                   <Filter className="h-4 w-3 absolute left-22  top-1/2 -translate-y-1/2" style={{ color: "var(--muted)" }} />
+
+                  <Filter className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "var(--muted)" }} />
+
                   <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}

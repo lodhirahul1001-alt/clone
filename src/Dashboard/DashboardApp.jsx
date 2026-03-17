@@ -60,7 +60,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { removeUser } from "../features/reducers/AuthSlice";
 import { logOutUserApi } from "../features/actions/AuthAction";
-// ================= DASH NAV LINK (ADDED FIX) =================
+// === DASH NAV LINK (ADDED FIX) ===
 function DashNavLink({ to, icon: Icon, children, active, onClick }) {
   return (
     <Link
@@ -77,9 +77,9 @@ function DashNavLink({ to, icon: Icon, children, active, onClick }) {
 }
 
 
-// ================= THEME TOGGLE (optional) =================
+// === THEME TOGGLE (optional) ===
 
-// ================= SIDEBAR (RESPONSIVE) =================
+// === SIDEBAR (RESPONSIVE) ===
 function Sidebar({ isOpen, onClose }) {
   const location = useLocation();
   const navigate = useNavigate();
@@ -301,7 +301,7 @@ const menuItems = [
   );
 }
 
-// ================= MAIN DASHBOARD APP =================
+// === MAIN DASHBOARD APP ===
 function DashboardApp() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);

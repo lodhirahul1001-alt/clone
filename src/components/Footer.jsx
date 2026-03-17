@@ -106,7 +106,12 @@ export default function Footer() {
 
           <div className="mt-10 pt-6 border-t border-black/10 dark:border-white/10 text-sm text-[color:var(--muted)] flex flex-col sm:flex-row items-center justify-between gap-3">
             <span>© {new Date().getFullYear()} Silent Music Group All rights reserved.</span>
-            <span className="text-xs">Contect For Website Create - Lodhirahul7002@gmail.com</span>
+            <div className="flex flex-wrap items-center justify-center gap-3 text-xs">
+              <Link to="/refund-policy" className="hover:text-[color:var(--text)]">Refund Policy</Link>
+              <Link to="/disclaimer" className="hover:text-[color:var(--text)]">Disclaimer</Link>
+              <Link to="/cookie-policy" className="hover:text-[color:var(--text)]">Cookies Policy</Link>
+              <a href="/terms">Terms & Conditions</a>
+            </div>
           </div>
         </div>
       </div>

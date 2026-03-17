@@ -308,7 +308,7 @@ export default function Support() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-purple-900 dark:text-purple-100">Email Support</h3>
-                    <p className="text-purple-700 dark:text-purple-300 text-sm">info@silentmusicgroup.com</p>
+                    <p className="text-purple-700 dark:text-purple-300 text-sm">admin@silentmusicgroup.com</p>
                     <p className="text-purple-600 dark:text-purple-400 text-xs">Response in 2-4 hours</p>
                   </div>
                 </div>
@@ -652,7 +652,7 @@ export default function Support() {
                     </div>
                     <div>
                       <h3 className="font-medium dark:text-[color:var(--text)]">Email Support</h3>
-                      <p className="text-purple-600 dark:text-purple-400 font-medium">info@silentmusicgroup.com</p>
+                      <p className="text-purple-600 dark:text-purple-400 font-medium">admin@silentmusicgroup.com</p>
                       <p className="text-sm text-gray-600 dark:text-gray-400">Response within 2-4 hours</p>
                     </div>
                   </motion.div>

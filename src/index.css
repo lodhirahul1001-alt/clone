@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
-/* ==================================================   Theme tokens (Light + Dark)
-   ========================================================= */
+/* =   Theme tokens (Light + Dark)
+   = */
 :root{
   /* Hero overlays (light theme) */
   --heroShadeTop: rgba(255,255,255,0.55);
@@ -289,8 +289,8 @@
   100% { transform: translate3d(85px,0,0); }
 }
 
-/* ==============   CMS / Dashboard UI
-   ===================== */
+/*    CMS / Dashboard UI
+    */
 .dash-shell{
   background:
     radial-gradient(1000px 520px at 18% 10%, rgba(94, 17, 104, 0.18), transparent 60%),
@@ -672,7 +672,7 @@ html.dark .dash-table td{ border-bottom: 1px solid rgba(255,255,255,.08); }
 }
 html.dark .dash-pill{ border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.06); }
  
-/* ================= LIGHT DASHBOARD OVERRIDE ================= */
+/* === LIGHT DASHBOARD OVERRIDE === */
 html:not(.dark) .dash-shell {
   background: #ffffff !important;
 }

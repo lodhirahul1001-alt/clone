@@ -68,7 +68,7 @@ export const uploadProfilePictureApi = async (file) => {
   return res.data; // { msg, dp }
 };
 
-// ===================== FINANCE (USER) =====================
+//  FINANCE (USER) 
 // These routes should be available on backend for showing wallet + transactions + withdrawals.
 
 // GET /api/finance/summary

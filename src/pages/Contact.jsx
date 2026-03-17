@@ -80,7 +80,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <div className="font-medium">Email</div>
-                    <div className="text-[color:var(--muted)]">info@silentmusicgroup.com</div>
+                    <div className="text-[color:var(--muted)]">admin@silentmusicgroup.com</div>
                   </div>
                 </div>
 
