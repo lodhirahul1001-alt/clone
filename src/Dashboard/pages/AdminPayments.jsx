@@ -312,36 +312,6 @@ export default function AdminPayments() {
           </p>
         </div>
 
-       <div className="flex items-center gap-2 flex-wrap">
-  <button
-    type="button"
-    className={
-      "dash-btn transition-all duration-200 hover:scale-[1.02] hover:shadow-md " +
-      (tab === "withdrawals"
-        ? "dash-btn-primary ring-2 ring-fuchsia-400/30"
-        : "hover:bg-fuchsia-500/10 hover:text-fuchsia-600 dark:hover:text-fuchsia-400")
-    }
-    onClick={() => setTab("withdrawals")}
-  >
-    Withdrawals
-  </button>
-
-  <button
-    type="button"
-    className={
-      "dash-btn transition-all duration-200 hover:scale-[1.12] hover:bg-fuchsia-200/10 hover:text-fuchsia-600 dark:hover:text-black" + 
-      (tab === "earnings"
-        ? "dash-btn-primary ring-2 ring-fuchsia-400/30"
-        : "hover:bg-fuchsia-500/10  hover:scale-[1.12] hover:text-fuchsia-600 dark:hover:text-fuchsia-400")
-    }
-    onClick={() => setTab("earnings")}
-  >
-    Credit Earnings
-  </button>
-</div>
-      </div>
-
-
         <div className="flex items-center gap-2 flex-wrap">
           <button
             type="button"
@@ -398,17 +368,6 @@ export default function AdminPayments() {
             </div>
           </div>
 
-          <div className="dash-card p-5 rounded-2xl">
-            <div className="flex items-center justify-between gap-6 flex-wrap">
-              <div className="flex items-center gap-5 flex-wrap">
-                <div className="relative w-full md:w-auto">
-                  <Search className="h-4 w-4 left-45    absolute  gap-2 top-1/2 -translate-y-1/2" style={{ color: "var(--muted)" }} />
-                  <input
-                    value={q}
-                    onChange={(e) => setQ(e.target.value)}
-                    placeholder=" Search user / amount..."
-                    className="dash-input pl-9 "
-
           <div className="dash-card p-4 rounded-2xl">
             <div className="flex items-center justify-between gap-3 flex-wrap">
               <div className="flex items-center gap-2 flex-wrap">
@@ -419,35 +378,21 @@ export default function AdminPayments() {
                     onChange={(e) => setQ(e.target.value)}
                     placeholder="Search user / txn / bank / amount..."
                     className="dash-input pl-9"
-
                   />
                 </div>
 
                 <div className="relative">
-                  <Filter className="h-4 w-3 absolute left-22  top-1/2 -translate-y-1/2" style={{ color: "var(--muted)" }} />
-
                   <Filter className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "var(--muted)" }} />
-
                   <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
                     className="dash-input pl-9"
                   >
-                    <option className="drop-down" value="all">
-                      All
-                    </option>
-                    <option className="drop-down" value="pending">
-                      pending
-                    </option>
-                    <option className="drop-down" value="approved">
-                      approved
-                    </option>
-                    <option className="drop-down" value="rejected">
-                      rejected
-                    </option>
-                    <option className="drop-down" value="paid">
-                      paid
-                    </option>
+                    <option className="drop-down" value="all">All</option>
+                    <option className="drop-down" value="pending">pending</option>
+                    <option className="drop-down" value="approved">approved</option>
+                    <option className="drop-down" value="rejected">rejected</option>
+                    <option className="drop-down" value="paid">paid</option>
                   </select>
                 </div>
 

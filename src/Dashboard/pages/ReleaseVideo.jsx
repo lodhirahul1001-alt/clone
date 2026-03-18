@@ -69,9 +69,6 @@ export default function ReleaseVideo() {
       }
     };
 
-    loadUserReleases();
-    loadMyClaims();
-
     // Load existing claims from localStorage to persist across refreshes
     const savedClaims = localStorage.getItem('user_claims');
     if (savedClaims) {
@@ -83,6 +80,7 @@ export default function ReleaseVideo() {
     }
 
     loadUserReleases();
+    loadMyClaims();
 
   }, []);
 
@@ -120,35 +118,14 @@ export default function ReleaseVideo() {
 
     try {
       const mongoPayload = {
-        claimCategory: formData.claimCategory,
-        claimUrl: formData.claimUrl,
-        releaseId: formData.releaseId || null,
-        releaseTitle: selectedRelease?.title || selectedRelease?.album || "",
-        releasePublicId: selectedRelease?.publicId || "",
-        isrc: formData.isrc,
-        cmsName: formData.cmsName,
-        note: "",
-      };
-
-      const mongoRes = await AxiosIntance.post("/claims/create", mongoPayload);
-
-      const rawClaim =
-        mongoRes?.data?.claim ||
-        mongoRes?.data?.item ||
-        mongoRes?.data?.data ||
-        mongoRes?.data;
-
-      const savedClaim = normalizeClaim(rawClaim);
-
-
-      // 1) Save to MongoDB (NEW)
-      const mongoPayload = {
         claimCategory: formData.claimCategory || "",
         claimUrl: formData.claimUrl || "",
+        releaseId: formData.releaseId || null,
         releaseTitle: selectedRelease?.title || selectedRelease?.album || "",
         releasePublicId: selectedRelease?.publicId || "",
         isrc: formData.isrc || "",
         cmsName: formData.cmsName || "",
+        note: "",
         user: {
           email: user?.email || "",
           fullName: user?.fullName || "",
@@ -157,8 +134,16 @@ export default function ReleaseVideo() {
         createdAt: new Date().toISOString(),
       };
 
-      const mongoRes = await AxiosIntance.post("/claims", mongoPayload);
+      const mongoRes = await AxiosIntance.post("/claims/create", mongoPayload);
       console.log("Claim saved to MongoDB:", mongoRes.data);
+
+      const rawClaim =
+        mongoRes?.data?.claim ||
+        mongoRes?.data?.item ||
+        mongoRes?.data?.data ||
+        mongoRes?.data;
+
+      const savedClaim = normalizeClaim(rawClaim);
 
       // 2) Save to Google Sheets (keep)
 
@@ -171,12 +156,8 @@ export default function ReleaseVideo() {
             body: JSON.stringify({
               claim_category: formData.claimCategory || "",
               claim_url: formData.claimUrl || "",
-              release_title: selectedRelease?.title || selectedRelease?.album || "",
-              release_public_id: selectedRelease?.publicId || "",
-
               release_title: mongoPayload.releaseTitle,
               release_public_id: mongoPayload.releasePublicId,
-
               isrc: formData.isrc || "",
               cms_name: formData.cmsName || "",
               user_email: user?.email || "",
@@ -189,18 +170,7 @@ export default function ReleaseVideo() {
         }
       }
 
-      setClaims((prev) => [savedClaim, ...prev]);
-
-          console.log("Claim saved to Google Sheets");
-        } catch (sheetError) {
-          console.error("Google Sheet save failed:", sheetError);
-          // Don't fail the whole operation for sheet error
-        }
-      }
-      
-      // Save claim to localStorage to persist across refreshes
-      const savedClaim = mongoRes?.data?.claim || mongoRes?.data;
-      const updatedClaims = [savedClaim || payload, ...claims];
+      const updatedClaims = [savedClaim, ...claims];
       setClaims(updatedClaims);
       localStorage.setItem('user_claims', JSON.stringify(updatedClaims));
 
@@ -219,14 +189,6 @@ export default function ReleaseVideo() {
           error?.response?.data?.msg ||
           error?.response?.data?.message ||
           "Could not save claim. Please try again.",
-
-      console.error("Claim submit error:", error);
-      console.error("Error details:", error.response?.data || error.message);
-
-      setFeedback({
-        type: "error",
-        message: error.response?.data?.msg || error.message || "Could not save claim. Please try again.",
-
       });
     } finally {
       setIsSending(false);
