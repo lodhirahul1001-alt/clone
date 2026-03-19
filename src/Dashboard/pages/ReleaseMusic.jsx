@@ -273,7 +273,7 @@ const ReleaseMusic = () => {
         </td>
 
         <td className="px-4 py-3">
-          <span className="px-2 py-1 rounded-lg dash-badge">
+          <span className="px-2 capitalize py-1 rounded-lg dash-badge">
             {track.stage || track.status || "pending"}
           </span>
         </td>
