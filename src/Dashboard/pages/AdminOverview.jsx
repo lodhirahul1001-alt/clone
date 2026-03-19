@@ -90,7 +90,7 @@ export default function AdminOverview() {
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
           <h1 className="text-xl font-semibold">Admin · Overview</h1>
-          <p className="text-sm" style={{ color: "var(--muted)" }}>
+          <p className="text-sm uppercase" style={{ color: "var(--muted)" }}>
             One place to monitor everything: users, uploads, payments, claims and callbacks.
           </p>
         </div>

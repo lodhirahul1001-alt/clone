@@ -4,6 +4,7 @@ import { AxiosIntance } from "../../config/Axios.Intance";
 import { adminGetClaimsApi, adminUpdateClaimStatusApi } from "../../apis/AdminApis";
 
 const statusOptions = ["pending", "approved", "rejected"];
+const toTitle = (s = "") => s.charAt(0).toUpperCase() + s.slice(1);
 
 export default function AdminClaims() {
   const [loading, setLoading] = useState(false);
@@ -65,8 +66,8 @@ export default function AdminClaims() {
         <div className="flex items-center gap-2 flex-wrap">
           <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search..." className="dash-input" />
           <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="dash-input">
-            <option value="all">All status</option>
-            {statusOptions.map((s) => <option key={s} value={s}>{s}</option>)}
+            <option value="all">All Status</option>
+            {statusOptions.map((s) => <option key={s} value={s}>{toTitle(s)}</option>)}
           </select>
           <button className="dash-btn" type="button" onClick={fetchItems} disabled={loading}>Refresh</button>
         </div>
@@ -98,7 +99,7 @@ export default function AdminClaims() {
                   <td className="p-2">{c.releaseTitle || '-'}</td>
                   <td className="p-2">{c.isrc || '-'}</td>
                   <td className="p-2 max-w-[280px] truncate"><a className="underline" href={c.claimUrl} target="_blank" rel="noreferrer">{c.claimUrl}</a></td>
-                  <td className="p-2"><select className="dash-input" value={c.status || 'pending'} onChange={(e)=>updateStatus(c._id, e.target.value)}>{statusOptions.map((s)=><option key={s} value={s}>{s}</option>)}</select></td>
+                  <td className="p-2"><select className="dash-input" value={c.status || 'pending'} onChange={(e)=>updateStatus(c._id, e.target.value)}>{statusOptions.map((s)=><option key={s} value={s}>{toTitle(s)}</option>)}</select></td>
                   <td className="p-2"><button className="dash-btn" type="button" onClick={()=>deleteClaim(c._id)}>Delete</button></td>
                 </tr>
               ))

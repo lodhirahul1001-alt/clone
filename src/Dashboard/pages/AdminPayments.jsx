@@ -46,6 +46,11 @@ function badge(status) {
   return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-200";
 }
 
+function toTitle(s = "") {
+  const v = String(s);
+  return v ? v.charAt(0).toUpperCase() + v.slice(1) : "";
+}
+
 function safeBankLine(w) {
   const b = w?.bankDetails || {};
   const name = b?.accountHolderName || "";
@@ -307,7 +312,7 @@ export default function AdminPayments() {
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div>
           <h1 className="text-xl font-semibold">Admin · Payment Dashboard</h1>
-          <p className="text-sm" style={{ color: "var(--muted)" }}>
+          <p className="text-sm capitalize" style={{ color: "var(--muted)" }}>
             Manually credit earnings and process withdrawal requests (pending / reject / approve / paid).
           </p>
         </div>
@@ -333,7 +338,7 @@ export default function AdminPayments() {
 
       {tab === "withdrawals" ? (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+          <div className="grid grid-cols-1 capitalize md:grid-cols-4 gap-3">
             <div className="dash-card-soft p-4 rounded-2xl">
               <div className="text-xs" style={{ color: "var(--muted)" }}>
                 Pending
@@ -389,10 +394,10 @@ export default function AdminPayments() {
                     className="dash-input pl-9"
                   >
                     <option className="drop-down" value="all">All</option>
-                    <option className="drop-down" value="pending">pending</option>
-                    <option className="drop-down" value="approved">approved</option>
-                    <option className="drop-down" value="rejected">rejected</option>
-                    <option className="drop-down" value="paid">paid</option>
+                    <option className="drop-down" value="pending">Pending</option>
+                    <option className="drop-down" value="approved">Approved</option>
+                    <option className="drop-down" value="rejected">Rejected</option>
+                    <option className="drop-down" value="paid">Paid</option>
                   </select>
                 </div>
 
@@ -460,7 +465,7 @@ export default function AdminPayments() {
                         <td className="p-2 whitespace-nowrap">{fmtDate(w.createdAt)}</td>
                         <td className="p-2 whitespace-nowrap">
                           <span className={`px-2 py-1 rounded-lg text-xs font-medium ${badge(w.status)}`}>
-                            {w.status}
+                            {toTitle(w.status || "pending")}
                           </span>
                         </td>
                         <td className="p-2 whitespace-nowrap">

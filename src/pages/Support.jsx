@@ -146,13 +146,13 @@ export default function Support() {
   };
 
   const handleWhatsAppClick = () => {
-    const message = encodeURIComponent('Hi! I need help with PrDigitalCms. Can you assist me?');
-    const whatsappUrl = `https://wa.me/911234567890?text=${message}`;
+    const message = encodeURIComponent('Hi! I need help with Silent Music Group. Can you assist me?');
+    const whatsappUrl = `https://wa.me/919060070222?text=${message}`;
     window.open(whatsappUrl, '_blank');
   };
 
   const handleEmailClick = () => {
-    window.location.href = 'mailto:support@prdigitalcms.com?subject=Support Request';
+    window.location.href = 'mailto:admin@silentmusicgroup.com?subject=Support Request';
   };
 
   const getStatusColor = (status) => {

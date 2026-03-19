@@ -7,6 +7,7 @@ import {
 } from "../../apis/AdminApis";
 
 const statusOptions = ["pending", "approve", "reject"];
+const toTitle = (s = "") => s.charAt(0).toUpperCase() + s.slice(1);
 
 export default function AdminTracks() {
   const [loading, setLoading] = useState(false);
@@ -95,10 +96,10 @@ export default function AdminTracks() {
             onChange={(e) => setStatusFilter(e.target.value)}
             className="dash-input"
           >
-            <option className='drop-down' value="all">All status</option>
+            <option className='drop-down' value="all">All Status</option>
             {statusOptions.map((s) => (
               <option className='drop-down' key={s} value={s}>
-                {s}
+                {toTitle(s)}
               </option>
             ))}
           </select>
@@ -179,10 +180,10 @@ export default function AdminTracks() {
                     />
                   </td>
                   <td className="p-2 whitespace-nowrap">
-                    <span className="px-2 py-1 rounded-lg dash-badge">{t.status || "pending"}</span>
+                    <span className="px-2 py-1 rounded-lg dash-badge">{toTitle(t.status || "pending")}</span>
                   </td>
                   <td className="p-2 whitespace-nowrap">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center  capitalize gap-2">
                       <select
                         value={t.status || "pending"}
                         onChange={(e) => updateStatus(t._id, e.target.value)}
@@ -190,7 +191,7 @@ export default function AdminTracks() {
                       >
                         {statusOptions.map((s) => (
                           <option className='drop-down' key={s} value={s}>
-                            {s}
+                            {toTitle(s)}
                           </option>
                         ))}
                       </select>

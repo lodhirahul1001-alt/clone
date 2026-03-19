@@ -264,11 +264,11 @@ export default function CreateClaim() {
               ) : (
                 claims.slice(0, 20).map((c, i) => (
                   <tr key={c._id || i} style={{ borderTop: "1px solid var(--dash-border)" }}>
-                    <td className="p-2 uppercase">{c.claimCategory || "-"}</td>
+                    <td className="p-2 capitalize">{c.claimCategory || "-"}</td>
                     <td className="p-2">{c.releaseTitle || "-"}</td>
                     <td className="p-2">{c.isrc || "-"}</td>
                     <td className="p-2 max-w-[280px] truncate"><a className="underline" href={c.claimUrl} target="_blank" rel="noreferrer">{c.claimUrl}</a></td>
-                    <td className="p-2"><span className="px-2 py-1 rounded-lg dash-badge">{c.status || "pending"}</span></td>
+                    <td className="p-2"><span className="px-2 py-1 capitalize rounded-lg dash-badge">{c.status || "pending"}</span></td>
                   </tr>
                 ))
               )}

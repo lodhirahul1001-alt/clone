@@ -137,17 +137,17 @@ export default function Support() {
   };
 
   const handlePhoneCall = () => {
-    window.location.href = 'tel:+911234567890';
+    window.location.href = 'tel:+919060070222';
   };
 
   const handleWhatsAppClick = () => {
-    const message = encodeURIComponent('Hi! I need help with PrDigitalCms. Can you assist me?');
-    const whatsappUrl = `https://wa.me/911234567890?text=${message}`;
+    const message = encodeURIComponent('Hi! I need help with silent music group. Can you assist me?');
+    const whatsappUrl = `https://wa.me/+919060070222?text=${message}`;
     window.open(whatsappUrl, '_blank');
   };
 
   const handleEmailClick = () => {
-    window.location.href = 'mailto:support@prdigitalcms.com?subject=Support Request';
+    window.location.href = 'mailto:admin@silentmusicgroup.com?subject=Support Request';
   };
 
   const getStatusColor = (status) => {
@@ -275,7 +275,7 @@ export default function Support() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-green-900 dark:text-green-100">WhatsApp</h3>
-                    <p className="text-green-700 dark:text-green-300 text-sm">PrDigital Community</p>
+                    <p className="text-green-700 dark:text-green-300 text-sm">Silent Music Group Community</p>
                     <p className="text-green-600 dark:text-green-400 text-xs">Instant Support</p>
                   </div>
                 </div>
@@ -292,7 +292,7 @@ export default function Support() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-purple-900 dark:text-purple-100">Email Support</h3>
-                    <p className="text-purple-700 dark:text-purple-300 text-sm">prdigitalcms@gmail.com</p>
+                    <p className="text-purple-700 dark:text-purple-300 text-sm">admin@silentmusicgroup.com</p>
                     <p className="text-purple-600 dark:text-purple-400 text-xs">Response in 2-4 hours</p>
                   </div>
                 </div>
@@ -543,7 +543,7 @@ export default function Support() {
                         </span>
                         <span className="flex items-center gap-1">
                           <Star className="w-3 h-3" />
-                          {faq.helpful} helpful
+                          {faq.helpful} Helpful
                         </span>
                       </div>
                     </div>
@@ -633,7 +633,7 @@ export default function Support() {
                     </div>
                     <div>
                       <h3 className="font-medium dark:text-[color:var(--text)]">WhatsApp Community</h3>
-                      <p className="text-green-600 dark:text-green-400 font-medium">PrDigital Support</p>
+                      <p className="text-green-600 dark:text-green-400 font-medium">Silent Music Group</p>
                       <p className="text-sm text-gray-600 dark:text-gray-400">Join our community for instant help</p>
                     </div>
                   </motion.div>
@@ -648,7 +648,7 @@ export default function Support() {
                     </div>
                     <div>
                       <h3 className="font-medium dark:text-[color:var(--text)]">Email Support</h3>
-                      <p className="text-purple-600 dark:text-purple-400 font-medium">prdigitalcms@gmail.com</p>
+                      <p className="text-purple-600 dark:text-purple-400 font-medium">admin@silentmusicgroup.com</p>
                       <p className="text-sm text-gray-600 dark:text-gray-400">Response within 2-4 hours</p>
                     </div>
                   </motion.div>
