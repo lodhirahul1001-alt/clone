@@ -298,7 +298,7 @@ export function FormStorageManager({ isOpen, onClose }) {
                         placeholder="Search all form data..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)] text-sm"
+                        className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-[color:var(--text)] text-sm"
                       />
                     </div>
 
@@ -306,7 +306,7 @@ export function FormStorageManager({ isOpen, onClose }) {
                       <select
                         value={filterType}
                         onChange={(e) => setFilterType(e.target.value)}
-                        className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)] text-sm"
+                        className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-[color:var(--text)] text-sm"
                       >
                         <option value="all">All Form Types</option>
                         {formTypes.map((type) => (
@@ -319,7 +319,7 @@ export function FormStorageManager({ isOpen, onClose }) {
                       <select
                         value={filterStatus}
                         onChange={(e) => setFilterStatus(e.target.value)}
-                        className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)] text-sm"
+                        className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-[color:var(--text)] text-sm"
                       >
                         <option value="all">All Status</option>
                         <option value="draft">Draft</option>
@@ -419,7 +419,7 @@ export function FormStorageManager({ isOpen, onClose }) {
 
                       <div className="space-y-4">
                         {/* Form Info */}
-                        <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
+                        <div className="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-lg">
                           <h4 className="font-medium text-gray-900 dark:text-[color:var(--text)] mb-3">Form Information</h4>
                           <div className="grid grid-cols-2 gap-4 text-sm">
                             <div>
@@ -456,7 +456,7 @@ export function FormStorageManager({ isOpen, onClose }) {
                         </div>
 
                         {/* All Form Data */}
-                        <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
+                        <div className="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-lg">
                           <h4 className="font-medium text-gray-900 dark:text-[color:var(--text)] mb-3">All Captured Data</h4>
                           <div className="space-y-3">
                             {Object.entries(selectedSubmission.data).map(([key, value]) => (
@@ -479,7 +479,7 @@ export function FormStorageManager({ isOpen, onClose }) {
                         </div>
 
                         {/* Status Management */}
-                        <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
+                        <div className="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-lg">
                           <h4 className="font-medium text-gray-900 dark:text-[color:var(--text)] mb-3">Manage Status</h4>
                           <div className="flex gap-2">
                             <select
@@ -487,7 +487,7 @@ export function FormStorageManager({ isOpen, onClose }) {
                               onChange={(e) =>
                                 updateSubmissionStatus(selectedSubmission.id, e.target.value)
                               }
-                              className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)] text-sm"
+                              className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-[color:var(--text)] text-sm"
                             >
                               <option value="draft">Draft</option>
                               <option value="submitted">Submitted</option>

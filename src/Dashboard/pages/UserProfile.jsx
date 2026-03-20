@@ -484,7 +484,7 @@ const [saveError, setSaveError] = useState("");
           </div>
 
           {/* Profile Photo Section */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mb-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mb-6 p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
             <div className="relative">
               <img
                 src={
@@ -543,7 +543,7 @@ const [saveError, setSaveError] = useState("");
                     setHasUnsavedChanges(true);
                   }}
                   disabled={!isEditing}
-                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-700 dark:text-[color:var(--text)] disabled:bg-gray-100 dark:disabled:bg-gray-800"
+                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-900 dark:text-[color:var(--text)] disabled:bg-gray-100 dark:disabled:bg-gray-800"
                 />
               </div>
             ))}
@@ -589,7 +589,7 @@ const [saveError, setSaveError] = useState("");
                       currentPassword: e.target.value,
                     })
                   }
-                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 pr-10 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 pr-10 dark:bg-gray-900 dark:text-[color:var(--text)]"
                   required
                 />
                 <button
@@ -626,7 +626,7 @@ const [saveError, setSaveError] = useState("");
                       newPassword: e.target.value,
                     })
                   }
-                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 pr-10 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 pr-10 dark:bg-gray-900 dark:text-[color:var(--text)]"
                   minLength={8}
                   required
                 />
@@ -667,7 +667,7 @@ const [saveError, setSaveError] = useState("");
                       confirmPassword: e.target.value,
                     })
                   }
-                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 pr-10 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 pr-10 dark:bg-gray-900 dark:text-[color:var(--text)]"
                   required
                 />
                 <button
@@ -752,7 +752,7 @@ const [saveError, setSaveError] = useState("");
                     setHasUnsavedChanges(true);
                   }}
                   disabled={!isEditing}
-                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-700 dark:text-[color:var(--text)] disabled:bg-gray-100 dark:disabled:bg-gray-800"
+                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-900 dark:text-[color:var(--text)] disabled:bg-gray-100 dark:disabled:bg-gray-800"
                 />
               </div>
             ))}
@@ -794,7 +794,7 @@ const [saveError, setSaveError] = useState("");
           </div>
 
           {/* PAN Card Image Section */}
-          <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+          <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
             <h3 className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
               PAN Card Image
             </h3>
@@ -839,7 +839,7 @@ const [saveError, setSaveError] = useState("");
                 disabled={!isEditing}
                 pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
                 maxLength={10}
-                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-700 dark:text-[color:var(--text)] disabled:bg-gray-100 dark:disabled:bg-gray-800"
+                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-900 dark:text-[color:var(--text)] disabled:bg-gray-100 dark:disabled:bg-gray-800"
               />
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 Format: ABCDE1234F
@@ -861,7 +861,7 @@ const [saveError, setSaveError] = useState("");
                   setHasUnsavedChanges(true);
                 }}
                 disabled={!isEditing}
-                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-700 dark:text-[color:var(--text)] disabled:bg-gray-100 dark:disabled:bg-gray-800"
+                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-900 dark:text-[color:var(--text)] disabled:bg-gray-100 dark:disabled:bg-gray-800"
               />
             </div>
 
@@ -880,7 +880,7 @@ const [saveError, setSaveError] = useState("");
                   setHasUnsavedChanges(true);
                 }}
                 disabled={!isEditing}
-                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-700 dark:text-[color:var(--text)] disabled:bg-gray-100 dark:disabled:bg-gray-800"
+                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-900 dark:text-[color:var(--text)] disabled:bg-gray-100 dark:disabled:bg-gray-800"
               />
             </div>
 
@@ -899,7 +899,7 @@ const [saveError, setSaveError] = useState("");
                   setHasUnsavedChanges(true);
                 }}
                 disabled={!isEditing}
-                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-700 dark:text-[color:var(--text)] disabled:bg-gray-100 dark:disabled:bg-gray-800"
+                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-900 dark:text-[color:var(--text)] disabled:bg-gray-100 dark:disabled:bg-gray-800"
               />
             </div>
           </div>

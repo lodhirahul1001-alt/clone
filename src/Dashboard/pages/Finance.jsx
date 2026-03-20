@@ -317,7 +317,7 @@ export default function Finance() {
                       {transaction.date ? new Date(transaction.date).toLocaleString() : "-"}
                     </td>
                     <td className="p-4">
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(transaction.status)}`}>
+                      <span className={`px-2 py-1 rounded text-xs capitalize font-medium ${getStatusColor(transaction.status)}`}>
                         {transaction.status}
                       </span>
                     </td>

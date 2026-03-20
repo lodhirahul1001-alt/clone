@@ -11,7 +11,7 @@ const normalizeClaim = (claim) => ({
   releasePublicId: claim?.releasePublicId || claim?.release_public_id || "",
   isrc: claim?.isrc || "",
   cmsName: claim?.cmsName || claim?.cms_name || "",
-  status: claim?.status || "pending",
+  status: claim?.status || "Pending",
   createdAt: claim?.createdAt || claim?.created_at || "",
 });
 
@@ -31,7 +31,7 @@ export default function ReleaseVideo() {
     claimUrl: "",
     releaseId: "",
     isrc: "",
-    cmsName: "WMG",
+    cmsName: "",
   });
 
   const selectedRelease = useMemo(
@@ -106,7 +106,7 @@ export default function ReleaseVideo() {
       claimUrl: "",
       releaseId: "",
       isrc: "",
-      cmsName: "WMG",
+      cmsName: "",
     });
     setFeedback({ type: "", message: "" });
   };
@@ -391,15 +391,15 @@ export default function ReleaseVideo() {
                 <td className="whitespace-nowrap">{claim.cmsName || "-"}</td>
                 <td className="whitespace-nowrap">
                   <span
-                    className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium border ${
+                    className={`inline-flex items-center rounded-full px-3 capitalize py-1 text-xs font-medium border ${
                       claim.status === "approved"
-                        ? "bg-green-500/15 text-green-600 border-green-500/30 dark:text-green-400"
+                        ? "bg-green-500/15 text-green-600 border-green-500/30 capitalize dark:text-green-400"
                         : claim.status === "rejected"
-                        ? "bg-red-500/15 text-red-600 border-red-500/30 dark:text-red-400"
-                        : "bg-yellow-500/15 text-yellow-600 border-yellow-500/30 dark:text-yellow-400"
+                        ? "bg-red-500/15 text-red-600 border-red-500/30 capitalize dark:text-red-400"
+                        : "bg-yellow-500/15 text-yellow-600 border-yellow-500/30 capitalize dark:text-yellow-400"
                     }`}
                   >
-                    {claim.status || "pending"}
+                    {claim.status || "Pending"}
                   </span>
                 </td>
               </tr>
@@ -426,15 +426,15 @@ export default function ReleaseVideo() {
               </div>
 
               <span
-                className={`inline-flex items-center rounded-full px-3 py-1 text-[11px] font-medium border ${
+                className={`inline-flex items-center rounded-full px-3 py-1 text-[11px] capitalize font-medium border ${
                   claim.status === "approved"
-                    ? "bg-green-500/15 text-green-600 border-green-500/30 dark:text-green-400"
+                    ? "bg-green-500/15 text-green-600 border-green-500/30 capitalize dark:text-green-400"
                     : claim.status === "rejected"
-                    ? "bg-red-500/15 text-red-600 border-red-500/30 dark:text-red-400"
-                    : "bg-yellow-500/15 text-yellow-600 border-yellow-500/30 dark:text-yellow-400"
+                    ? "bg-red-500/15 text-red-600 border-red-500/30 capitalize dark:text-red-400"
+                    : "bg-yellow-500/15 text-yellow-600 border-yellow-500/30 capitalize dark:text-yellow-400"
                 }`}
               >
-                {claim.status || "pending"}
+                {claim.status || "Pending"}
               </span>
             </div>
 

@@ -161,7 +161,7 @@ export default function Hero() {
               </a>
 
               <a
-                href="youtube.com/@silentmusicgroup?si=NDGXYIR-7fjwfwQz"
+                href="https://youtube.com/@silentmusicgroup?si=QwAFnIP6TKb3Pzlb"
                 target="_blank"
                 rel="noopener noreferrer"
               >

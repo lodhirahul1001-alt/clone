@@ -411,13 +411,13 @@ export default function Support() {
                     placeholder="Search tickets..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-[color:var(--text)]"
                   />
                 </div>
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-[color:var(--text)]"
                 >
                   {categories.map(category => (
                     <option key={category} value={category}>
@@ -436,7 +436,7 @@ export default function Support() {
             <div className="bg-transparent rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-gray-50 dark:bg-gray-700">
+                  <thead className="bg-gray-50 dark:bg-gray-900">
                     <tr>
                       <th className="text-left p-4 font-medium text-gray-900 dark:text-gray-100">Ticket ID</th>
                       <th className="text-left p-4 font-medium text-gray-900 dark:text-gray-100">Subject</th>
@@ -505,13 +505,13 @@ export default function Support() {
                   placeholder="Search FAQs..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-[color:var(--text)]"
                 />
               </div>
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-[color:var(--text)]"
               >
                 {categories.map(category => (
                   <option key={category} value={category}>
@@ -564,7 +564,7 @@ export default function Support() {
                         transition={{ duration: 0.3 }}
                         className="border-t border-gray-200 dark:border-gray-700"
                       >
-                        <div className="p-6 bg-gray-50 dark:bg-gray-700/50">
+                        <div className="p-6 bg-gray-50 dark:bg-gray-900/50">
                           <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{faq.answer}</p>
                           <div className="mt-4 flex items-center gap-4">
                             <span className="text-sm text-gray-500 dark:text-gray-400">Was this helpful?</span>
@@ -695,7 +695,7 @@ export default function Support() {
                   </label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-[color:var(--text)]"
                     placeholder="Enter your name"
                   />
                 </div>
@@ -706,7 +706,7 @@ export default function Support() {
                   </label>
                   <input
                     type="email"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-[color:var(--text)]"
                     placeholder="Enter your email"
                   />
                 </div>
@@ -717,7 +717,7 @@ export default function Support() {
                   </label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-[color:var(--text)]"
                     placeholder="What can we help you with?"
                   />
                 </div>
@@ -728,7 +728,7 @@ export default function Support() {
                   </label>
                   <textarea
                     rows={4}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-[color:var(--text)]"
                     placeholder="Describe your issue or question..."
                   />
                 </div>
@@ -782,7 +782,7 @@ export default function Support() {
                       required
                       value={newTicket.subject}
                       onChange={(e) => setNewTicket({ ...newTicket, subject: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-[color:var(--text)]"
                       placeholder="Brief description of your issue"
                     />
                   </div>
@@ -796,7 +796,7 @@ export default function Support() {
                         required
                         value={newTicket.category}
                         onChange={(e) => setNewTicket({ ...newTicket, category: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-[color:var(--text)]"
                       >
                         {categories.slice(1).map(category => (
                           <option key={category} value={category}>{category}</option>
@@ -812,7 +812,7 @@ export default function Support() {
                         required
                         value={newTicket.priority}
                         onChange={(e) => setNewTicket({ ...newTicket, priority: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-[color:var(--text)]"
                       >
                         <option value="Low">Low</option>
                         <option value="Medium">Medium</option>
@@ -831,7 +831,7 @@ export default function Support() {
                       rows={4}
                       value={newTicket.description}
                       onChange={(e) => setNewTicket({ ...newTicket, description: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-[color:var(--text)]"
                       placeholder="Provide detailed information about your issue..."
                     />
                   </div>
@@ -844,7 +844,7 @@ export default function Support() {
                       type="file"
                       multiple
                       onChange={(e) => setNewTicket({ ...newTicket, files: e.target.files || undefined })}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-[color:var(--text)]"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-[color:var(--text)]"
                     />
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                       Max: 5 files, 10MB each. Supported: JPG, PNG, PDF, DOC, TXT

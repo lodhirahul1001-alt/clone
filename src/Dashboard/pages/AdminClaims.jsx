@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { AxiosIntance } from "../../config/Axios.Intance";
 import { adminGetClaimsApi, adminUpdateClaimStatusApi } from "../../apis/AdminApis";
 
-const statusOptions = ["pending", "approved", "rejected"];
+const statusOptions = ["Pending", "Approved", "Rejected"];
 const toTitle = (s = "") => s.charAt(0).toUpperCase() + s.slice(1);
 
 export default function AdminClaims() {
@@ -99,7 +99,7 @@ export default function AdminClaims() {
                   <td className="p-2">{c.releaseTitle || '-'}</td>
                   <td className="p-2">{c.isrc || '-'}</td>
                   <td className="p-2 max-w-[280px] truncate"><a className="underline" href={c.claimUrl} target="_blank" rel="noreferrer">{c.claimUrl}</a></td>
-                  <td className="p-2"><select className="dash-input" value={c.status || 'pending'} onChange={(e)=>updateStatus(c._id, e.target.value)}>{statusOptions.map((s)=><option key={s} value={s}>{toTitle(s)}</option>)}</select></td>
+                  <td className="p-2"><select className="dash-input" value={c.status || 'Pending'} onChange={(e)=>updateStatus(c._id, e.target.value)}>{statusOptions.map((s)=><option key={s} value={s}>{toTitle(s)}</option>)}</select></td>
                   <td className="p-2"><button className="dash-btn" type="button" onClick={()=>deleteClaim(c._id)}>Delete</button></td>
                 </tr>
               ))

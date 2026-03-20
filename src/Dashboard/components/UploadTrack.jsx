@@ -1013,7 +1013,7 @@ export function UploadTrack({
             {/* Terms Agreement */}
      <section className="mt-6">
   <div className="w-full bg-[color:var(--panel)] border border-[color:var(--border)] rounded-lg px-5 py-3 flex items-center justify-between">
-    <span className="text-sm text-black">
+    <span className="text-sm text-[color:var(--text)]">
       By submitting, you agree to our{' '}
       <a
         href="/terms-and-conditions"
