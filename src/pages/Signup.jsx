@@ -13,8 +13,14 @@ export default function Signup() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm();
+  const passwordField = register("password", {
+    required: "Password is required",
+    minLength: { value: 6, message: "Min 6 characters" },
+  });
+  const passwordValue = watch("password", "");
 
   const onSubmit = async (data) => {
     try {
@@ -71,7 +77,10 @@ export default function Signup() {
                   className="input-ui pl-11 pr-12"
                   placeholder="Password"
                   type={showPassword ? "text" : "password"}
-                  {...register("password", { required: "Password is required", minLength: { value: 6, message: "Min 6 characters" } })}
+                  autoComplete="new-password"
+                  {...passwordField}
+                  value={passwordValue}
+                  onChange={passwordField.onChange}
                 />
                 <button
                   type="button"

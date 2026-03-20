@@ -13,8 +13,11 @@ export default function Login() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm();
+  const passwordField = register("password", { required: "Password is required" });
+  const passwordValue = watch("password", "");
 
   const onSubmit = async (data) => {
     try {
@@ -77,7 +80,10 @@ export default function Login() {
                     className="input-ui pl-11 pr-12"
                     placeholder="Password"
                     type={showPassword ? "text" : "password"}
-                    {...register("password", { required: "Password is required" })}
+                    autoComplete="current-password"
+                    {...passwordField}
+                    value={passwordValue}
+                    onChange={passwordField.onChange}
                   />
                   <button
                     type="button"
