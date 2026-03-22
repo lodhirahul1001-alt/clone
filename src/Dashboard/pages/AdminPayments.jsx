@@ -338,60 +338,60 @@ export default function AdminPayments() {
 
       {tab === "withdrawals" ? (
         <>
-          <div className="grid grid-cols-1 capitalize md:grid-cols-4 gap-3">
-            <div className="dash-card-soft p-4 rounded-2xl">
+          <div className="grid grid-cols-1 capitalize md:grid-cols-2 xl:grid-cols-4 gap-4">
+            <div className="dash-card-soft p-5 rounded-2xl min-h-[92px]">
               <div className="text-xs" style={{ color: "var(--muted)" }}>
                 Pending
               </div>
-              <div className="mt-1 text-2xl font-semibold flex items-center gap-2">
-                <Clock className="h-5 w-5" /> {stats.pending}
+              <div className="mt-2 text-2xl font-semibold flex items-center gap-3">
+                <Clock className="h-5 w-5 shrink-0" /> {stats.pending}
               </div>
             </div>
-            <div className="dash-card-soft p-4 rounded-2xl">
+            <div className="dash-card-soft p-5 rounded-2xl min-h-[92px]">
               <div className="text-xs" style={{ color: "var(--muted)" }}>
                 Approved
               </div>
-              <div className="mt-1 text-2xl font-semibold flex items-center gap-2">
-                <CheckCircle2 className="h-5 w-5" /> {stats.approved}
+              <div className="mt-2 text-2xl font-semibold flex items-center gap-3">
+                <CheckCircle2 className="h-5 w-5 shrink-0" /> {stats.approved}
               </div>
             </div>
-            <div className="dash-card-soft p-4 rounded-2xl">
+            <div className="dash-card-soft p-5 rounded-2xl min-h-[92px]">
               <div className="text-xs" style={{ color: "var(--muted)" }}>
                 Paid
               </div>
-              <div className="mt-1 text-2xl font-semibold flex items-center gap-2">
-                <Send className="h-5 w-5" /> {stats.paid}
+              <div className="mt-2 text-2xl font-semibold flex items-center gap-3">
+                <Send className="h-5 w-5 shrink-0" /> {stats.paid}
               </div>
             </div>
-            <div className="dash-card-soft p-4 rounded-2xl">
+            <div className="dash-card-soft p-5 rounded-2xl min-h-[92px]">
               <div className="text-xs" style={{ color: "var(--muted)" }}>
                 Pending Amount
               </div>
-              <div className="mt-1 text-2xl font-semibold flex items-center gap-2">
-                <DollarSign className="h-5 w-5" /> {money(stats.pendingAmt)}
+              <div className="mt-2 text-2xl font-semibold flex items-center gap-3">
+                <DollarSign className="h-5 w-5 shrink-0" /> {money(stats.pendingAmt)}
               </div>
             </div>
           </div>
 
-          <div className="dash-card p-4 rounded-2xl">
-            <div className="flex items-center justify-between gap-3 flex-wrap">
-              <div className="flex items-center gap-2 flex-wrap">
-                <div className="relative">
-                  <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "var(--muted)" }} />
+          <div className="dash-card p-5 rounded-2xl">
+            <div className="flex items-center justify-between gap-4 flex-wrap">
+              <div className="flex items-center gap-3 flex-wrap w-full xl:w-auto">
+                <div className="relative flex-1 min-w-[240px]">
+                  <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: "var(--muted)" }} />
                   <input
                     value={q}
                     onChange={(e) => setQ(e.target.value)}
                     placeholder="Search user / txn / bank / amount..."
-                    className="dash-input pl-9"
+                    className="dash-input w-full min-h-[44px] pl-10 pr-4 leading-none"
                   />
                 </div>
 
-                <div className="relative">
-                  <Filter className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "var(--muted)" }} />
+                <div className="relative min-w-[160px]">
+                  <Filter className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: "var(--muted)" }} />
                   <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
-                    className="dash-input pl-9"
+                    className="dash-input dash-select-themed w-full min-h-[44px] pl-10 pr-10 leading-none"
                   >
                     <option className="drop-down" value="all">All</option>
                     <option className="drop-down" value="pending">Pending</option>

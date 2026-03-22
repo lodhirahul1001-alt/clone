@@ -18,20 +18,40 @@ export default function Contact() {
     setIsSent(false);
 
     try {
-      await emailjs.sendForm(
-        EMAILJS_CONFIG.SERVICE_ID,
-        EMAILJS_CONFIG.TEMPLATE_ID,
-        form.current,
-        EMAILJS_CONFIG.PUBLIC_KEY
-      );
-
       const formElement = form.current;
       const payload = {
-        user_name: formElement.user_name?.value || "",
-        user_email: formElement.user_email?.value || "",
-        user_website: formElement.user_website?.value || "",
+        name: formElement.user_name?.value || "",
+        email: formElement.user_email?.value || "",
+        website: formElement.user_website?.value || "",
         message: formElement.message?.value || "",
       };
+
+      if (
+        !EMAILJS_CONFIG.SERVICE_ID ||
+        !EMAILJS_CONFIG.TEMPLATE_ID ||
+        !EMAILJS_CONFIG.PUBLIC_KEY
+      ) {
+        throw new Error("EmailJS configuration is missing.");
+      }
+
+      await emailjs.send(
+        EMAILJS_CONFIG.SERVICE_ID,
+        EMAILJS_CONFIG.TEMPLATE_ID,
+        {
+          name: payload.name,
+          email: payload.email,
+          website: payload.website,
+          message: payload.message,
+          user_name: payload.name,
+          user_email: payload.email,
+          user_website: payload.website,
+          reply_to: payload.email,
+          from_name: payload.name,
+        },
+        {
+          publicKey: EMAILJS_CONFIG.PUBLIC_KEY,
+        }
+      );
 
       void postFormEntryToGoogleSheet({
         formType: "contact-form",
@@ -39,8 +59,8 @@ export default function Contact() {
         data: payload,
         status: "submitted",
         userInfo: {
-          name: payload.user_name,
-          email: payload.user_email,
+          name: payload.name,
+          email: payload.email,
         },
       });
 

@@ -72,7 +72,7 @@ export default function AdminCallbacks() {
 
         <div className="flex items-center gap-2 flex-wrap">
           <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search..." className="dash-input" />
-          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="dash-input">
+          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="dash-input dash-select-themed">
             <option value="all">All Status</option>
             {statusOptions.map((s) => (
               <option key={s} value={s} className="drop-down">
@@ -121,7 +121,7 @@ export default function AdminCallbacks() {
                   <td className="p-2">{c.enquiryFor || "-"}</td>
                   <td className="p-2 whitespace-nowrap">{c.preferredTime || "-"}</td>
                   <td className="p-2 capitalize whitespace-nowrap">
-                    <select className="dash-input capitalize" value={c.status || "new"} onChange={(e) => updateStatus(c._id, e.target.value)}>
+                    <select className="dash-input dash-select-themed capitalize" value={c.status || "new"} onChange={(e) => updateStatus(c._id, e.target.value)}>
                       {statusOptions.map((s) => (
                         <option key={s} value={s}>
                           {toTitle(s)}

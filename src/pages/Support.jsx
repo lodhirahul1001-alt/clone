@@ -1,6 +1,7 @@
 import CallbackModal from "../components/CallbackModal";
 // pages/Support.jsx
 import { useState } from 'react';
+import emailjs from "@emailjs/browser";
 import {
   Phone,
   MessageCircle,
@@ -25,11 +26,20 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Support() {
+  const QUICK_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_QUICK_TEMPLATE_ID;
   const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'tickets' | 'faq' | 'contact'
   const [showTicketModal, setShowTicketModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [expandedFAQ, setExpandedFAQ] = useState(null);
+  const [quickForm, setQuickForm] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  });
+  const [quickSending, setQuickSending] = useState(false);
+  const [ticketSending, setTicketSending] = useState(false);
     
 
   const [newTicket, setNewTicket] = useState({
@@ -37,8 +47,9 @@ export default function Support() {
     description: '',
     priority: 'Medium',
     category: 'General',
+    files: undefined,
   });
-    const [callbackOpen, setCallbackOpen] = useState(false);
+  const [callbackOpen, setCallbackOpen] = useState(false);
 
 
   // Mock data
@@ -120,25 +131,71 @@ export default function Support() {
 
   const categories = ['all', 'General', 'Technical', 'Billing', 'Distribution', 'YouTube', 'Payments'];
 
-  const handleCreateTicket = (e) => {
+  const sendSupportEmail = async (templateParams) => {
+    if (!QUICK_TEMPLATE_ID) {
+      throw new Error('Quick message template ID is missing.');
+    }
+
+    return emailjs.send(
+      import.meta.env.VITE_EMAILJS_SERVICE_ID,
+      QUICK_TEMPLATE_ID,
+      templateParams,
+      {
+        publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
+      }
+    );
+  };
+
+  const handleCreateTicket = async (e) => {
     e.preventDefault();
 
+    const now = new Date().toISOString();
+    const id = `TKT-${String(tickets.length + 1).padStart(3, '0')}`;
+    const status = 'Open';
+    const file_names = Array.from(newTicket.files || []).map((file) => file.name).join(', ');
     const ticket = {
       ...newTicket,
-      id: `TKT-${String(tickets.length + 1).padStart(3, '0')}`,
-      status: 'Open',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      id,
+      status,
+      createdAt: now,
+      updatedAt: now,
+      file_names,
     };
 
-    console.log('Creating ticket:', ticket);
-    setShowTicketModal(false);
-    setNewTicket({
-      subject: '',
-      description: '',
-      priority: 'Medium',
-      category: 'General',
-    });
+    setTicketSending(true);
+
+    try {
+      await sendSupportEmail({
+        form_type: 'Support Ticket',
+        subject: ticket.subject,
+        category: ticket.category,
+        priority: ticket.priority,
+        ticket_id: ticket.id,
+        status: ticket.status,
+        description: ticket.description,
+        createdAt: ticket.createdAt,
+        updatedAt: ticket.updatedAt,
+        file_names: ticket.file_names || 'No attachments',
+        title: ticket.subject,
+        message: ticket.description,
+      });
+
+      console.log('Creating ticket:', ticket);
+      alert(`Ticket created successfully: ${ticket.id}`);
+      setShowTicketModal(false);
+      setNewTicket({
+        subject: '',
+        description: '',
+        priority: 'Medium',
+        category: 'General',
+        files: undefined,
+      });
+    } catch (error) {
+      console.error('Support ticket EmailJS error:', error);
+      alert('Failed to create ticket');
+    } finally {
+      setTicketSending(false);
+    }
   };
 
   const handlePhoneCall = () => {
@@ -153,6 +210,46 @@ export default function Support() {
 
   const handleEmailClick = () => {
     window.location.href = 'mailto:admin@silentmusicgroup.com?subject=Support Request';
+  };
+
+  const handleQuickFormChange = (field) => (e) => {
+    setQuickForm((prev) => ({ ...prev, [field]: e.target.value }));
+  };
+
+  const handleQuickMessageSubmit = async (e) => {
+    e.preventDefault();
+
+    setQuickSending(true);
+
+    try {
+      await sendSupportEmail(
+        {
+          form_type: 'Quick Message',
+          name: quickForm.name,
+          email: quickForm.email,
+          subject: quickForm.subject,
+          message: quickForm.message,
+          user_name: quickForm.name,
+          user_email: quickForm.email,
+          title: quickForm.subject,
+          reply_to: quickForm.email,
+          from_name: quickForm.name,
+        }
+      );
+
+      alert('Message sent successfully');
+      setQuickForm({
+        name: '',
+        email: '',
+        subject: '',
+        message: '',
+      });
+    } catch (error) {
+      console.error('Quick message EmailJS error:', error);
+      alert('Failed to send message');
+    } finally {
+      setQuickSending(false);
+    }
   };
 
   const getStatusColor = (status) => {
@@ -424,13 +521,13 @@ export default function Support() {
                     placeholder="Search tickets..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="input-ui w-full pl-10 pr-4 py-2"
+                    className="input-ui w-full pl-10 pr-4 py-2 text-[color:var(--text)] placeholder:text-gray-500 dark:placeholder:text-gray-400"
                   />
                 </div>
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="input-ui px-4 py-2"
+                  className="input-ui px-4 py-2 text-[color:var(--text)]"
                 >
                   {categories.map((category) => (
                     <option key={category} value={category}>
@@ -449,14 +546,14 @@ export default function Support() {
             <div className="glass-soft rounded-lg border border-[color:var(--border)] overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-white/5">
+                  <thead className="bg-black/5 dark:bg-white/10">
                     <tr>
-                      <th className="text-left p-4 font-medium text-gray-900 dark:text-gray-100">Ticket ID</th>
-                      <th className="text-left p-4 font-medium text-gray-900 dark:text-gray-100">Subject</th>
-                      <th className="text-left p-4 font-medium text-gray-900 dark:text-gray-100">Priority</th>
-                      <th className="text-left p-4 font-medium text-gray-900 dark:text-gray-100">Status</th>
-                      <th className="text-left p-4 font-medium text-gray-900 dark:text-gray-100">Created</th>
-                      <th className="text-left p-4 font-medium text-gray-900 dark:text-gray-100">Updated</th>
+                      <th className="text-left p-4 font-semibold text-[color:var(--text)]">Ticket ID</th>
+                      <th className="text-left p-4 font-semibold text-[color:var(--text)]">Subject</th>
+                      <th className="text-left p-4 font-semibold text-[color:var(--text)]">Priority</th>
+                      <th className="text-left p-4 font-semibold text-[color:var(--text)]">Status</th>
+                      <th className="text-left p-4 font-semibold text-[color:var(--text)]">Created</th>
+                      <th className="text-left p-4 font-semibold text-[color:var(--text)]">Updated</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -469,7 +566,7 @@ export default function Support() {
                         className="border-b border-[color:var(--border)] hover:bg-white/5 transition-colors"
                       >
                         <td className="p-4">
-                          <span className="font-mono text-sm text-blue-600 dark:text-blue-400">{ticket.id}</span>
+                          <span className="font-mono text-sm font-semibold text-blue-600 dark:text-blue-300">{ticket.id}</span>
                         </td>
                         <td className="p-4">
                           <div>
@@ -489,10 +586,10 @@ export default function Support() {
                             {ticket.status}
                           </span>
                         </td>
-                        <td className="p-4 text-sm text-gray-600 dark:text-gray-400">
+                        <td className="p-4 text-sm text-gray-600 dark:text-gray-300">
                           {new Date(ticket.createdAt).toLocaleDateString()}
                         </td>
-                        <td className="p-4 text-sm text-gray-600 dark:text-gray-400">
+                        <td className="p-4 text-sm text-gray-600 dark:text-gray-300">
                           {new Date(ticket.updatedAt).toLocaleDateString()}
                         </td>
                       </motion.tr>
@@ -692,13 +789,16 @@ export default function Support() {
             <div className="glass-soft rounded-lg border border-[color:var(--border)] p-6">
               <h2 className="text-xl font-semibold mb-6 dark:text-[color:var(--text)]">Quick Message</h2>
 
-              <form className="space-y-4">
+              <form className="space-y-4" onSubmit={handleQuickMessageSubmit}>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Your Name</label>
                   <input
                     type="text"
+                    value={quickForm.name}
+                    onChange={handleQuickFormChange('name')}
                     className="input-ui w-full px-3 py-2"
                     placeholder="Enter your name"
+                    required
                   />
                 </div>
 
@@ -706,8 +806,11 @@ export default function Support() {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
                   <input
                     type="email"
+                    value={quickForm.email}
+                    onChange={handleQuickFormChange('email')}
                     className="input-ui w-full px-3 py-2"
                     placeholder="Enter your email"
+                    required
                   />
                 </div>
 
@@ -715,8 +818,11 @@ export default function Support() {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Subject</label>
                   <input
                     type="text"
+                    value={quickForm.subject}
+                    onChange={handleQuickFormChange('subject')}
                     className="input-ui w-full px-3 py-2"
                     placeholder="What can we help you with?"
+                    required
                   />
                 </div>
 
@@ -724,8 +830,11 @@ export default function Support() {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Message</label>
                   <textarea
                     rows="4"
+                    value={quickForm.message}
+                    onChange={handleQuickFormChange('message')}
                     className="input-ui w-full px-3 py-2"
                     placeholder="Describe your issue or question..."
+                    required
                   />
                 </div>
 
@@ -733,10 +842,11 @@ export default function Support() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   type="submit"
+                  disabled={quickSending}
                   className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-[color:var(--text)] py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 flex items-center justify-center gap-2"
                 >
                   <Send className="w-4 h-4" />
-                  Send Message
+                  {quickSending ? 'Sending...' : 'Send Message'}
                 </motion.button>
               </form>
             </div>
@@ -859,9 +969,10 @@ export default function Support() {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       type="submit"
+                      disabled={ticketSending}
                       className="bg-gradient-to-r from-blue-600 to-purple-600 text-[color:var(--text)] px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200"
                     >
-                      Create Ticket
+                      {ticketSending ? 'Creating...' : 'Create Ticket'}
                     </motion.button>
                   </div>
                 </form>
