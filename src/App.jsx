@@ -19,18 +19,26 @@ import HomeDashboard from "./pages/HomeDashboard.jsx";
 import PrivateRoute from "./components/PrivateRoute";
 import DashboardApp from "./Dashboard/DashboardApp.jsx";
 import { useDispatch } from "react-redux";
-import { removeUser } from "./features/reducers/AuthSlice.jsx";
+import { removeUser, resetAuthCheck } from "./features/reducers/AuthSlice.jsx";
 import { useEffect } from "react";
 import { initAuth } from "./features/actions/AuthAction";
 
 function App() {
   const location = useLocation();
   const dispatch = useDispatch();
+  const isProtectedRoute =
+    location.pathname.startsWith("/user-dashboard") ||
+    location.pathname.startsWith("/cms");
 
   // ✅ Fetch authenticated user if token exists
   useEffect(() => {
-    dispatch(initAuth());
-  }, [dispatch]);
+    if (isProtectedRoute) {
+      dispatch(initAuth());
+      return;
+    }
+
+    dispatch(resetAuthCheck());
+  }, [dispatch, isProtectedRoute]);
 
   useEffect(() => {
     const handler = () => {
@@ -43,9 +51,7 @@ function App() {
   }, [dispatch]);
 
   // ✅ Hide Navbar & Footer on protected dashboard routes
-  const hideNavbarFooter =
-    location.pathname.startsWith("/user-dashboard") ||
-    location.pathname.startsWith("/cms");
+  const hideNavbarFooter = isProtectedRoute;
 
   return (
     <div className="min-h-screen">

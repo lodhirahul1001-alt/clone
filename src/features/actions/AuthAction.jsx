@@ -1,5 +1,5 @@
 import { AxiosIntance } from "../../config/Axios.Intance";
-import { addUser, removeUser } from "../reducers/AuthSlice";
+import { addUser, removeUser, startAuthCheck } from "../reducers/AuthSlice";
 import { getProfileApi } from "../../apis/UserApis";
 
 // REGISTER
@@ -45,6 +45,7 @@ export const logOutUserApi = () => async (dispatch) => {
 
 // INIT AUTH (on refresh / return) => profile API
 export const initAuth = () => async (dispatch) => {
+  dispatch(startAuthCheck());
   try {
     const res = await getProfileApi(); // GET /user/profile (authMiddleware protected)
     if (res?.user) {
