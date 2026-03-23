@@ -178,10 +178,10 @@ export default function Finance() {
   return (
     <div className="p-6 min-h-screen text-[color:var(--text)]">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold dark:text-[color:var(--text)]">Finance Report</h1>
+        <h1 className="text-2xl font-semibold text-[color:var(--text)]">Finance Report</h1>
         <button
           onClick={() => setShowWithdrawModal(true)}
-          className="bg-gradient-to-r from-green-500 to-emerald-500 text-[color:var(--text)] px-4 py-2 rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all duration-200 hover:scale-105 active:scale-95 flex items-center gap-2"
+          className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all duration-200 hover:scale-105 active:scale-95 flex items-center gap-2 shadow-lg shadow-emerald-500/20"
         >
           <CreditCard className="w-4 h-4" />
           Request Withdrawal
@@ -197,7 +197,7 @@ export default function Finance() {
             className={`px-4 py-2 rounded-lg capitalize transition-all duration-200 ${
               activeTab === tab
                 ? 'bg-gradient-to-r from-[var(--accent-1)] to-[var(--accent-2)] text-white'
-                : 'text-[color:var(--muted)] hover:bg-white/5'
+                : 'text-[color:var(--muted)] hover:bg-black/5 dark:hover:bg-white/8 hover:text-[color:var(--text)]'
             }`}
           >
             {tab}
@@ -210,43 +210,43 @@ export default function Finance() {
         <div className="space-y-6">
           {/* Balance Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-transparent p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            <div className="dash-card p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Current Balance</p>
+                  <p className="text-sm text-[color:var(--muted)]">Current Balance</p>
                   <p className="text-2xl font-bold text-green-600 dark:text-green-400">
                     ${currentBalance.toFixed(2)}
                   </p>
                 </div>
-                <div className="p-3 bg-green-100 dark:bg-green-900/50 rounded-full">
+                <div className="p-3 rounded-full bg-green-100 dark:bg-green-900/40 border border-green-200 dark:border-green-500/20">
                   <DollarSign className="w-6 h-6 text-green-600 dark:text-green-400" />
                 </div>
               </div>
             </div>
 
-            <div className="bg-transparent p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            <div className="dash-card p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Pending Earnings</p>
+                  <p className="text-sm text-[color:var(--muted)]">Pending Earnings</p>
                   <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
                     ${pendingEarnings.toFixed(2)}
                   </p>
                 </div>
-                <div className="p-3 bg-yellow-100 dark:bg-yellow-900/50 rounded-full">
+                <div className="p-3 rounded-full bg-yellow-100 dark:bg-yellow-900/40 border border-yellow-200 dark:border-yellow-500/20">
                   <TrendingUp className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
                 </div>
               </div>
             </div>
 
-            <div className="bg-transparent p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            <div className="dash-card p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Max Withdrawal</p>
+                  <p className="text-sm text-[color:var(--muted)]">Max Withdrawal</p>
                   <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                     ${maxWithdrawal.toFixed(2)}
                   </p>
                 </div>
-                <div className="p-3 bg-blue-100 dark:bg-blue-900/50 rounded-full">
+                <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900/40 border border-blue-200 dark:border-blue-500/20">
                   <CreditCard className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                 </div>
               </div>
@@ -254,7 +254,7 @@ export default function Finance() {
           </div>
 
           {/* Withdrawal Limit Notice */}
-          <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+          <div className="rounded-lg p-4 border bg-amber-50/90 border-amber-300 dark:bg-amber-900/20 dark:border-amber-700/50">
             <div className="flex items-start gap-3">
               <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5" />
               <div>
@@ -270,9 +270,9 @@ export default function Finance() {
 
       {/* Transactions Tab */}
       {activeTab === 'transactions' && (
-        <div className="bg-transparent rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-          <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-            <h2 className="text-lg font-semibold dark:text-[color:var(--text)]">Recent Transactions</h2>
+        <div className="dash-card rounded-lg overflow-hidden">
+          <div className="p-4 border-b border-[color:var(--border)] flex justify-between items-center bg-black/[0.02] dark:bg-white/[0.02]">
+            <h2 className="text-lg font-semibold text-[color:var(--text)]">Recent Transactions</h2>
             <button className="flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300">
               <Download className="w-4 h-4" />
               Export
@@ -281,27 +281,27 @@ export default function Finance() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-gray-200 dark:border-gray-700">
-                  <th className="text-left p-4 dark:text-gray-200">Type</th>
-                  <th className="text-left p-4 dark:text-gray-200">Description</th>
-                  <th className="text-left p-4 dark:text-gray-200">Amount</th>
-                  <th className="text-left p-4 dark:text-gray-200">Date</th>
-                  <th className="text-left p-4 dark:text-gray-200">Status</th>
+                <tr className="border-b border-[color:var(--border)] text-[color:var(--muted)] bg-black/[0.03] dark:bg-white/[0.03]">
+                  <th className="text-left p-4">Type</th>
+                  <th className="text-left p-4">Description</th>
+                  <th className="text-left p-4">Amount</th>
+                  <th className="text-left p-4">Date</th>
+                  <th className="text-left p-4">Status</th>
                 </tr>
               </thead>
               <tbody>
                 {(mergedTransactions || []).map((transaction) => (
                   <tr
                     key={transaction._id || transaction.id}
-                    className="border-b border-gray-100 dark:border-gray-700"
+                    className="border-b border-[color:var(--border)] hover:bg-black/[0.025] dark:hover:bg-white/[0.03]"
                   >
                     <td className="p-4">
                       <div className="flex items-center gap-2">
                         {getTransactionIcon(transaction.type)}
-                        <span className="capitalize dark:text-gray-200">{transaction.type}</span>
+                        <span className="capitalize text-[color:var(--text)]">{transaction.type}</span>
                       </div>
                     </td>
-                    <td className="p-4 dark:text-gray-200">{transaction.description}</td>
+                    <td className="p-4 text-[color:var(--text)]">{transaction.description}</td>
                     <td className="p-4">
                       <span
                         className={`font-medium ${
@@ -313,7 +313,7 @@ export default function Finance() {
                         {transaction.amount > 0 ? '+' : ''}${Math.abs(transaction.amount).toFixed(2)}
                       </span>
                     </td>
-                    <td className="p-4 dark:text-gray-200">
+                    <td className="p-4 text-[color:var(--muted)]">
                       {transaction.date ? new Date(transaction.date).toLocaleString() : "-"}
                     </td>
                     <td className="p-4">
@@ -332,7 +332,7 @@ export default function Finance() {
       {/* Withdraw Tab */}
       {activeTab === 'withdraw' && (
         <div className="max-w-2xl">
-          <div className="glass-soft rounded-lg border border-[color:var(--border)] p-6">
+          <div className="dash-card p-6">
             <h2 className="text-lg font-semibold mb-4 text-[color:var(--text)]">Request Withdrawal</h2>
 
             <form onSubmit={handleWithdrawal} className="space-y-4">
@@ -381,7 +381,7 @@ export default function Finance() {
 
               {/* Bank Details Section */}
               {withdrawalRequest.method === 'bank' && (
-                <div className="space-y-4 p-4 bg-white/5 rounded-lg border border-[color:var(--border)]">
+                <div className="space-y-4 p-4 rounded-lg border border-[color:var(--border)] bg-black/[0.025] dark:bg-white/[0.03]">
                   <h3 className="text-sm font-medium text-[color:var(--muted)] flex items-center gap-2">
                     <Building2 className="w-4 h-4" />
                     Bank Account Details
@@ -451,7 +451,7 @@ export default function Finance() {
                 </button>
                 <button
                   type="submit"
-                  className="bg-gradient-to-r from-green-500 to-emerald-500 text-[color:var(--text)] px-4 py-2 rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all duration-200 hover:scale-105 active:scale-95"
+                  className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg shadow-emerald-500/20"
                 >
                   Submit Request
                 </button>
@@ -521,7 +521,7 @@ export default function Finance() {
 
               {/* Bank Details in Modal */}
               {withdrawalRequest.method === 'bank' && (
-                <div className="space-y-3 p-3 bg-[color:var(--panel-soft)] rounded-xl border border-[color:var(--border)]">
+                <div className="space-y-3 p-3 rounded-xl border border-[color:var(--border)] bg-black/[0.025] dark:bg-white/[0.03]">
                   <h3 className="text-sm font-medium text-[color:var(--muted)] flex items-center gap-2">
                     <Building2 className="w-4 h-4" />
                     Bank Details
@@ -585,7 +585,7 @@ export default function Finance() {
                 </button>
                 <button
                   type="submit"
-                  className="bg-gradient-to-r from-green-500 to-emerald-500 text-[color:var(--text)] px-4 py-2 rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all duration-200"
+                  className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all duration-200 shadow-lg shadow-emerald-500/20"
                 >
                   Submit
                 </button>

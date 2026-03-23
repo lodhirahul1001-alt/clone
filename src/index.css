@@ -780,8 +780,8 @@ select.input-ui option {
 }
 
 html.dark select.input-ui option {
-  color: #111827;
-  background-color: #ffffff;
+  color: #e5e7eb;
+  background-color: #0b1020;
 }
 
 /* ===== Dashboard dark-theme visibility + deeper black overrides ===== */
@@ -813,4 +813,133 @@ html.dark .dash-shell{
 html.dark .dash-sidebar{
   background: rgba(0,0,0,.92) !important;
   border-right: 1px solid rgba(255,255,255,.12) !important;
+}
+
+/* ===== Final Theme Cleanup: high-contrast black/white dashboard surfaces ===== */
+:root{
+  --theme-surface: #ffffff;
+  --theme-surface-soft: #f8fafc;
+  --theme-surface-muted: #f1f5f9;
+  --theme-field: #ffffff;
+  --theme-field-disabled: #f3f4f6;
+  --theme-field-border: rgba(15,23,42,.14);
+  --theme-text-strong: #0f172a;
+  --theme-text-soft: #475569;
+}
+
+.dark{
+  --theme-surface: rgba(255,255,255,.05);
+  --theme-surface-soft: rgba(255,255,255,.04);
+  --theme-surface-muted: rgba(255,255,255,.08);
+  --theme-field: #0a0a0a;
+  --theme-field-disabled: #111111;
+  --theme-field-border: rgba(255,255,255,.14);
+  --theme-text-strong: rgba(255,255,255,.94);
+  --theme-text-soft: rgba(255,255,255,.72);
+}
+
+html:not(.dark) .dash-shell{
+  background:
+    radial-gradient(1100px 680px at 15% 8%, rgba(124,58,237,.08), transparent 60%),
+    radial-gradient(900px 640px at 85% 10%, rgba(236,72,153,.06), transparent 58%),
+    #ffffff !important;
+}
+
+html.dark .dash-shell{
+  background:
+    radial-gradient(1000px 620px at 15% 8%, rgba(124,58,237,.16), transparent 60%),
+    radial-gradient(900px 620px at 85% 10%, rgba(236,72,153,.10), transparent 58%),
+    #000000 !important;
+}
+
+html:not(.dark) .dash-sidebar,
+html:not(.dark) .dash-header{
+  background: rgba(255,255,255,.96) !important;
+  color: var(--theme-text-strong);
+}
+
+html.dark .dash-header{
+  background: rgba(0,0,0,.92) !important;
+  border-bottom: 1px solid rgba(255,255,255,.12) !important;
+}
+
+.dash-card,
+.dash-card-soft{
+  color: var(--theme-text-strong);
+}
+
+html:not(.dark) .dash-card{
+  background: var(--theme-surface) !important;
+  border: 1px solid rgba(15,23,42,.10) !important;
+  box-shadow: 0 12px 32px rgba(15,23,42,.06) !important;
+}
+
+html:not(.dark) .dash-card-soft{
+  background: var(--theme-surface-soft) !important;
+  border: 1px solid rgba(15,23,42,.10) !important;
+}
+
+html.dark .dash-card{
+  background: var(--theme-surface) !important;
+  border: 1px solid rgba(255,255,255,.12) !important;
+  box-shadow: 0 20px 50px rgba(0,0,0,.45) !important;
+}
+
+html.dark .dash-card-soft{
+  background: var(--theme-surface-soft) !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+}
+
+.theme-surface-muted{
+  background: var(--theme-surface-muted);
+  border: 1px solid var(--theme-field-border);
+}
+
+.theme-label{
+  color: var(--theme-text-soft);
+}
+
+.theme-field{
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--theme-field-border);
+  background: var(--theme-field);
+  color: var(--theme-text-strong);
+  padding: 10px 12px;
+  outline: none;
+  transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+}
+
+.theme-field::placeholder{
+  color: var(--theme-text-soft);
+}
+
+.theme-field:focus{
+  border-color: rgba(59,130,246,.45);
+  box-shadow: 0 0 0 3px rgba(59,130,246,.14);
+}
+
+.theme-field:disabled{
+  background: var(--theme-field-disabled);
+  color: var(--theme-text-strong);
+  opacity: 1;
+}
+
+.theme-primary-btn{
+  background: linear-gradient(90deg, #2563eb, #7c3aed);
+  color: #ffffff;
+  border: 1px solid transparent;
+  box-shadow: 0 10px 24px rgba(37,99,235,.18);
+}
+
+.theme-primary-btn:hover{
+  filter: brightness(1.04);
+}
+
+.theme-tab-idle{
+  color: var(--theme-text-soft);
+}
+
+.theme-tab-idle:hover{
+  color: var(--theme-text-strong);
 }
