@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { useParams, Link, useNavigate } from "react-router";
+import { useParams, useSearchParams, Link, useNavigate } from "react-router";
 import { ArrowRight } from "lucide-react";
 import { AxiosIntance } from "../config/Axios.Intance";
 
 export default function ResetPassword() {
-  const { token } = useParams();
+  const { token: tokenParam } = useParams();
+  const [searchParams] = useSearchParams();
+  const token = tokenParam || searchParams.get("token");
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -14,6 +16,7 @@ export default function ResetPassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMsg("");
+    if (!token) return setMsg("Invalid reset link. Please request a new password reset email.");
     if (!password || password.length < 6) return setMsg("Password must be at least 6 characters");
     if (password !== confirm) return setMsg("Passwords do not match");
 
@@ -36,6 +39,11 @@ export default function ResetPassword() {
         <p className="mt-2 text-sm" style={{ color: "var(--muted)" }}>
           Create a new password for your account.
         </p>
+        {!token ? (
+          <div className="mt-4 text-sm" style={{ color: "var(--muted)" }}>
+            Reset link is missing or invalid. Please request a new reset email.
+          </div>
+        ) : null}
 
         <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
           <div>
