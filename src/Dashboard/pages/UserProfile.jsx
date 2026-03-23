@@ -395,7 +395,7 @@ const [saveError, setSaveError] = useState("");
   if (profileLoading) {
     return (
       <div className="p-6">
-        <p className="text-sm text-gray-500">Loading profile...</p>
+        <p className="text-sm theme-label">Loading profile...</p>
       </div>
     );
   }
@@ -415,7 +415,7 @@ const [saveError, setSaveError] = useState("");
       {/* Top Header */}
 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between w-full">
         <div>
-          <h1 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-[color:var(--text)]">
+          <h1 className="text-xl sm:text-2xl font-semibold text-[color:var(--text)]">
             User Profile
           </h1>
           <p className="text-xs sm:text-sm" style={{ color: "var(--muted)" }}>
@@ -438,7 +438,7 @@ const [saveError, setSaveError] = useState("");
       </div>
 
       {/* Tab Navigation */}
-      <div className="border-b border-gray-200 dark:border-gray-700">
+      <div className="border-b border-[color:var(--border)]">
         <div className="flex gap-2 sm:gap-4 overflow-x-auto no-scrollbar">
           {[
             { id: "personal", label: "Personal Info", icon: User },
@@ -452,7 +452,7 @@ const [saveError, setSaveError] = useState("");
               className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 border-b-2 text-xs sm:text-sm whitespace-nowrap transition-all duration-200 ${
                 activeTab === tab.id
                   ? "border-blue-500 text-blue-600 dark:text-blue-400"
-                  : "border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-[color:var(--text)]"
+                  : "border-transparent theme-tab-idle"
               }`}
             >
               <tab.icon className="w-4 h-4 shrink-0" />
@@ -466,7 +466,7 @@ const [saveError, setSaveError] = useState("");
       {activeTab === "personal" && (
         <div className="dash-card p-4 sm:p-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-            <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-[color:var(--text)]">
+            <h2 className="text-base sm:text-lg font-semibold text-[color:var(--text)]">
               Personal Information
             </h2>
             <div className="flex items-center gap-2">
@@ -484,7 +484,7 @@ const [saveError, setSaveError] = useState("");
           </div>
 
           {/* Profile Photo Section */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mb-6 p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mb-6 p-4 rounded-lg theme-surface-muted">
             <div className="relative">
               <img
                 src={
@@ -492,10 +492,10 @@ const [saveError, setSaveError] = useState("");
                   "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
                 }
                 alt="Profile"
-                className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-white dark:border-gray-600 shadow-lg"
+                className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-white dark:border-white/20 shadow-lg"
               />
               {isEditing && (
-                <label className="absolute bottom-0 right-0 bg-blue-600 text-[color:var(--text)] p-1.5 sm:p-2 rounded-full cursor-pointer hover:bg-blue-700 transition-colors">
+                <label className="absolute bottom-0 right-0 bg-blue-600 text-white p-1.5 sm:p-2 rounded-full cursor-pointer hover:bg-blue-700 transition-colors">
                   <Camera className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   <input
                     type="file"
@@ -507,13 +507,13 @@ const [saveError, setSaveError] = useState("");
               )}
             </div>
             <div>
-              <h3 className="text-base sm:text-lg font-medium text-gray-900 dark:text-[color:var(--text)]">
+              <h3 className="text-base sm:text-lg font-medium text-[color:var(--text)]">
                 {userInfo.firstName} {userInfo.lastName}
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-sm theme-label">
                 {userInfo.email}
               </p>
-              <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+              <p className="text-xs theme-label mt-1">
                 All data automatically saved to Form Manager
               </p>
             </div>
@@ -532,7 +532,7 @@ const [saveError, setSaveError] = useState("");
               ["PIN Code", "pincode", "text"],
             ].map(([label, key, type]) => (
               <div key={key}>
-                <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-xs sm:text-sm font-medium theme-label mb-1">
                   {label}
                 </label>
                 <input
@@ -543,7 +543,7 @@ const [saveError, setSaveError] = useState("");
                     setHasUnsavedChanges(true);
                   }}
                   disabled={!isEditing}
-                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-900 dark:text-[color:var(--text)] disabled:bg-gray-100 dark:disabled:bg-gray-800"
+                  className="theme-field text-sm"
                 />
               </div>
             ))}
@@ -554,7 +554,7 @@ const [saveError, setSaveError] = useState("");
               <button
                 onClick={() => handleSave("personal")}
                 disabled={saveStatus === "saving"}
-                className="bg-blue-600 text-[color:var(--text)] px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 flex items-center gap-2 disabled:opacity-50 text-sm"
+                className="theme-primary-btn px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 disabled:opacity-50 text-sm"
               >
                 {getSaveButtonContent()}
               </button>
@@ -566,7 +566,7 @@ const [saveError, setSaveError] = useState("");
       {/* Password Tab */}
       {activeTab === "password" && (
         <div className="dash-card p-4 sm:p-6">
-          <h2 className="text-base sm:text-lg font-semibold mb-4 sm:mb-6 text-gray-900 dark:text-[color:var(--text)]">
+          <h2 className="text-base sm:text-lg font-semibold mb-4 sm:mb-6 text-[color:var(--text)]">
             Change Password
           </h2>
 
@@ -576,7 +576,7 @@ const [saveError, setSaveError] = useState("");
           >
             {/* Current Password */}
             <div>
-              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label className="block text-xs sm:text-sm font-medium theme-label mb-1">
                 Current Password
               </label>
               <div className="relative">
@@ -589,7 +589,7 @@ const [saveError, setSaveError] = useState("");
                       currentPassword: e.target.value,
                     })
                   }
-                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 pr-10 dark:bg-gray-900 dark:text-[color:var(--text)]"
+                  className="theme-field pr-10"
                   required
                 />
                 <button
@@ -600,7 +600,7 @@ const [saveError, setSaveError] = useState("");
                       current: !showPassword.current,
                     })
                   }
-                  className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                  className="absolute right-3 top-2.5 theme-label hover:text-[color:var(--text)]"
                 >
                   {showPassword.current ? (
                     <EyeOff className="w-4 h-4" />
@@ -613,7 +613,7 @@ const [saveError, setSaveError] = useState("");
 
             {/* New Password */}
             <div>
-              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label className="block text-xs sm:text-sm font-medium theme-label mb-1">
                 New Password
               </label>
               <div className="relative">
@@ -626,7 +626,7 @@ const [saveError, setSaveError] = useState("");
                       newPassword: e.target.value,
                     })
                   }
-                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 pr-10 dark:bg-gray-900 dark:text-[color:var(--text)]"
+                  className="theme-field pr-10"
                   minLength={8}
                   required
                 />
@@ -638,7 +638,7 @@ const [saveError, setSaveError] = useState("");
                       new: !showPassword.new,
                     })
                   }
-                  className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                  className="absolute right-3 top-2.5 theme-label hover:text-[color:var(--text)]"
                 >
                   {showPassword.new ? (
                     <EyeOff className="w-4 h-4" />
@@ -647,14 +647,14 @@ const [saveError, setSaveError] = useState("");
                   )}
                 </button>
               </div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-xs theme-label mt-1">
                 Password must be at least 8 characters long
               </p>
             </div>
 
             {/* Confirm Password */}
             <div>
-              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label className="block text-xs sm:text-sm font-medium theme-label mb-1">
                 Confirm New Password
               </label>
               <div className="relative">
@@ -667,7 +667,7 @@ const [saveError, setSaveError] = useState("");
                       confirmPassword: e.target.value,
                     })
                   }
-                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 pr-10 dark:bg-gray-900 dark:text-[color:var(--text)]"
+                  className="theme-field pr-10"
                   required
                 />
                 <button
@@ -678,7 +678,7 @@ const [saveError, setSaveError] = useState("");
                       confirm: !showPassword.confirm,
                     })
                   }
-                  className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                  className="absolute right-3 top-2.5 theme-label hover:text-[color:var(--text)]"
                 >
                   {showPassword.confirm ? (
                     <EyeOff className="w-4 h-4" />
@@ -692,7 +692,7 @@ const [saveError, setSaveError] = useState("");
             <button
               type="submit"
               disabled={saveStatus === "saving"}
-              className="bg-blue-600 text-[color:var(--text)] px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 flex items-center gap-2 disabled:opacity-50 text-sm"
+              className="theme-primary-btn px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 disabled:opacity-50 text-sm"
             >
               {getSaveButtonContent()}
             </button>
@@ -700,7 +700,7 @@ const [saveError, setSaveError] = useState("");
               <p className="text-xs text-red-600 mt-1">{saveError}</p>
             )}
 
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className="text-xs theme-label">
               Password change details will be saved to Form Data Manager
             </p>
           </form>
@@ -711,7 +711,7 @@ const [saveError, setSaveError] = useState("");
       {activeTab === "bank" && (
         <div className="dash-card p-4 sm:p-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-            <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-[color:var(--text)]">
+            <h2 className="text-base sm:text-lg font-semibold text-[color:var(--text)]">
               Bank Account Details
             </h2>
             <div className="flex items-center gap-2">
@@ -737,7 +737,7 @@ const [saveError, setSaveError] = useState("");
               ["Branch Name", "branchName"],
             ].map(([label, key], idx) => (
               <div key={key} className={idx === 4 ? "md:col-span-2" : ""}>
-                <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-xs sm:text-sm font-medium theme-label mb-1">
                   {label}
                 </label>
                 <input
@@ -752,7 +752,7 @@ const [saveError, setSaveError] = useState("");
                     setHasUnsavedChanges(true);
                   }}
                   disabled={!isEditing}
-                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-900 dark:text-[color:var(--text)] disabled:bg-gray-100 dark:disabled:bg-gray-800"
+                  className="theme-field text-sm"
                 />
               </div>
             ))}
@@ -763,7 +763,7 @@ const [saveError, setSaveError] = useState("");
               <button
                 onClick={() => handleSave("bank")}
                 disabled={saveStatus === "saving"}
-                className="bg-blue-600 text-[color:var(--text)] px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 flex items-center gap-2 disabled:opacity-50 text-sm"
+                className="theme-primary-btn px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 disabled:opacity-50 text-sm"
               >
                 {getSaveButtonContent()}
               </button>
@@ -776,7 +776,7 @@ const [saveError, setSaveError] = useState("");
       {activeTab === "pan" && (
         <div className="dash-card p-4 sm:p-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-            <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-[color:var(--text)]">
+            <h2 className="text-base sm:text-lg font-semibold text-[color:var(--text)]">
               PAN Card Details
             </h2>
             <div className="flex items-center gap-2">
@@ -794,8 +794,8 @@ const [saveError, setSaveError] = useState("");
           </div>
 
           {/* PAN Card Image Section */}
-          <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
-            <h3 className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+          <div className="mb-6 p-4 rounded-lg theme-surface-muted">
+            <h3 className="text-xs sm:text-sm font-medium theme-label mb-3">
               PAN Card Image
             </h3>
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
@@ -803,11 +803,11 @@ const [saveError, setSaveError] = useState("");
                 <img
                   src={panDetails.panCardImage}
                   alt="PAN Card"
-                  className="w-40 h-28 sm:w-48 sm:h-32 object-cover rounded-lg border border-gray-300 dark:border-gray-600"
+                  className="w-40 h-28 sm:w-48 sm:h-32 object-cover rounded-lg border border-[color:var(--border)]"
                 />
               )}
               {isEditing && (
-                <label className="bg-blue-600 text-[color:var(--text)] px-3 sm:px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-700 transition-colors flex items-center gap-2 text-xs sm:text-sm">
+                <label className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-700 transition-colors flex items-center gap-2 text-xs sm:text-sm">
                   <Upload className="w-4 h-4" />
                   Upload PAN Card
                   <input
@@ -823,7 +823,7 @@ const [saveError, setSaveError] = useState("");
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
             <div>
-              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label className="block text-xs sm:text-sm font-medium theme-label mb-1">
                 PAN Number
               </label>
               <input
@@ -839,15 +839,15 @@ const [saveError, setSaveError] = useState("");
                 disabled={!isEditing}
                 pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
                 maxLength={10}
-                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-900 dark:text-[color:var(--text)] disabled:bg-gray-100 dark:disabled:bg-gray-800"
+                className="theme-field text-sm"
               />
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-xs theme-label mt-1">
                 Format: ABCDE1234F
               </p>
             </div>
 
             <div>
-              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label className="block text-xs sm:text-sm font-medium theme-label mb-1">
                 PAN Holder Name
               </label>
               <input
@@ -861,12 +861,12 @@ const [saveError, setSaveError] = useState("");
                   setHasUnsavedChanges(true);
                 }}
                 disabled={!isEditing}
-                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-900 dark:text-[color:var(--text)] disabled:bg-gray-100 dark:disabled:bg-gray-800"
+                className="theme-field text-sm"
               />
             </div>
 
             <div>
-              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label className="block text-xs sm:text-sm font-medium theme-label mb-1">
                 Father&apos;s Name
               </label>
               <input
@@ -880,12 +880,12 @@ const [saveError, setSaveError] = useState("");
                   setHasUnsavedChanges(true);
                 }}
                 disabled={!isEditing}
-                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-900 dark:text-[color:var(--text)] disabled:bg-gray-100 dark:disabled:bg-gray-800"
+                className="theme-field text-sm"
               />
             </div>
 
             <div>
-              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label className="block text-xs sm:text-sm font-medium theme-label mb-1">
                 Date of Birth (as per PAN)
               </label>
               <input
@@ -899,7 +899,7 @@ const [saveError, setSaveError] = useState("");
                   setHasUnsavedChanges(true);
                 }}
                 disabled={!isEditing}
-                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm dark:bg-gray-900 dark:text-[color:var(--text)] disabled:bg-gray-100 dark:disabled:bg-gray-800"
+                className="theme-field text-sm"
               />
             </div>
           </div>
@@ -909,7 +909,7 @@ const [saveError, setSaveError] = useState("");
               <button
                 onClick={() => handleSave("pan")}
                 disabled={saveStatus === "saving"}
-                className="bg-blue-600 text-[color:var(--text)] px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 flex items-center gap-2 disabled:opacity-50 text-sm"
+                className="theme-primary-btn px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 disabled:opacity-50 text-sm"
               >
                 {getSaveButtonContent()}
               </button>
