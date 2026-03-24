@@ -62,7 +62,7 @@ export default function Footer() {
                 </a>
                 <a
                   className="h-10 w-10 rounded-full border border-black/10 bg-black/5 hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 grid place-items-center transition-colors"
-                  href="https://www.youtube.com/"
+                  href="https://www.youtube.com/@silentmusicgroup"
                   target="_blank"
                   rel="noreferrer"
                   aria-label="YouTube"

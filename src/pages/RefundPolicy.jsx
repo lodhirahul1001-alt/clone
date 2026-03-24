@@ -171,14 +171,14 @@ export default function RefundPolicy() {
           <p style={{ margin: 0, color: "#4b5563", lineHeight: "1.8" }}>
             For any refund-related questions, please contact us at{" "}
             <a
-              href="mailto:support@silentmusicgroup.com"
+              href="mailto:silentmusicindia@gmail.com"
               style={{
                 color: "#4f46e5",
                 textDecoration: "none",
                 fontWeight: "600",
               }}
             >
-              support@silentmusicgroup.com
+              silentmusicindia@gmail.com
             </a>
           </p>
         </div>

@@ -171,10 +171,10 @@ export default function Terms() {
           <p style={{ margin: 0, color: "#4b5563" }}>
             Email:{" "}
             <a
-              href="mailto:admin@silentmusicgroup.com"
+              href="mailto:silentmusicindia@gmail.com"
               style={{ color: "#059669", fontWeight: "600", textDecoration: "none" }}
             >
-              admin@silentmusicgroup.com
+              silentmusicindia@gmai.com
             </a>
           </p>
         </div>
