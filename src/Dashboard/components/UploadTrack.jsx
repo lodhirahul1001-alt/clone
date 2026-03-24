@@ -903,7 +903,7 @@ export function UploadTrack({
                               if (fallback) fallback.style.display = 'flex';
                             }}
                           />
-                          <span className="hidden w-16 h-16 sm:w-20 sm:h-20 items-center justify-center text-black dark:text-white font-bold text-xs sm:text-sm">
+                          <span className="hidden w-16 h-16 sm:w-20 sm:h-20 items-center justify-center text-slate-700 dark:text-white font-bold text-xs sm:text-sm">
                             {logo.short}
                           </span>
                         </motion.button>
@@ -937,7 +937,7 @@ export function UploadTrack({
                               if (fallback) fallback.style.display = 'flex';
                             }}
                           />
-                          <span className="hidden w-16 h-16 sm:w-20 sm:h-20 items-center justify-center text-black dark:text-white font-bold text-xs sm:text-sm">
+                          <span className="hidden w-16 h-16 sm:w-20 sm:h-20 items-center justify-center text-slate-700 dark:text-white font-bold text-xs sm:text-sm">
                             {logo.short}
                           </span>
                         </motion.button>

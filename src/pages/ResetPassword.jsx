@@ -98,7 +98,7 @@ export default function ResetPassword() {
               <div>
                 <label className="mb-2 block text-sm font-medium text-[color:var(--muted)]">New Password</label>
                 <div className="relative">
-                  <Lock className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500 dark:text-white/80" />
+                  <Lock className="theme-icon-muted pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2" />
                   <input
                     className="input-ui pl-11 pr-12"
                     type={showPassword ? "text" : "password"}
@@ -111,7 +111,7 @@ export default function ResetPassword() {
                   <button
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-2 text-slate-500 transition-colors hover:bg-black/10 hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/50 dark:text-white/75 dark:hover:bg-white/10 dark:hover:text-white"
+                    className="theme-icon-button absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/50"
                     aria-label={showPassword ? "Hide password" : "Show password"}
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -122,7 +122,7 @@ export default function ResetPassword() {
               <div>
                 <label className="mb-2 block text-sm font-medium text-[color:var(--muted)]">Confirm Password</label>
                 <div className="relative">
-                  <ShieldCheck className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500 dark:text-white/80" />
+                  <ShieldCheck className="theme-icon-muted pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2" />
                   <input
                     className="input-ui pl-11 pr-12"
                     type={showConfirm ? "text" : "password"}
@@ -135,7 +135,7 @@ export default function ResetPassword() {
                   <button
                     type="button"
                     onClick={() => setShowConfirm((v) => !v)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-2 text-slate-500 transition-colors hover:bg-black/10 hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/50 dark:text-white/75 dark:hover:bg-white/10 dark:hover:text-white"
+                    className="theme-icon-button absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/50"
                     aria-label={showConfirm ? "Hide confirm password" : "Show confirm password"}
                   >
                     {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}

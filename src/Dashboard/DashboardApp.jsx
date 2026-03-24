@@ -158,12 +158,11 @@ const menuItems = [
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-2xl grid place-items-center dash-badge">
-              
-  <div className="h-9 w-9 rounded-full grid place-items-center border border-white/10 bg-white/5">
+  <div className="brand-logo-shell h-9 w-9 rounded-full grid place-items-center">
               <img
                 src="/newlogo.jpeg"
                 alt="Silent Music Group logo"
-                className="h-7 w-7 object-contain"
+                className="brand-logo-img h-7 w-7 object-contain"
               />
             </div>            </div>
             <div>

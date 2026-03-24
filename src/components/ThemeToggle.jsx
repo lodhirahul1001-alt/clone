@@ -14,8 +14,8 @@ export default function ThemeToggle({ className = "" }) {
       onClick={toggleTheme}
       aria-label="Toggle theme"
       className={
-        "inline-flex items-center justify-center rounded-full border border-white/10 " +
-        "bg-white/5 hover:bg-white/10 dark:bg-white/5 dark:hover:bg-white/10 " +
+        "inline-flex items-center justify-center rounded-full border border-black/10 dark:border-white/10 " +
+        "bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10 " +
         "backdrop-blur-xl shadow-[0_10px_30px_rgba(0,0,0,0.35)] " +
         "transition-colors duration-200 h-10 w-10 " +
         className
@@ -24,7 +24,7 @@ export default function ThemeToggle({ className = "" }) {
       {theme === "dark" ? (
         <Sun className="h-5 w-5 text-yellow-200" />
       ) : (
-        <Moon className="h-5 w-5 text-slate-900" />
+        <Moon className="h-5 w-5 text-slate-700" />
       )}
     </button>
   );

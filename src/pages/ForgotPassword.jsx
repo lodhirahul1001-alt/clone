@@ -44,7 +44,7 @@ export default function ForgotPassword() {
         </form>
 
         {submitted && (
-          <div className="mt-5 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm">
+          <div className="mt-5 rounded-xl border border-black/10 bg-black/5 dark:border-white/10 dark:bg-white/5 px-4 py-3 text-sm text-[color:var(--text)]">
             ✅ If the email exists, a reset link will be sent.
           </div>
         )}

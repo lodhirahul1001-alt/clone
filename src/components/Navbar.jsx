@@ -60,11 +60,11 @@ export default function Navbar() {
       <div className="container-page py-2 sm:py-3" ref={navWrapperRef}>
         <div className="glass nav-surface flex items-center justify-between px-4 py-3">
           <Link to="/" className="flex items-center gap-2">
-            <div className="h-9 w-9 rounded-full grid place-items-center border border-white/10 bg-white/5">
+            <div className="brand-logo-shell h-9 w-9 rounded-full grid place-items-center">
               <img
                 src="/newlogo.jpeg"
                 alt="Silent Music Group logo"
-                className="h-7 w-7 object-contain"
+                className="brand-logo-img h-7 w-7 object-contain"
               />
             </div>
             <span className="font-semibold tracking-tight">

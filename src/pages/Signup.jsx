@@ -47,7 +47,7 @@ export default function Signup() {
           <form onSubmit={handleSubmit(onSubmit)} className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
               <div className="relative">
-                <User className="pointer-events-none h-4 w-4 absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 dark:text-white/80" />
+                <User className="theme-icon-muted pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2" />
                 <input
                   className="input-ui pl-11"
                   placeholder="Full name"
@@ -59,7 +59,7 @@ export default function Signup() {
 
             <div className="md:col-span-2">
               <div className="relative">
-                <Mail className="pointer-events-none h-4 w-4 absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 dark:text-white/80" />
+                <Mail className="theme-icon-muted pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2" />
                 <input
                   className="input-ui pl-11"
                   placeholder="Email"
@@ -72,7 +72,7 @@ export default function Signup() {
 
             <div className="md:col-span-2">
               <div className="relative">
-                <Lock className="pointer-events-none h-4 w-4 absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 dark:text-white/80" />
+                <Lock className="theme-icon-muted pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2" />
                 <input
                   className="input-ui pl-11 pr-12"
                   placeholder="Password"
@@ -85,7 +85,7 @@ export default function Signup() {
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg text-slate-500 dark:text-white/75 hover:text-slate-800 dark:hover:text-white hover:bg-black/10 dark:hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/50"
+                  className="theme-icon-button absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/50"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
               {showPassword ? (

@@ -92,7 +92,7 @@ export function FormStorageManager({ isOpen, onClose }) {
       case 'draft':
         return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400';
       default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
+        return 'bg-white text-gray-600 dark:bg-gray-900/20 dark:text-gray-400';
     }
   };
 
@@ -127,7 +127,7 @@ export function FormStorageManager({ isOpen, onClose }) {
             <div className="flex items-center gap-3">
               <Database className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               <div>
-                <h2 className="text-xl font-semibold dark:text-[color:var(--text)]">Complete Form Data Manager</h2>
+                <h2 className="text-xl font-semibold text-[color:var(--text)]">Complete Form Data Manager</h2>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   All user form submissions and data in one place
                 </p>
@@ -143,7 +143,7 @@ export function FormStorageManager({ isOpen, onClose }) {
               </button>
               <button
                 onClick={onClose}
-                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="text-gray-600 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 p-2 rounded-lg hover:bg-white dark:hover:bg-gray-700"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -163,7 +163,7 @@ export function FormStorageManager({ isOpen, onClose }) {
                 className={`flex items-center gap-2 px-6 py-4 border-b-2 transition-all duration-200 ${
                   activeTab === tab.id
                     ? 'border-blue-500 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
-                    : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-[color:var(--text)] hover:bg-gray-50 dark:hover:bg-gray-700/50'
+                    : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-[color:var(--text)] hover:bg-white dark:hover:bg-gray-700/50'
                 }`}
               >
                 <tab.icon className="w-4 h-4" />
@@ -219,7 +219,7 @@ export function FormStorageManager({ isOpen, onClose }) {
 
               {/* Form Type Breakdown */}
               <div className="bg-transparent rounded-lg p-6 border border-gray-200 dark:border-gray-600">
-                <h3 className="text-lg font-semibold mb-4 dark:text-[color:var(--text)]">Form Type Breakdown</h3>
+                <h3 className="text-lg font-semibold mb-4 text-[color:var(--text)]">Form Type Breakdown</h3>
                 <div className="space-y-3">
                   {formTypes.map((type) => {
                     const count = allSubmissions.filter((s) => s.formType === type).length;
@@ -228,13 +228,13 @@ export function FormStorageManager({ isOpen, onClose }) {
                       <div key={type} className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           {getFormIcon(type)}
-                          <span className="dark:text-[color:var(--text)] capitalize">{type.replace('-', ' ')}</span>
+                          <span className="text-[color:var(--text)] capitalize">{type.replace('-', ' ')}</span>
                         </div>
                         <div className="flex items-center gap-3">
                           <div className="w-32 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                             <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${percentage}%` }} />
                           </div>
-                          <span className="text-sm font-medium dark:text-[color:var(--text)] w-8">{count}</span>
+                          <span className="text-sm font-medium text-[color:var(--text)] w-8">{count}</span>
                         </div>
                       </div>
                     );
@@ -249,7 +249,7 @@ export function FormStorageManager({ isOpen, onClose }) {
             <div className="p-6 max-h-[70vh] overflow-y-auto">
               <div className="bg-transparent rounded-lg p-6 border border-gray-200 dark:border-gray-600">
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-semibold dark:text-[color:var(--text)]">Complete User Profile Data</h3>
+                  <h3 className="text-lg font-semibold text-[color:var(--text)]">Complete User Profile Data</h3>
                   <button
                     onClick={() => copyToClipboard(userProfile)}
                     className="flex items-center gap-2 px-3 py-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
@@ -261,11 +261,11 @@ export function FormStorageManager({ isOpen, onClose }) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {Object.entries(userProfile).map(([key, value]) => (
-                    <div key={key} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                      <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                    <div key={key} className="p-3 bg-white dark:bg-gray-800 rounded-lg">
+                      <div className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide">
                         {key.replace(/([A-Z])/g, ' $1').trim()}
                       </div>
-                      <div className="text-sm font-medium dark:text-[color:var(--text)] mt-1 break-words">
+                      <div className="text-sm font-medium text-[color:var(--text)] mt-1 break-words">
                         {typeof value === 'object' ? JSON.stringify(value) : String(value)}
                       </div>
                     </div>
@@ -292,7 +292,7 @@ export function FormStorageManager({ isOpen, onClose }) {
                   {/* Filters */}
                   <div className="flex flex-col gap-3 mb-4">
                     <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600 dark:text-gray-400 w-4 h-4" />
                       <input
                         type="text"
                         placeholder="Search all form data..."
@@ -329,7 +329,7 @@ export function FormStorageManager({ isOpen, onClose }) {
                     </div>
                   </div>
 
-                  <h3 className="font-medium text-gray-900 dark:text-[color:var(--text)] mb-4">
+                  <h3 className="font-medium text-[color:var(--text)] mb-4">
                     Form Submissions ({filteredSubmissions.length})
                   </h3>
 
@@ -344,12 +344,12 @@ export function FormStorageManager({ isOpen, onClose }) {
                           setSelectedSubmission(submission);
                           setShowDetails(true);
                         }}
-                        className="p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-all duration-200"
+                        className="p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-white dark:hover:bg-gray-700/50 cursor-pointer transition-all duration-200"
                       >
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
                             {getFormIcon(submission.formType)}
-                            <span className="font-medium text-sm dark:text-[color:var(--text)]">
+                            <span className="font-medium text-sm text-[color:var(--text)]">
                               {submission.formTitle}
                             </span>
                           </div>
@@ -365,7 +365,7 @@ export function FormStorageManager({ isOpen, onClose }) {
                           </div>
                         </div>
 
-                        <div className="text-xs text-gray-500 dark:text-gray-400 space-y-1">
+                        <div className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
                           <div className="flex items-center gap-1">
                             <Calendar className="w-3 h-3" />
                             {new Date(submission.timestamp).toLocaleString()}
@@ -398,11 +398,11 @@ export function FormStorageManager({ isOpen, onClose }) {
                   {showDetails && selectedSubmission ? (
                     <div>
                       <div className="flex items-center justify-between mb-4">
-                        <h3 className="font-medium text-gray-900 dark:text-[color:var(--text)]">Complete Form Data</h3>
+                        <h3 className="font-medium text-[color:var(--text)]">Complete Form Data</h3>
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => copyToClipboard(selectedSubmission)}
-                            className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+                            className="p-2 text-gray-600 hover:text-gray-900 dark:hover:text-gray-300 rounded-lg hover:bg-white dark:hover:bg-gray-700"
                             title="Copy all data"
                           >
                             <Copy className="w-4 h-4" />
@@ -419,52 +419,52 @@ export function FormStorageManager({ isOpen, onClose }) {
 
                       <div className="space-y-4">
                         {/* Form Info */}
-                        <div className="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-lg">
-                          <h4 className="font-medium text-gray-900 dark:text-[color:var(--text)] mb-3">Form Information</h4>
+                        <div className="bg-white dark:bg-gray-900/50 p-4 rounded-lg">
+                          <h4 className="font-medium text-[color:var(--text)] mb-3">Form Information</h4>
                           <div className="grid grid-cols-2 gap-4 text-sm">
                             <div>
-                              <span className="text-gray-500 dark:text-gray-400">Form Type:</span>
-                              <p className="font-medium dark:text-[color:var(--text)]">{selectedSubmission.formType}</p>
+                              <span className="text-gray-600 dark:text-gray-400">Form Type:</span>
+                              <p className="font-medium text-[color:var(--text)]">{selectedSubmission.formType}</p>
                             </div>
                             <div>
-                              <span className="text-gray-500 dark:text-gray-400">Form Title:</span>
-                              <p className="font-medium dark:text-[color:var(--text)]">{selectedSubmission.formTitle}</p>
+                              <span className="text-gray-600 dark:text-gray-400">Form Title:</span>
+                              <p className="font-medium text-[color:var(--text)]">{selectedSubmission.formTitle}</p>
                             </div>
                             <div>
-                              <span className="text-gray-500 dark:text-gray-400">Status:</span>
-                              <p className="font-medium dark:text-[color:var(--text)]">{selectedSubmission.status}</p>
+                              <span className="text-gray-600 dark:text-gray-400">Status:</span>
+                              <p className="font-medium text-[color:var(--text)]">{selectedSubmission.status}</p>
                             </div>
                             <div>
-                              <span className="text-gray-500 dark:text-gray-400">Submitted:</span>
-                              <p className="font-medium dark:text-[color:var(--text)]">
+                              <span className="text-gray-600 dark:text-gray-400">Submitted:</span>
+                              <p className="font-medium text-[color:var(--text)]">
                                 {new Date(selectedSubmission.timestamp).toLocaleString()}
                               </p>
                             </div>
                             {selectedSubmission.userInfo?.name && (
                               <div>
-                                <span className="text-gray-500 dark:text-gray-400">User:</span>
-                                <p className="font-medium dark:text-[color:var(--text)]">{selectedSubmission.userInfo.name}</p>
+                                <span className="text-gray-600 dark:text-gray-400">User:</span>
+                                <p className="font-medium text-[color:var(--text)]">{selectedSubmission.userInfo.name}</p>
                               </div>
                             )}
                             {selectedSubmission.userInfo?.email && (
                               <div>
-                                <span className="text-gray-500 dark:text-gray-400">Email:</span>
-                                <p className="font-medium dark:text-[color:var(--text)]">{selectedSubmission.userInfo.email}</p>
+                                <span className="text-gray-600 dark:text-gray-400">Email:</span>
+                                <p className="font-medium text-[color:var(--text)]">{selectedSubmission.userInfo.email}</p>
                               </div>
                             )}
                           </div>
                         </div>
 
                         {/* All Form Data */}
-                        <div className="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-lg">
-                          <h4 className="font-medium text-gray-900 dark:text-[color:var(--text)] mb-3">All Captured Data</h4>
+                        <div className="bg-white dark:bg-gray-900/50 p-4 rounded-lg">
+                          <h4 className="font-medium text-[color:var(--text)] mb-3">All Captured Data</h4>
                           <div className="space-y-3">
                             {Object.entries(selectedSubmission.data).map(([key, value]) => (
                               <div key={key} className="border-b border-gray-200 dark:border-gray-600 pb-2">
-                                <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                                <div className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide">
                                   {key.replace(/([A-Z])/g, ' $1').trim()}
                                 </div>
-                                <div className="text-sm font-medium dark:text-[color:var(--text)] mt-1 break-words">
+                                <div className="text-sm font-medium text-[color:var(--text)] mt-1 break-words">
                                   {typeof value === 'boolean'
                                     ? value
                                       ? 'Yes'
@@ -479,8 +479,8 @@ export function FormStorageManager({ isOpen, onClose }) {
                         </div>
 
                         {/* Status Management */}
-                        <div className="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-lg">
-                          <h4 className="font-medium text-gray-900 dark:text-[color:var(--text)] mb-3">Manage Status</h4>
+                        <div className="bg-white dark:bg-gray-900/50 p-4 rounded-lg">
+                          <h4 className="font-medium text-[color:var(--text)] mb-3">Manage Status</h4>
                           <div className="flex gap-2">
                             <select
                               value={selectedSubmission.status}
@@ -497,7 +497,7 @@ export function FormStorageManager({ isOpen, onClose }) {
                               onClick={() =>
                                 updateSubmissionStatus(selectedSubmission.id, selectedSubmission.status)
                               }
-                              className="px-3 py-2 bg-blue-600 text-[color:var(--text)] rounded-lg hover:bg-blue-700 transition-colors text-sm flex items-center gap-1"
+                              className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm flex items-center gap-1"
                             >
                               <RefreshCw className="w-3 h-3" />
                               Update

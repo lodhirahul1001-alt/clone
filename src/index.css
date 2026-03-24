@@ -943,3 +943,73 @@ html.dark .dash-card-soft{
 .theme-tab-idle:hover{
   color: var(--theme-text-strong);
 }
+
+.theme-icon-muted{
+  color: rgba(15,23,42,.52);
+}
+
+.theme-icon-button{
+  color: rgba(15,23,42,.52);
+}
+
+.theme-icon-button:hover{
+  color: #0f172a;
+  background: rgba(15,23,42,.08);
+}
+
+html.dark .theme-icon-muted{
+  color: rgba(255,255,255,.80);
+}
+
+html.dark .theme-icon-button{
+  color: rgba(255,255,255,.75);
+}
+
+html.dark .theme-icon-button:hover{
+  color: rgba(255,255,255,.96);
+  background: rgba(255,255,255,.10);
+}
+
+.brand-logo-shell{
+  border: 1px solid rgba(15,23,42,.12);
+  background:
+    linear-gradient(135deg, rgba(124,58,237,.12), rgba(236,72,153,.08)),
+    rgba(255,255,255,.92);
+  box-shadow: 0 8px 20px rgba(15,23,42,.08);
+}
+
+.brand-logo-img{
+  filter: saturate(1.08) contrast(1.05);
+}
+
+html.dark .brand-logo-shell{
+  border-color: rgba(255,255,255,.12);
+  background:
+    linear-gradient(135deg, rgba(124,58,237,.18), rgba(236,72,153,.12)),
+    rgba(255,255,255,.06);
+  box-shadow: none;
+}
+
+.support-card-title{
+  color: #0f172a;
+}
+
+.support-card-copy{
+  color: #1e3a8a;
+}
+
+.support-card-meta{
+  color: #2563eb;
+}
+
+html.dark .support-card-title{
+  color: rgba(255,255,255,.94);
+}
+
+html.dark .support-card-copy{
+  color: rgba(255,255,255,.78);
+}
+
+html.dark .support-card-meta{
+  color: rgba(255,255,255,.64);
+}

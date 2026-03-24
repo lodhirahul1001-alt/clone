@@ -9,12 +9,12 @@ export default function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <div className="h-10 w-10 rounded-full border border-white/10 bg-white/5 grid place-items-center">
-                   <div className="h-9 w-9 rounded-full grid place-items-center border border-white/10 bg-white/5">
+                <div className="h-10 w-10 rounded-full grid place-items-center">
+                   <div className="brand-logo-shell h-9 w-9 rounded-full grid place-items-center">
               <img
                 src="/newlogo.jpeg"
                 alt="Silent Music Group logo"
-                className="h-7 w-7 object-contain"
+                className="brand-logo-img h-7 w-7 object-contain"
               />
             </div>
                 </div>

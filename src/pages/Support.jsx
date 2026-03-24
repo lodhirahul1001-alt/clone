@@ -270,15 +270,15 @@ export default function Support() {
   const getPriorityColor = (priority) => {
     switch (priority) {
       case 'Critical':
-        return 'bg-red-500 text-[color:var(--text)]';
+        return 'bg-red-500 text-white';
       case 'High':
-        return 'bg-orange-500 text-[color:var(--text)]';
+        return 'bg-orange-500 text-white';
       case 'Medium':
-        return 'bg-blue-500 text-[color:var(--text)]';
+        return 'bg-blue-500 text-white';
       case 'Low':
-        return 'bg-green-500 text-[color:var(--text)]';
+        return 'bg-green-500 text-white';
       default:
-        return 'bg-gray-500 text-[color:var(--text)]';
+        return 'bg-gray-500 text-white';
     }
   };
 
@@ -309,7 +309,7 @@ export default function Support() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setShowTicketModal(true)}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 text-[color:var(--text)] px-6 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 flex items-center gap-2 shadow-lg"
+            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 flex items-center gap-2 shadow-lg"
           >
             <Plus className="w-5 h-5" />
             Create Ticket 
@@ -366,13 +366,13 @@ export default function Support() {
                 onClick={handlePhoneCall}
               >
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-blue-600 text-[color:var(--text)] rounded-full">
+                  <div className="p-3 bg-blue-600 text-white rounded-full">
                     <Phone className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-blue-900 dark:text-blue-100">Call Support</h3>
-                    <p className="text-blue-700 dark:text-blue-300 text-sm">+91 90600 70222 </p>
-                    <p className="text-blue-600 dark:text-blue-400 text-xs">24/7 Available</p>
+                    <h3 className="support-card-title font-semibold">Call Support</h3>
+                    <p className="support-card-copy text-sm">+91 90600 70222 </p>
+                    <p className="support-card-meta text-xs">24/7 Available</p>
                   </div>
                 </div>
               </motion.div>
@@ -383,13 +383,13 @@ export default function Support() {
                 onClick={handleWhatsAppClick}
               >
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-green-600 text-[color:var(--text)] rounded-full">
+                  <div className="p-3 bg-green-600 text-white rounded-full">
                     <MessageCircle className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-green-900 dark:text-green-100">WhatsApp</h3>
-                    <p className="text-green-700 dark:text-green-300 text-sm">Silent Music Group Community</p>
-                    <p className="text-green-600 dark:text-green-400 text-xs">Instant Support</p>
+                    <h3 className="support-card-title font-semibold">WhatsApp</h3>
+                    <p className="support-card-copy text-sm">Silent Music Group Community</p>
+                    <p className="support-card-meta text-xs">Instant Support</p>
                   </div>
                 </div>
               </motion.div>
@@ -400,13 +400,13 @@ export default function Support() {
                 onClick={handleEmailClick}
               >
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-purple-600 text-[color:var(--text)] rounded-full">
+                  <div className="p-3 bg-purple-600 text-white rounded-full">
                     <Mail className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-purple-900 dark:text-purple-100">Email Support</h3>
-                    <p className="text-purple-700 dark:text-purple-300 text-sm">admin@silentmusicgroup.com</p>
-                    <p className="text-purple-600 dark:text-purple-400 text-xs">Response in 2-4 hours</p>
+                    <h3 className="support-card-title font-semibold">Email Support</h3>
+                    <p className="support-card-copy text-sm">admin@silentmusicgroup.com</p>
+                    <p className="support-card-meta text-xs">Response in 2-4 hours</p>
                   </div>
                 </div>
               </motion.div>
@@ -477,7 +477,7 @@ export default function Support() {
 
             {/* Popular Resources */}
             <div className="glass-soft rounded-lg border border-[color:var(--border)] p-6">
-              <h2 className="text-xl font-semibold mb-6 dark:text-[color:var(--text)]">Popular Resources</h2>
+              <h2 className="text-xl font-semibold mb-6 text-[color:var(--text)]">Popular Resources</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {[
                   { title: 'Getting Started Guide', icon: BookOpen, color: 'blue' },
@@ -493,14 +493,14 @@ export default function Support() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
                     whileHover={{ scale: 1.02 }}
-                    className="flex items-center gap-3 p-4 rounded-lg border border-[color:var(--border)] hover:bg-white/5 cursor-pointer transition-all duration-200"
+                    className="flex items-center gap-3 p-4 rounded-lg border border-[color:var(--border)] hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer transition-all duration-200"
                   >
                     {/* Note: dynamic Tailwind class names below may need safelisting in production */}
                     <div className={`p-2 rounded-lg bg-${resource.color}-100 dark:bg-${resource.color}-900/20`}>
                       <resource.icon className={`w-5 h-5 text-${resource.color}-600 dark:text-${resource.color}-400`} />
                     </div>
-                    <span className="font-medium dark:text-[color:var(--text)]">{resource.title}</span>
-                    <ExternalLink className="w-4 h-4 text-gray-400 ml-auto" />
+                    <span className="font-medium text-[color:var(--text)]">{resource.title}</span>
+                    <ExternalLink className="w-4 h-4 text-gray-600 dark:text-gray-400 ml-auto" />
                   </motion.div>
                 ))}
               </div>
@@ -515,7 +515,7 @@ export default function Support() {
             <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
               <div className="flex gap-4 flex-1">
                 <div className="relative flex-1 max-w-md">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600 dark:text-gray-400 w-4 h-4" />
                   <input
                     type="text"
                     placeholder="Search tickets..."
@@ -563,14 +563,14 @@ export default function Support() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        className="border-b border-[color:var(--border)] hover:bg-white/5 transition-colors"
+                        className="border-b border-[color:var(--border)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                       >
                         <td className="p-4">
                           <span className="font-mono text-sm font-semibold text-blue-600 dark:text-blue-300">{ticket.id}</span>
                         </td>
                         <td className="p-4">
                           <div>
-                            <p className="font-medium dark:text-[color:var(--text)]">{ticket.subject}</p>
+                            <p className="font-medium text-[color:var(--text)]">{ticket.subject}</p>
                             <p className="text-sm text-gray-600 dark:text-gray-400 truncate max-w-xs">
                               {ticket.description}
                             </p>
@@ -607,7 +607,7 @@ export default function Support() {
             {/* Search and Filter */}
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600 dark:text-gray-400 w-4 h-4" />
                 <input
                   type="text"
                   placeholder="Search FAQs..."
@@ -641,7 +641,7 @@ export default function Support() {
                 >
                   <button
                     onClick={() => setExpandedFAQ(expandedFAQ === faq.id ? null : faq.id)}
-                    className="w-full p-6 text-left flex items-center justify-between hover:bg-white/5 transition-colors"
+                    className="w-full p-6 text-left flex items-center justify-between hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                   >
                     <div className="flex-1">
                       <h3 className="font-medium text-[color:var(--text)] mb-1">{faq.question}</h3>
@@ -706,7 +706,7 @@ export default function Support() {
             {/* Contact Information */}
             <div className="space-y-6">
               <div className="glass-soft rounded-lg border border-[color:var(--border)] p-6">
-                <h2 className="text-xl font-semibold mb-6 dark:text-[color:var(--text)]">Get in Touch</h2>
+                <h2 className="text-xl font-semibold mb-6 text-[color:var(--text)]">Get in Touch</h2>
 
                 <div className="space-y-4">
                   <motion.div
@@ -714,11 +714,11 @@ export default function Support() {
                     onClick={handlePhoneCall}
                     className="flex items-center gap-4 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 cursor-pointer transition-all duration-200"
                   >
-                    <div className="p-3 bg-blue-600 text-[color:var(--text)] rounded-full">
+                    <div className="p-3 bg-blue-600 text-white rounded-full">
                       <Phone className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="font-medium dark:text-[color:var(--text)]">Phone Support</h3>
+                      <h3 className="font-medium text-[color:var(--text)]">Phone Support</h3>
                       <p className="text-blue-600 dark:text-blue-400 font-medium">+91 9060070222</p>
                       <p className="text-sm text-gray-600 dark:text-gray-400">Available 24/7</p>
                     </div>
@@ -729,11 +729,11 @@ export default function Support() {
                     onClick={handleWhatsAppClick}
                     className="flex items-center gap-4 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-green-50 dark:hover:bg-green-900/20 cursor-pointer transition-all duration-200"
                   >
-                    <div className="p-3 bg-green-600 text-[color:var(--text)] rounded-full">
+                    <div className="p-3 bg-green-600 text-white rounded-full">
                       <MessageCircle className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="font-medium dark:text-[color:var(--text)]">WhatsApp Community</h3>
+                      <h3 className="font-medium text-[color:var(--text)]">WhatsApp Community</h3>
                       <p className="text-green-600 dark:text-green-400 font-medium">SMG Support Team </p>
                       <p className="text-sm text-gray-600 dark:text-gray-400">Join our community for instant help</p>
                     </div>
@@ -744,11 +744,11 @@ export default function Support() {
                     onClick={handleEmailClick}
                     className="flex items-center gap-4 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-purple-50 dark:hover:bg-purple-900/20 cursor-pointer transition-all duration-200"
                   >
-                    <div className="p-3 bg-purple-600 text-[color:var(--text)] rounded-full">
+                    <div className="p-3 bg-purple-600 text-white rounded-full">
                       <Mail className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="font-medium dark:text-[color:var(--text)]">Email Support</h3>
+                      <h3 className="font-medium text-[color:var(--text)]">Email Support</h3>
                       <p className="text-purple-600 dark:text-purple-400 font-medium">admin@silentmusicgroup.com</p>
                       <p className="text-sm text-gray-600 dark:text-gray-400">Response within 2-4 hours</p>
                     </div>
@@ -758,18 +758,18 @@ export default function Support() {
 
               {/* Office Hours */}
               <div className="glass-soft rounded-lg border border-[color:var(--border)] p-6">
-                <h3 className="font-semibold mb-4 dark:text-[color:var(--text)] flex items-center gap-2">
+                <h3 className="font-semibold mb-4 text-[color:var(--text)] flex items-center gap-2">
                   <Clock className="w-5 h-5" />
                   Support Hours
                 </h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-gray-600 dark:text-gray-400">Monday - Friday</span>
-                    <span className="dark:text-[color:var(--text)]">9:00 AM - 6:00 PM IST</span>
+                    <span className="text-[color:var(--text)]">9:00 AM - 6:00 PM IST</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600 dark:text-gray-400">Saturday</span>
-                    <span className="dark:text-[color:var(--text)]">10:00 AM - 4:00 PM IST</span>
+                    <span className="text-[color:var(--text)]">10:00 AM - 4:00 PM IST</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600 dark:text-gray-400">Sunday</span>
@@ -787,7 +787,7 @@ export default function Support() {
 
             {/* Quick Contact Form */}
             <div className="glass-soft rounded-lg border border-[color:var(--border)] p-6">
-              <h2 className="text-xl font-semibold mb-6 dark:text-[color:var(--text)]">Quick Message</h2>
+              <h2 className="text-xl font-semibold mb-6 text-[color:var(--text)]">Quick Message</h2>
 
               <form className="space-y-4" onSubmit={handleQuickMessageSubmit}>
                 <div>
@@ -843,7 +843,7 @@ export default function Support() {
                   whileTap={{ scale: 0.98 }}
                   type="submit"
                   disabled={quickSending}
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-[color:var(--text)] py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 flex items-center justify-center gap-2"
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 flex items-center justify-center gap-2"
                 >
                   <Send className="w-4 h-4" />
                   {quickSending ? 'Sending...' : 'Send Message'}
@@ -869,10 +869,10 @@ export default function Support() {
                 className="glass rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-[color:var(--border)]"
               >
                 <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                  <h2 className="text-xl font-semibold dark:text-[color:var(--text)]">Create Support Ticket</h2>
+                  <h2 className="text-xl font-semibold text-[color:var(--text)]">Create Support Ticket</h2>
                   <button
                     onClick={() => setShowTicketModal(false)}
-                    className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
                   >
                     <X className="w-6 h-6" />
                   </button>
@@ -952,7 +952,7 @@ export default function Support() {
                       onChange={(e) => setNewTicket({ ...newTicket, files: e.target.files || undefined })}
                       className="input-ui w-full px-3 py-2"
                     />
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                       Max: 5 files, 10MB each. Supported: JPG, PNG, PDF, DOC, TXT
                     </p>
                   </div>
@@ -970,7 +970,7 @@ export default function Support() {
                       whileTap={{ scale: 0.98 }}
                       type="submit"
                       disabled={ticketSending}
-                      className="bg-gradient-to-r from-blue-600 to-purple-600 text-[color:var(--text)] px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200"
+                      className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200"
                     >
                       {ticketSending ? 'Creating...' : 'Create Ticket'}
                     </motion.button>

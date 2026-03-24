@@ -60,7 +60,7 @@ export default function Login() {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
                 <div className="relative">
-                  <User className="pointer-events-none h-4 w-4 absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 dark:text-white/80" />
+                  <User className="theme-icon-muted pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2" />
                   <input
                     className="input-ui pl-11"
                     placeholder="Email"
@@ -75,7 +75,7 @@ export default function Login() {
 
               <div>
                 <div className="relative">
-                  <Lock className="pointer-events-none h-4 w-4 absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 dark:text-white/80" />
+                  <Lock className="theme-icon-muted pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2" />
                   <input
                     className="input-ui pl-11 pr-12"
                     placeholder="Password"
@@ -88,7 +88,7 @@ export default function Login() {
                   <button
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg text-slate-500 dark:text-white/75 hover:text-slate-800 dark:hover:text-white hover:bg-black/10 dark:hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/50"
+                    className="theme-icon-button absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/50"
                     aria-label={showPassword ? "Hide password" : "Show password"}
                   >
                     {showPassword ? (
