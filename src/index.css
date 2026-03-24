@@ -134,19 +134,26 @@
 }
 
 /* logo sizing */
-.marquee-img {
+.marquee-img,
+.marquee-img-white {
   height: 26px;
   width: auto;
+  max-height: 26px;
 }
 
 /* ✅ FORCE LOGOS CLEAR ON DARK */
-.marquee-img-white {
-  opacity: 0.95;
-  filter: brightness(2.5) contrast(1.2);
+html:not(.dark) .marquee-img,
+html:not(.dark) .marquee-img-white {
+  opacity: 0.92;
+  filter: brightness(0) saturate(100%) contrast(1.12);
+  mix-blend-mode: normal;
 }
 
 /* If SVG is black, this makes it white-ish */
-.marquee-img-white {
+.dark .marquee-img,
+.dark .marquee-img-white {
+  opacity: 0.98;
+  filter: brightness(0) invert(1) contrast(1.12);
   mix-blend-mode: screen;
 }
 
@@ -264,9 +271,6 @@
     will-change: transform;
   }
   .marquee-item{ display:flex; align-items:center; justify-content:center; }
-  /* Make logos visible in BOTH themes */
-  .marquee-img{ max-height: 26px; width:auto; opacity: .95; filter: grayscale(2) brightness(.28) contrast(1.55); }
-  .dark .marquee-img{ filter: invert(1) brightness(2.05) contrast(1.35) grayscale(1); opacity: .98; }
   .marquee-track:hover{ animation-play-state: paused; }
 }
 
