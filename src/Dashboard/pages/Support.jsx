@@ -200,7 +200,7 @@ export default function Support() {
         >
           <div>
             <h1 className="text-3xl font-bold text-[color:var(--text)] mb-2">Help & Support Center</h1>
-            <p className="text-gray-600 dark:text-gray-300">Get help, find answers, and connect with our support team</p>
+            <p className="text-gray-700 dark:text-gray-300">Get help, find answers, and connect with our support team</p>
           </div>
           <motion.button
             whileHover={{ scale: 1.05 }}
@@ -229,7 +229,7 @@ export default function Support() {
               className={`flex items-center gap-2 px-6 py-3 rounded-lg transition-all duration-200 flex-1 justify-center ${
                 activeTab === tab.id
                   ? 'bg-transparent text-blue-600 dark:text-blue-400 shadow-md'
-                  : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-[color:var(--text)]'
+                  : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-[color:var(--text)]'
               }`}
             >
               <tab.icon className="w-5 h-5" />
@@ -309,7 +309,7 @@ export default function Support() {
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Avg Response Time</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-400">Avg Response Time</p>
                     <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">2.5 hrs</p>
                   </div>
                   <Clock className="w-8 h-8 text-blue-600 dark:text-blue-400" />
@@ -324,7 +324,7 @@ export default function Support() {
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Resolution Rate</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-400">Resolution Rate</p>
                     <p className="text-2xl font-bold text-green-600 dark:text-green-400">98.5%</p>
                   </div>
                   <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
@@ -339,7 +339,7 @@ export default function Support() {
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Active Users</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-400">Active Users</p>
                     <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">12.5K</p>
                   </div>
                   <Users className="w-8 h-8 text-purple-600 dark:text-purple-400" />
@@ -354,7 +354,7 @@ export default function Support() {
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Satisfaction</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-400">Satisfaction</p>
                     <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">4.9/5</p>
                   </div>
                   <Star className="w-8 h-8 text-yellow-600 dark:text-yellow-400" />
@@ -386,7 +386,7 @@ export default function Support() {
                       <resource.icon className={`w-5 h-5 text-${resource.color}-600 dark:text-${resource.color}-400`} />
                     </div>
                     <span className="font-medium text-[color:var(--text)]">{resource.title}</span>
-                    <ExternalLink className="w-4 h-4 text-gray-600 dark:text-gray-400 ml-auto" />
+                    <ExternalLink className="w-4 h-4 text-gray-700 dark:text-gray-400 ml-auto" />
                   </motion.div>
                 ))}
               </div>
@@ -405,7 +405,7 @@ export default function Support() {
             <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
               <div className="flex gap-4 flex-1">
                 <div className="relative flex-1 max-w-md">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600 dark:text-gray-400 w-4 h-4" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-700 dark:text-gray-400 w-4 h-4" />
                   <input
                     type="text"
                     placeholder="Search tickets..."
@@ -426,7 +426,7 @@ export default function Support() {
                   ))}
                 </select>
               </div>
-              <button className="flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-[color:var(--text)]">
+              <button className="flex items-center gap-2 px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-[color:var(--text)]">
                 <Download className="w-4 h-4" />
                 Export
               </button>
@@ -461,7 +461,7 @@ export default function Support() {
                         <td className="p-4">
                           <div>
                             <p className="font-medium text-[color:var(--text)]">{ticket.subject}</p>
-                            <p className="text-sm text-gray-600 dark:text-gray-400 truncate max-w-xs">{ticket.description}</p>
+                            <p className="text-sm text-gray-700 dark:text-gray-400 truncate max-w-xs">{ticket.description}</p>
                           </div>
                         </td>
                         <td className="p-4">
@@ -474,13 +474,13 @@ export default function Support() {
                             {ticket.status}
                           </span>
                         </td>
-                        <td className="p-4 text-sm text-gray-600 dark:text-gray-400">
+                        <td className="p-4 text-sm text-gray-700 dark:text-gray-400">
                           {new Date(ticket.createdAt).toLocaleDateString()}
                         </td>
                         {/* <td className="p-4 text-sm text-gray-900 dark:text-gray-400">
                           {new Date(ticket.updatedAt).toLocaleDateString()}
                         </td> */}
-                        <td className="p-4 text-sm  text-black dark:text-gray-400">
+                        <td className="p-4 text-sm text-gray-900  dark:text-gray-400">
   {new Date(ticket.updatedAt).toLocaleDateString()}
 </td>
                       </motion.tr>
@@ -502,7 +502,7 @@ export default function Support() {
             {/* Search and Filter */}
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600 dark:text-gray-400 w-4 h-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-700 dark:text-gray-400 w-4 h-4" />
                 <input
                   type="text"
                   placeholder="Search FAQs..."
@@ -540,7 +540,7 @@ export default function Support() {
                   >
                     <div className="flex-1">
                       <h3 className="font-medium text-gray-900 dark:text-[color:var(--text)] mb-1">{faq.question}</h3>
-                      <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+                      <div className="flex items-center gap-4 text-sm text-gray-700 dark:text-gray-400">
                         <span className="bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-400 px-2 py-1 rounded">
                           {faq.category}
                         </span>
@@ -554,7 +554,7 @@ export default function Support() {
                       animate={{ rotate: expandedFAQ === faq.id ? 90 : 0 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <ChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                      <ChevronRight className="w-5 h-5 text-gray-700 dark:text-gray-400" />
                     </motion.div>
                   </button>
                   
@@ -570,7 +570,7 @@ export default function Support() {
                         <div className="p-6 bg-white dark:bg-gray-900/50">
                           <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{faq.answer}</p>
                           <div className="mt-4 flex items-center gap-4">
-                            <span className="text-sm text-gray-600 dark:text-gray-400">Was this helpful?</span>
+                            <span className="text-sm text-gray-700 dark:text-gray-400">Was this helpful?</span>
                             <div className="flex gap-2">
                               <motion.button
                                 whileHover={{ scale: 1.1 }}
@@ -622,7 +622,7 @@ export default function Support() {
                     <div>
                       <h3 className="font-medium text-[color:var(--text)]">Phone Support</h3>
                       <p className="text-blue-600 dark:text-blue-400 font-medium">+91 73660 42410</p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Available 24/7</p>
+                      <p className="text-sm text-gray-700 dark:text-gray-400">Available 24/7</p>
                     </div>
                   </motion.div>
 
@@ -637,7 +637,7 @@ export default function Support() {
                     <div>
                       <h3 className="font-medium text-[color:var(--text)]">WhatsApp Community</h3>
                       <p className="text-green-600 dark:text-green-400 font-medium">Silent Music Group</p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Join our community for instant help</p>
+                      <p className="text-sm text-gray-700 dark:text-gray-400">Join our community for instant help</p>
                     </div>
                   </motion.div>
 
@@ -652,7 +652,7 @@ export default function Support() {
                     <div>
                       <h3 className="font-medium text-[color:var(--text)]">Email Support</h3>
                       <p className="text-purple-600 dark:text-purple-400 font-medium">admin@silentmusicgroup.com</p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Response within 2-4 hours</p>
+                      <p className="text-sm text-gray-700 dark:text-gray-400">Response within 2-4 hours</p>
                     </div>
                   </motion.div>
                 </div>
@@ -666,20 +666,20 @@ export default function Support() {
                 </h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Monday - Friday</span>
+                    <span className="text-gray-700 dark:text-gray-400">Monday - Friday</span>
                     <span className="text-[color:var(--text)]">9:00 AM - 6:00 PM IST</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Saturday</span>
+                    <span className="text-gray-700 dark:text-gray-400">Saturday</span>
                     <span className="text-[color:var(--text)]">10:00 AM - 4:00 PM IST</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Sunday</span>
+                    <span className="text-gray-700 dark:text-gray-400">Sunday</span>
                     <span className="text-red-600 dark:text-red-400">Closed</span>
                   </div>
                   <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                     <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">Emergency Support</span>
+                      <span className="text-gray-700 dark:text-gray-400">Emergency Support</span>
                       <span className="text-green-600 dark:text-green-400">24/7 Available</span>
                     </div>
                   </div>
@@ -693,7 +693,7 @@ export default function Support() {
               
               <form className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300 mb-1">
                     Your Name
                   </label>
                   <input
@@ -769,7 +769,7 @@ export default function Support() {
                   <h2 className="text-xl font-semibold text-[color:var(--text)]">Create Support Ticket</h2>
                   <button
                     onClick={() => setShowTicketModal(false)}
-                    className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
+                    className="text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
                   >
                     <X className="w-6 h-6" />
                   </button>
@@ -849,7 +849,7 @@ export default function Support() {
                       onChange={(e) => setNewTicket({ ...newTicket, files: e.target.files || undefined })}
                       className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-[color:var(--text)]"
                     />
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                    <p className="text-sm text-gray-700 dark:text-gray-400 mt-1">
                       Max: 5 files, 10MB each. Supported: JPG, PNG, PDF, DOC, TXT
                     </p>
                   </div>

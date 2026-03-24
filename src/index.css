@@ -17,7 +17,7 @@
   --panel-soft: rgba(255,255,255,.55);
   --border: rgba(2,6,23,.10);
   --text: #0f172a;
-  --muted: rgba(15,23,42,.65);
+  --muted: rgba(15,23,42,.78);
   --accent-1: #7c3aed; /* violet */
   --accent-2: #ec4899; /* fuchsia */
   --shadow: 0 18px 50px rgba(2,6,23,.12);
@@ -30,7 +30,7 @@
   --dash-card-soft: rgba(255,255,255,.60);
   --dash-border: rgba(2,6,23,.10);
   --dash-text: #0b1220;
-  --dash-muted: rgba(2,6,23,.62);
+  --dash-muted: rgba(2,6,23,.74);
   --dash-accent: #50163f; /* neon green */
   --dash-accent-2: #ec4899;; /* lime */
 }
@@ -822,9 +822,9 @@ html.dark .dash-sidebar{
   --theme-surface-muted: #f1f5f9;
   --theme-field: #ffffff;
   --theme-field-disabled: #f3f4f6;
-  --theme-field-border: rgba(15,23,42,.14);
+  --theme-field-border: rgba(15,23,42,.18);
   --theme-text-strong: #0f172a;
-  --theme-text-soft: #475569;
+  --theme-text-soft: #334155;
 }
 
 .dark{
@@ -1012,4 +1012,193 @@ html.dark .support-card-copy{
 
 html.dark .support-card-meta{
   color: rgba(255,255,255,.64);
+}
+
+/* Global light-theme contrast overrides for reused Tailwind utilities */
+html:not(.dark) .text-gray-300{
+  color: #64748b !important;
+}
+
+html:not(.dark) .text-gray-400{
+  color: #64748b !important;
+}
+
+html:not(.dark) .text-gray-500{
+  color: #475569 !important;
+}
+
+html:not(.dark) .text-gray-600{
+  color: #334155 !important;
+}
+
+html:not(.dark) .text-gray-700{
+  color: #1f2937 !important;
+}
+
+html:not(.dark) .text-gray-800{
+  color: #111827 !important;
+}
+
+html:not(.dark) .text-gray-900{
+  color: #020617 !important;
+}
+
+html:not(.dark) .text-slate-100{
+  color: #0f172a !important;
+}
+
+html:not(.dark) .text-slate-200,
+html:not(.dark) .text-slate-300{
+  color: #334155 !important;
+}
+
+html:not(.dark) .text-slate-400,
+html:not(.dark) .text-slate-500{
+  color: #475569 !important;
+}
+
+html:not(.dark) .text-slate-600{
+  color: #334155 !important;
+}
+
+html:not(.dark) .text-white\/60,
+html:not(.dark) .text-white\/70,
+html:not(.dark) .text-white\/75,
+html:not(.dark) .text-white\/80,
+html:not(.dark) .text-white\/90{
+  color: rgba(15,23,42,.72) !important;
+}
+
+html:not(.dark) .placeholder\:text-gray-400::placeholder,
+html:not(.dark) .placeholder\:text-gray-500::placeholder,
+html:not(.dark) .placeholder\:text-gray-600::placeholder{
+  color: #64748b !important;
+  opacity: 1;
+}
+
+html:not(.dark) .bg-gray-50,
+html:not(.dark) .bg-gray-100{
+  background-color: #ffffff !important;
+}
+
+html:not(.dark) .bg-white\/5{
+  background-color: rgba(15,23,42,.04) !important;
+}
+
+html:not(.dark) .bg-white\/10{
+  background-color: rgba(15,23,42,.08) !important;
+}
+
+html:not(.dark) .bg-white\/15{
+  background-color: rgba(15,23,42,.12) !important;
+}
+
+html:not(.dark) .border-white\/10{
+  border-color: rgba(15,23,42,.10) !important;
+}
+
+html:not(.dark) .border-white\/15{
+  border-color: rgba(15,23,42,.14) !important;
+}
+
+html:not(.dark) .border-white\/20{
+  border-color: rgba(15,23,42,.18) !important;
+}
+
+html:not(.dark) .hover\:bg-white\/5:hover{
+  background-color: rgba(15,23,42,.04) !important;
+}
+
+html:not(.dark) .hover\:bg-white\/10:hover{
+  background-color: rgba(15,23,42,.08) !important;
+}
+
+html:not(.dark) .hover\:bg-white\/15:hover{
+  background-color: rgba(15,23,42,.12) !important;
+}
+
+html:not(.dark) .hover\:text-gray-600:hover{
+  color: #334155 !important;
+}
+
+html:not(.dark) .hover\:text-gray-700:hover,
+html:not(.dark) .hover\:text-gray-900:hover,
+html:not(.dark) .hover\:text-black:hover{
+  color: #0f172a !important;
+}
+
+/* Light-theme readability for soft accent text used on white/tinted cards */
+html:not(.dark) .text-amber-300,
+html:not(.dark) .text-amber-400{
+  color: #92400e !important;
+}
+
+html:not(.dark) .text-amber-500,
+html:not(.dark) .text-amber-600{
+  color: #b45309 !important;
+}
+
+html:not(.dark) .text-amber-700,
+html:not(.dark) .text-amber-800{
+  color: #78350f !important;
+}
+
+html:not(.dark) .text-amber-900{
+  color: #451a03 !important;
+}
+
+html:not(.dark) .text-yellow-300,
+html:not(.dark) .text-yellow-400{
+  color: #a16207 !important;
+}
+
+html:not(.dark) .text-yellow-500,
+html:not(.dark) .text-yellow-600{
+  color: #854d0e !important;
+}
+
+html:not(.dark) .text-blue-300,
+html:not(.dark) .text-blue-400{
+  color: #1d4ed8 !important;
+}
+
+html:not(.dark) .text-green-300,
+html:not(.dark) .text-green-400{
+  color: #15803d !important;
+}
+
+html:not(.dark) .text-purple-300,
+html:not(.dark) .text-purple-400{
+  color: #7e22ce !important;
+}
+
+html:not(.dark) .text-red-300,
+html:not(.dark) .text-red-400{
+  color: #dc2626 !important;
+}
+
+html:not(.dark) .bg-amber-50\/90,
+html:not(.dark) .bg-amber-50\/95{
+  background-color: rgba(255,251,235,.96) !important;
+}
+
+html:not(.dark) .border-amber-300{
+  border-color: #fbbf24 !important;
+}
+
+html:not(.dark) label{
+  color: #334155;
+}
+
+html:not(.dark) input,
+html:not(.dark) textarea,
+html:not(.dark) select{
+  color: #0f172a;
+}
+
+html:not(.dark) input::placeholder,
+html:not(.dark) textarea::placeholder,
+html:not(.dark) select::placeholder{
+  color: #64748b;
+  opacity: 1;
 }

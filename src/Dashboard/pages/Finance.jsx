@@ -254,12 +254,12 @@ export default function Finance() {
           </div>
 
           {/* Withdrawal Limit Notice */}
-          <div className="rounded-lg p-4 border bg-amber-50/90 border-amber-300 dark:bg-amber-900/20 dark:border-amber-700/50">
+          <div className="rounded-lg border border-amber-200 bg-amber-50/95 p-4 dark:border-amber-700/10 dark:bg-amber-200/20">
             <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5" />
+              <AlertCircle className="mt-0.5 h-5 w-5 text-amber-700 dark:text-amber-400" />
               <div>
-                <h3 className="font-medium text-amber-800 dark:text-amber-200">Withdrawal Limit</h3>
-                <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
+                <h3 className="font-medium text-amber-900 dark:text-amber-200">Withdrawal Limit</h3>
+                <p className="mt-1 text-sm text-amber-800 dark:text-amber-300">
                   Maximum withdrawal amount is limited to ${maxWithdrawal} per transaction for security purposes.
                 </p>
               </div>
