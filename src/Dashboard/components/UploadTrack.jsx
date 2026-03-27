@@ -154,6 +154,23 @@ export function UploadTrack({
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState(undefined);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const validationOrder = [
+    'title',
+    'label',
+    'primaryArtist',
+    'lyricist',
+    'composer',
+    'genre',
+    'lyricsLanguage',
+    'pLine',
+    'cLine',
+    'titleLanguage',
+    'productionYear',
+    'releaseDate',
+    'audioFile',
+    'coverArt',
+    'agreeToTerms',
+  ];
 
   // Load saved data on mount
   useEffect(() => {
@@ -203,6 +220,28 @@ export function UploadTrack({
 
     if (errors[fileType]) {
       setErrors((prev) => ({ ...prev, [fileType]: '' }));
+    }
+  };
+
+  const scrollToField = (fieldName) => {
+    if (typeof document === 'undefined' || !fieldName) return;
+
+    const wrapper = document.querySelector(`[data-field-wrapper="${fieldName}"]`);
+    const control = document.querySelector(`[name="${fieldName}"]`);
+    const scrollTarget = wrapper || control;
+    const focusTarget =
+      control && control.offsetParent !== null
+        ? control
+        : wrapper;
+
+    if (!scrollTarget) return;
+
+    scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    if (focusTarget && typeof focusTarget.focus === 'function') {
+      window.setTimeout(() => {
+        focusTarget.focus({ preventScroll: true });
+      }, 250);
     }
   };
 
@@ -276,18 +315,18 @@ export function UploadTrack({
     if (!formData.productionYear.trim()) newErrors.productionYear = 'Production Year is required';
     if (!formData.releaseDate.trim()) newErrors.releaseDate = 'Release Date is required';
 
-    if (!formData.audioFile) {
+    if (mode !== "edit" && !formData.audioFile) {
       newErrors.audioFile = 'Audio file is required';
-    } else {
+    } else if (formData.audioFile) {
       const audioFormats = ['audio/wav', 'audio/mpeg', 'audio/mp3'];
       if (!audioFormats.includes(formData.audioFile.type)) {
         newErrors.audioFile = 'Audio file must be WAV or MP3 format';
       }
     }
 
-    if (!formData.coverArt) {
+    if (mode !== "edit" && !formData.coverArt) {
       newErrors.coverArt = 'Cover art is required';
-    } else {
+    } else if (formData.coverArt) {
       const imageFormats = ['image/jpeg', 'image/png'];
       if (!imageFormats.includes(formData.coverArt.type)) {
         newErrors.coverArt = 'Cover art must be JPEG or PNG format';
@@ -298,14 +337,25 @@ export function UploadTrack({
       newErrors.agreeToTerms = 'You must agree to the Terms & Conditions';
     }
 
+    const firstErrorField = validationOrder.find((field) => newErrors[field]) || null;
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return {
+      isValid: Object.keys(newErrors).length === 0,
+      firstErrorField,
+    };
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    if (!validateForm()) return;
+
+    const validation = validateForm();
+
+    if (!validation.isValid) {
+      window.requestAnimationFrame(() => {
+        scrollToField(validation.firstErrorField);
+      });
+      return;
+    }
   
     setIsSubmitting(true);
     setErrors((prev) => ({ ...prev, submit: "" }));
@@ -811,6 +861,8 @@ export function UploadTrack({
                     {mode === "edit" && <span className="text-xs text-[color:var(--muted)] text-[color:var(--muted)] ml-2">(Cannot edit Track ID: {serverPublicId}) </span>}
                   </label>
                   <div
+                    data-field-wrapper="audioFile"
+                    tabIndex={-1}
                     className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
                       errors.audioFile
                         ? 'border-red-300 bg-red-50 dark:bg-red-900/20'
@@ -840,6 +892,8 @@ export function UploadTrack({
                     Upload Cover Art
                   </label>
                   <div
+                    data-field-wrapper="coverArt"
+                    tabIndex={-1}
                     className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
                       errors.coverArt
                         ? 'border-red-300 bg-red-50 dark:bg-red-900/20'
@@ -1012,7 +1066,15 @@ export function UploadTrack({
 
             {/* Terms Agreement */}
      <section className="mt-6">
-  <div className="w-full bg-[color:var(--panel)] border border-[color:var(--border)] rounded-lg px-5 py-3 flex items-center justify-between">
+  <div
+    data-field-wrapper="agreeToTerms"
+    tabIndex={-1}
+    className={`w-full bg-[color:var(--panel)] border rounded-lg px-5 py-3 flex items-center justify-between ${
+      errors.agreeToTerms
+        ? 'border-red-500 bg-red-50 dark:bg-red-900/10'
+        : 'border-[color:var(--border)]'
+    }`}
+  >
     <span className="text-sm text-[color:var(--text)]">
       By submitting, you agree to our{' '}
       <a

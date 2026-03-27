@@ -500,7 +500,7 @@ export default function Support() {
                       <resource.icon className={`w-5 h-5 text-${resource.color}-600 dark:text-${resource.color}-400`} />
                     </div>
                     <span className="font-medium text-[color:var(--text)]">{resource.title}</span>
-                    <ExternalLink className="w-4 h-4 text-gray-600 dark:text-gray-400 ml-auto" />
+                    <ExternalLink className="w-4 h-4 text-gray-400 ml-auto" />
                   </motion.div>
                 ))}
               </div>
@@ -515,7 +515,7 @@ export default function Support() {
             <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
               <div className="flex gap-4 flex-1">
                 <div className="relative flex-1 max-w-md">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600 dark:text-gray-400 w-4 h-4" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <input
                     type="text"
                     placeholder="Search tickets..."
@@ -607,7 +607,7 @@ export default function Support() {
             {/* Search and Filter */}
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600 dark:text-gray-400 w-4 h-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
                   type="text"
                   placeholder="Search FAQs..."
@@ -872,7 +872,7 @@ export default function Support() {
                   <h2 className="text-xl font-semibold text-[color:var(--text)]">Create Support Ticket</h2>
                   <button
                     onClick={() => setShowTicketModal(false)}
-                    className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
+                    className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                   >
                     <X className="w-6 h-6" />
                   </button>
@@ -952,7 +952,7 @@ export default function Support() {
                       onChange={(e) => setNewTicket({ ...newTicket, files: e.target.files || undefined })}
                       className="input-ui w-full px-3 py-2"
                     />
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                       Max: 5 files, 10MB each. Supported: JPG, PNG, PDF, DOC, TXT
                     </p>
                   </div>

@@ -164,6 +164,68 @@ html:not(.dark) .marquee-img-white {
 
   .container-page { @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8; }
 
+  .hero-fullscreen{
+    min-height: 100svh;
+    padding-top: clamp(6.75rem, 11vw, 9.25rem);
+    padding-bottom: clamp(3.5rem, 7vw, 5.5rem);
+    display: flex;
+    align-items: center;
+  }
+
+  .hero-grid{
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1.02fr) minmax(320px, 0.98fr);
+    gap: clamp(2.5rem, 4vw, 5.5rem);
+    align-items: center;
+  }
+
+  .hero-copy-block{
+    max-width: 42rem;
+  }
+
+  .hero-kicker{
+    min-height: 2.4rem;
+    padding: 0.55rem 1rem;
+    font-size: 0.74rem;
+    letter-spacing: 0.06em;
+  }
+
+  .hero-title{
+    font-size: clamp(3.35rem, 7vw, 6.25rem);
+    line-height: 0.96;
+    letter-spacing: -0.055em;
+    text-wrap: balance;
+  }
+
+  .hero-description{
+    max-width: 38rem;
+    font-size: clamp(1.02rem, 1.25vw, 1.22rem);
+    line-height: 1.75;
+  }
+
+  .hero-cta-row .btn-primary,
+  .hero-cta-row .btn-ghost{
+    min-height: 3.6rem;
+    padding-inline: 1.45rem;
+    font-size: 1rem;
+  }
+
+  .hero-stat-pill{
+    min-height: 3rem;
+    padding: 0.72rem 1rem;
+  }
+
+  .hero-media-shell{
+    width: min(100%, 40rem);
+    margin-left: auto;
+  }
+
+  .hero-platform-pill{
+    font-size: 0.74rem;
+    padding: 0.46rem 0.78rem;
+  }
+
   .glass{
     background: var(--panel);
     border: 1px solid var(--border);
@@ -247,6 +309,46 @@ html:not(.dark) .marquee-img-white {
   }
   .dash-chip{ border: 1px solid var(--dash-border); background: rgba(255,255,255,.06); }
   .dash-nav-active{ background: rgba(34,197,94,.16); border: 1px solid rgba(34,197,94,.26); }
+}
+
+@media (max-width: 1023px) {
+  .hero-fullscreen{
+    min-height: auto;
+    padding-top: clamp(6.5rem, 15vw, 8rem);
+    padding-bottom: 3rem;
+    align-items: flex-start;
+  }
+
+  .hero-grid{
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.5rem;
+  }
+
+  .hero-copy-block{
+    max-width: 100%;
+  }
+
+  .hero-media-shell{
+    width: min(100%, 46rem);
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-title{
+    font-size: clamp(2.65rem, 12vw, 4.3rem);
+    line-height: 1;
+  }
+
+  .hero-description{
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .hero-kicker{
+    font-size: 0.69rem;
+    letter-spacing: 0.04em;
+  }
 }
 
 /* ---------------------------

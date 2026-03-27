@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { Play, Music2, BarChart3, Globe2 } from "lucide-react";
-import Marquee from "../components/Marquee";
 
 function EqualizerOverlay() {
   const bars = [10, 16, 8, 18, 12, 20, 9, 14, 7, 17];
@@ -83,19 +82,19 @@ export default function Hero() {
       {/* Gradient veil */}
       <div className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(180deg,var(--heroShadeTop),var(--heroShadeMid),var(--heroShadeBottom))" }} />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="container-page hero-fullscreen relative">
+        <div className="hero-grid">
           {/* LEFT: CONTENT */}
           <motion.div
             initial="hidden"
             whileInView="show"
             viewport={{ once: true }}
             transition={{ staggerChildren: 0.12 }}
-            className="order-2 lg:order-1 space-y-6"
+            className="hero-copy-block order-1 space-y-6 text-center lg:space-y-7 lg:text-left"
           >
             <motion.div
               variants={fadeUp}
-              className="inline-flex items-center gap-2 px-4 py-1 rounded-full glass-soft text-xs"
+              className="hero-kicker mx-auto inline-flex items-center gap-2 rounded-full glass-soft lg:mx-0"
             >
               <span
                 className="h-1.5 w-1.5 rounded-full animate-pulse"
@@ -107,7 +106,7 @@ export default function Hero() {
             {/* Shine heading */}
             <motion.h1
               variants={fadeUp}
-              className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight"
+              className="hero-title font-extrabold"
             >
               <span className="block text-[color:var(--text)]/90">Unlimited</span>
 
@@ -129,7 +128,7 @@ export default function Hero() {
 
             <motion.p
               variants={fadeUp}
-              className="max-w-xl text-sm sm:text-base leading-relaxed"
+              className="hero-description mx-auto lg:mx-0"
               style={{ color: "var(--muted)" }}
             >
               Upload once, auto-deliver to every major platform. Track royalties,
@@ -139,11 +138,11 @@ export default function Hero() {
 
             <motion.div
               variants={fadeUp}
-              className="flex flex-wrap items-center gap-3"
+              className="hero-cta-row flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:justify-center lg:justify-start"
             >
-              <a href="/cms">
+              <a href="/cms" className="w-full sm:w-auto">
                 <button
-                  className="btn-primary relative overflow-hidden"
+                  className="btn-primary relative w-full overflow-hidden sm:w-auto"
                   style={{
                     boxShadow:
                       "0 12px 50px rgba(124,58,237,.25), 0 0 0 1px rgba(255,255,255,.06)",
@@ -164,8 +163,9 @@ export default function Hero() {
                 href="https://youtube.com/@silentmusicgroup?si=QwAFnIP6TKb3Pzlb"
                 target="_blank"
                 rel="noopener noreferrer"
+                className="w-full sm:w-auto"
               >
-                <button className="btn-ghost flex items-center gap-2">
+                <button className="btn-ghost flex w-full items-center justify-center gap-2 sm:w-auto">
                   <Play className="w-4 h-4" />
                   Watch Demo
                 </button>
@@ -173,7 +173,7 @@ export default function Hero() {
             </motion.div>
 
             {/* SMALL STAT ROW */}
-            <motion.div variants={fadeUp} className="flex flex-wrap gap-3 pt-2">
+            <motion.div variants={fadeUp} className="flex flex-wrap justify-center gap-3 pt-2 lg:justify-start">
               {[
                 { icon: <Globe2 className="w-4 h-4" />, t: "190+ Countries" },
                 { icon: <Music2 className="w-4 h-4" />, t: "150+ Platforms" },
@@ -181,7 +181,7 @@ export default function Hero() {
               ].map((x) => (
                 <div
                   key={x.t}
-                  className="glass-soft px-3 py-2 rounded-xl text-xs flex items-center gap-2"
+                  className="hero-stat-pill glass-soft flex items-center gap-2 rounded-xl text-xs sm:text-sm"
                   style={{ border: "1px solid var(--dash-border)" }}
                 >
                   <span style={{ color: "var(--accent-2)" }}>{x.icon}</span>
@@ -197,9 +197,9 @@ export default function Hero() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className="order-1 lg:order-2 relative"
+            className="order-2 relative"
           >
-            <div className="relative glass p-3 sm:p-4 rounded-3xl overflow-hidden">
+            <div className="hero-media-shell relative glass p-3 sm:p-4 rounded-[2rem] overflow-hidden">
               {/* Glow border */}
               <div
                 className="pointer-events-none absolute -inset-1 rounded-3xl opacity-50 blur-2xl"
@@ -209,7 +209,7 @@ export default function Hero() {
                 }}
               />
 
-              <div className="w-full aspect-[16/10] overflow-hidden rounded-2xl">
+              <div className="w-full aspect-[16/10] overflow-hidden rounded-[1.55rem]">
                 {/*
                 <iframe
                   className="w-full h-full"
@@ -230,13 +230,13 @@ export default function Hero() {
 
 
               {/* Platform chips + hover lift */}
-              <div className="mt-4 flex flex-wrap gap-2">
+              <div className="mt-4 flex flex-wrap justify-center gap-2 lg:justify-start">
                 {["Spotify", "Apple Music", "JioSaavn", "Gaana", "YouTube Music"].map(
                   (p) => (
                     <motion.span
                       key={p}
                       whileHover={{ y: -2, scale: 1.02 }}
-                      className="px-3 py-1 rounded-full text-[11px] glass cursor-default"
+                      className="hero-platform-pill glass cursor-default rounded-full"
                       style={{ border: "1px solid var(--dash-border)" }}
                     >
                       {p}
