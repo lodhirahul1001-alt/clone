@@ -28,7 +28,7 @@ export default function Navbar() {
       await dispatch(logOutUserApi());
     } finally {
       dispatch(removeUser(null));
-      navigate("/");
+      navigate("/", { replace: true });
     }
   };
 

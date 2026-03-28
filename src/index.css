@@ -33,6 +33,9 @@
   --dash-muted: rgba(2,6,23,.74);
   --dash-accent: #50163f; /* neon green */
   --dash-accent-2: #ec4899;; /* lime */
+  --scrollbar-track: rgba(15,23,42,.08);
+  --scrollbar-thumb: rgba(88,28,135,.45);
+  --scrollbar-thumb-hover: rgba(88,28,135,.62);
 }
 
 .dark{
@@ -68,6 +71,9 @@
   --dash-muted: rgba(255,255,255,.62);
   --dash-accent: #1713cf;
   --dash-accent-2: #ce0dbe;
+  --scrollbar-track: rgba(255,255,255,.06);
+  --scrollbar-thumb: rgba(168,85,247,.42);
+  --scrollbar-thumb-hover: rgba(236,72,153,.55);
 }
 
 /* ---------------------------
@@ -82,8 +88,37 @@
   }
   #root { min-height: 100vh; overflow-x: hidden; }
   body { overflow-x: hidden; }
+  html,
+  body {
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  }
 
   h1, h2, h3, h4, h5, h6 { @apply font-sans; }
+}
+
+*::-webkit-scrollbar{
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track{
+  background: var(--scrollbar-track);
+}
+
+*::-webkit-scrollbar-thumb{
+  background: var(--scrollbar-thumb);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-thumb:hover{
+  background: var(--scrollbar-thumb-hover);
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-corner{
+  background: var(--scrollbar-track);
 }
 /* FULL WIDTH STRIP */
 .marquee-strip {
@@ -576,7 +611,7 @@ html:not(.dark) .marquee-img-white {
   color: var(--muted);
 }
 
-.dash-form input,
+.dash-form input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
 .dash-form select,
 .dash-form textarea{
   width: 100%;
@@ -604,16 +639,68 @@ html.dark .dash-select-themed option{
   background-color: #0b1020;
   color: #e5e7eb;
 }
-.dash-form input::placeholder,
+.dash-form input:not([type="checkbox"]):not([type="radio"]):not([type="file"])::placeholder,
 .dash-form textarea::placeholder{
   color: var(--muted);
 }
-.dash-form input:focus,
+.dash-form input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):focus,
 .dash-form select:focus,
 .dash-form textarea:focus{
   box-shadow: 0 0 0 3px rgba(124,58,237,.22);
   border-color: rgba(124,58,237,.45);
 }
+
+/* UploadTrack - Stores section fixed sizing (responsive) */
+.upload-track-stores-panel{
+  min-height: 250px;
+}
+
+.upload-track-stores-track{
+  height: 170px;
+}
+
+.upload-track-stores-row{
+  min-height: 80px;
+}
+
+.upload-track-store-btn{
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-track-store-logo{
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+
+@media (min-width: 640px){
+  .upload-track-stores-panel{
+    min-height: 280px;
+  }
+
+  .upload-track-stores-track{
+    height: 190px;
+  }
+
+  .upload-track-stores-row{
+    min-height: 96px;
+  }
+
+  .upload-track-store-btn{
+    width: 80px;
+    height: 80px;
+  }
+
+  .upload-track-store-logo{
+    width: 64px;
+    height: 64px;
+  }
+}
+
 .dash-pill{
   display:inline-flex;
   align-items:center;

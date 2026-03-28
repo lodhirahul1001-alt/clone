@@ -130,7 +130,7 @@ const menuItems = [
   try {
     await dispatch(logOutUserApi());  // call API first
     dispatch(removeUser(null));       // then clear redux
-    navigate("/");
+    navigate("/", { replace: true });
   } catch (e) {
     console.log("logout error", e);
   }

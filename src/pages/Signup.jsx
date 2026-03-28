@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router";
 import { fetchRegisterApi } from "../features/actions/AuthAction";
 import { Mail, User, Lock, Eye, EyeOff } from "lucide-react";
+import { getGmailValidationError, normalizeEmail } from "../utils/emailValidation";
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
@@ -64,7 +65,10 @@ export default function Signup() {
                   className="input-ui pl-11"
                   placeholder="Email"
                   type="email"
-                  {...register("email", { required: "Email is required" })}
+                  {...register("email", {
+                    setValueAs: normalizeEmail,
+                    validate: (value) => getGmailValidationError(value) || true,
+                  })}
                 />
               </div>
               {errors.email && <p className="mt-1 text-sm text-red-400">{errors.email.message}</p>}

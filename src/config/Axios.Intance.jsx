@@ -37,7 +37,7 @@ AxiosIntance.interceptors.response.use(
 
       // Agar CMS ke andar ho to home pe bhej do
       if (window.location.pathname.startsWith("/cms")) {
-        window.location.href = "/";
+        window.location.replace("/");
       }
     }
 

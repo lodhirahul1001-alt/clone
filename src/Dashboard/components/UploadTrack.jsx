@@ -14,12 +14,30 @@ import YouTube from 'react-youtube';
 export function UploadTrack({
   onClose,
   view = "modal",          // "modal" | "page"
-  mode = "create",         // "create" | "edit"
+  mode = "create",         // "create" | "edit" | "view"
+  readOnly = false,
   initialTrack = null,      // track object from backend when editing
   onSuccess,                // callback to refresh list
 }) {
   const navigate = useNavigate();
   const isModal = view === "modal";
+  const isEditMode = mode === "edit";
+  const isReadOnly = readOnly || mode === "view";
+  const isExistingTrackMode = isEditMode || isReadOnly;
+  const headerTitle = isReadOnly
+    ? "Release Details"
+    : isEditMode
+      ? "Edit Track Details"
+      : "Upload New Track";
+  const headerDescription = isReadOnly
+    ? "This release has already been approved. You can review the details, but editing is locked."
+    : isEditMode
+      ? "Update the editable details for this pending release."
+      : "Distribute your music to all major platforms - All data automatically saved";
+  const submitButtonLabel = isEditMode ? "Save Changes" : "Submit Track & Save Data";
+  const submittingButtonLabel = isEditMode ? "Saving Changes..." : "Uploading & Saving All Data...";
+  const formId = isModal ? "upload-track-modal-form" : "upload-track-page-form";
+  const [coverArtPreviewUrl, setCoverArtPreviewUrl] = useState("");
 
   // Safe close handler (fixes cases where close/cancel did nothing)
   const handleClose = () => {
@@ -108,8 +126,21 @@ export function UploadTrack({
   };
 // (removed duplicate navigate/exit handler)
 
+  const getExistingCoverArtUrl = (track) => {
+    const candidates = [
+      track?.coverArtUrl,
+      track?.coverArt,
+      track?.artwork,
+      track?.albumArt,
+      track?.image,
+      track?.thumbnail,
+    ];
+
+    return candidates.find((value) => typeof value === "string" && value.trim()) || "";
+  };
+
   useEffect(() => {
-    if (mode === "edit" && initialTrack) {
+    if (isExistingTrackMode && initialTrack) {
       setFormData((prev) => ({
         ...prev,
         title: initialTrack.title || "",
@@ -145,7 +176,24 @@ export function UploadTrack({
       }));
       setServerPublicId(initialTrack.publicId || "");
     }
-  }, [mode, initialTrack]);
+  }, [initialTrack, isExistingTrackMode]);
+
+  useEffect(() => {
+    if (formData.coverArt instanceof File) {
+      const previewUrl = URL.createObjectURL(formData.coverArt);
+      setCoverArtPreviewUrl(previewUrl);
+
+      return () => URL.revokeObjectURL(previewUrl);
+    }
+
+    if (isExistingTrackMode && initialTrack) {
+      setCoverArtPreviewUrl(getExistingCoverArtUrl(initialTrack));
+      return undefined;
+    }
+
+    setCoverArtPreviewUrl("");
+    return undefined;
+  }, [formData.coverArt, initialTrack, isExistingTrackMode]);
   
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -174,15 +222,19 @@ export function UploadTrack({
 
   // Load saved data on mount
   useEffect(() => {
+    if (isExistingTrackMode) return;
+
     const savedData = getAutoFillData();
     if (savedData && Object.keys(savedData).length > 0) {
       setFormData((prev) => ({ ...prev, ...savedData }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isExistingTrackMode]);
 
   // Auto-save when form changes
   useEffect(() => {
+    if (isReadOnly) return undefined;
+
     const timeoutId = setTimeout(() => {
       if (hasUnsavedChanges) {
         setIsSaving(true);
@@ -196,9 +248,11 @@ export function UploadTrack({
     }, 1000);
 
     return () => clearTimeout(timeoutId);
-  }, [formData, hasUnsavedChanges, saveFormData]);
+  }, [formData, hasUnsavedChanges, isReadOnly, saveFormData]);
 
   const handleInputChange = (e) => {
+    if (isReadOnly) return;
+
     const { name, value, type, checked } = e.target;
 
     setFormData((prev) => ({
@@ -214,6 +268,8 @@ export function UploadTrack({
   };
 
   const handleFileChange = (e, fileType) => {
+    if (isReadOnly) return;
+
     const file = e.target.files?.[0] || null;
     setFormData((prev) => ({ ...prev, [fileType]: file }));
     setHasUnsavedChanges(true);
@@ -282,6 +338,8 @@ export function UploadTrack({
   ];
 
   const handleStoreToggle = (storeName) => {
+    if (isReadOnly) return;
+
     setFormData((prev) => {
       const exists = prev.stores.includes(storeName);
       return {
@@ -347,6 +405,10 @@ export function UploadTrack({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (isReadOnly) {
+      return;
+    }
 
     const validation = validateForm();
 
@@ -469,10 +531,10 @@ export function UploadTrack({
       <div
         onClick={(e) => e.stopPropagation()}
         className={
-          (isModal ? "relative h-[100dvh] w-full overflow-y-auto " : "w-full overflow-x-hidden ") +
+          (isModal ? "relative h-[100dvh] w-full overflow-x-hidden overflow-y-auto " : "w-full overflow-x-hidden ") +
           (isModal
             ? "dash-card rounded-none w-full max-w-none mx-0 my-0"
-            : "dash-card rounded-2xl w-full max-w-6xl mx-auto my-6")
+            : "dash-card rounded-2xl w-full max-w-none mx-0 my-0")
         }
         style={isModal ? { maxWidth: "100%", margin: 0, borderRadius: 0, height: "100dvh" } : undefined}
       >
@@ -481,7 +543,7 @@ export function UploadTrack({
         <div
           className={
             (isModal ? "sticky top-0 z-50 " : "") +
-            "dash-card-soft border-b border-black/10 flex items-center justify-between gap-3 py-3 px-4"
+            "dash-card-soft border-b border-black/10 flex items-center justify-between gap-3 py-3 px-4 sm:px-5"
           }
         >
 
@@ -491,9 +553,9 @@ export function UploadTrack({
             
             <Music className="w-8 h-8 text-blue-600" />
             <div>
-              <h1 className="text-2xl font-bold  text-[color:var(--text)]">Upload New Track</h1>
+              <h1 className="text-xl sm:text-2xl font-bold text-[color:var(--text)]">{headerTitle}</h1>
               <p className="text-[color:var(--muted)] text-[color:var(--muted)]">
-                Distribute your music to all major platforms - All data automatically saved
+                {headerDescription}
               </p>
             </div>
           </div>
@@ -540,22 +602,32 @@ export function UploadTrack({
 
 
         {/* Platforms marquee (same as marketing site) */}
-        <div className="px-4 sm:px-6 pt-2">
+        <div className="px-4 sm:px-5 lg:px-6 pt-2">
           <div className=" ">
-            <Marquee />
+            {/* <Marquee /> */}
           </div>
         </div>
 
         {/* Form */}
-<div className="p-6 pt-2 sm:pt-02">
-          <form onSubmit={handleSubmit} className="space-y-8 dash-form">
+<div className="p-4 sm:p-5 lg:p-6 pt-2">
+          <form id={formId} onSubmit={handleSubmit} className="space-y-8 dash-form">
+            {isReadOnly ? (
+              <div className="rounded-xl border border-emerald-500/25 bg-emerald-500/10 px-4 py-3 text-sm text-[color:var(--text)]">
+                This song has already been approved by admin, so the details are view-only now.
+              </div>
+            ) : null}
+
+            <fieldset
+              disabled={isReadOnly || isSubmitting}
+              className={isReadOnly ? "space-y-6 lg:space-y-8 opacity-90" : "space-y-6 lg:space-y-8"}
+            >
             {/* Track Details */}
             <section>
               <h2 className="text-xl font-semibold mb-4 pb-2" style={{ borderBottom: "1px solid var(--border)" }}>
                 Track Details
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-6 items-start">
+                <div className="min-w-0">
                   <label className="block text-sm font-medium text-[color:var(--text)] text-[color:var(--muted)] mb-2">Title *</label>
                   <input
                     type="text"
@@ -585,7 +657,7 @@ export function UploadTrack({
                   {errors.label && <p className="text-red-500 text-sm mt-1">{errors.label}</p>}
                 </div>
 
-                <div className="md:col-span-2">
+                <div className="lg:col-span-2">
                   <label className="block text-sm font-medium text-[color:var(--text)] text-[color:var(--muted)] mb-2">UPC/EAN</label>
                   <input
                     type="text"
@@ -604,8 +676,8 @@ export function UploadTrack({
               <h2 className="text-xl font-semibold text-[color:var(--text)] dark:text-[color:var(--text)] mb-4 border-b border-[color:var(--border)] dark:border-[color:var(--border)] pb-2">
                 Artists & Credits
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div> 
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-6 items-start">
+                <div className="min-w-0">
                   <label className="block text-sm font-medium text-[color:var(--text)] text-[color:var(--muted)] mb-2">Primary Artist *</label>
                   <input
                     type="text"
@@ -693,7 +765,7 @@ export function UploadTrack({
               <h2 className="text-xl font-semibold text-[color:var(--text)] dark:text-[color:var(--text)] mb-4 border-b border-[color:var(--border)] dark:border-[color:var(--border)] pb-2">
                 Track Information
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-6">
                 <div>
                   <label className="block text-sm font-medium text-[color:var(--text)] text-[color:var(--muted)] mb-2">Genre *</label>
                   <select
@@ -764,7 +836,7 @@ export function UploadTrack({
                   {errors.cLine && <p className="text-red-500 text-sm mt-1">{errors.cLine}</p>}
                 </div>
 
-                <div className="md:col-span-2">
+                <div className="lg:col-span-2">
                   <label className="block text-sm font-medium text-[color:var(--text)] text-[color:var(--muted)] mb-2">Title Language *</label>
                   <select
                     name="titleLanguage"
@@ -791,7 +863,7 @@ export function UploadTrack({
               <h2 className="text-xl font-semibold text-[color:var(--text)] dark:text-[color:var(--text)] mb-4 border-b border-[color:var(--border)] dark:border-[color:var(--border)] pb-2">
                 Release Information
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-6">
                 <div>
                   <label className="block text-sm font-medium text-[color:var(--text)] text-[color:var(--muted)] mb-2">Production Year *</label>
                   <input
@@ -823,7 +895,7 @@ export function UploadTrack({
                   {errors.releaseDate && <p className="text-red-500 text-sm mt-1">{errors.releaseDate}</p>}
                 </div>
 
-                <div className="md:col-span-2 flex flex-wrap gap-6">
+                <div className="lg:col-span-2 flex flex-wrap gap-4 sm:gap-6">
                   <label className="flex items-center">
                     <input
                       type="checkbox"
@@ -854,16 +926,16 @@ export function UploadTrack({
               <h2 className="text-xl font-semibold text-[color:var(--text)] dark:text-[color:var(--text)] mb-4 border-b border-[color:var(--border)] dark:border-[color:var(--border)] pb-2">
                 Upload Your Files
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-6">
                 <div>
                   <label className="block text-sm font-medium text-[color:var(--text)] text-[color:var(--muted)] mb-2">
                     Upload Audio File
-                    {mode === "edit" && <span className="text-xs text-[color:var(--muted)] text-[color:var(--muted)] ml-2">(Cannot edit Track ID: {serverPublicId}) </span>}
+                    {isExistingTrackMode && <span className="text-xs text-[color:var(--muted)] text-[color:var(--muted)] ml-2">(Track ID: {serverPublicId}) </span>}
                   </label>
                   <div
                     data-field-wrapper="audioFile"
                     tabIndex={-1}
-                    className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+                    className={`min-h-[190px] border-2 border-dashed rounded-lg p-6 text-center transition-colors flex flex-col items-center justify-center ${
                       errors.audioFile
                         ? 'border-red-300 bg-red-50 dark:bg-red-900/20'
                         : 'border-[color:var(--border)] hover:border-blue-400 border-[color:var(--border)] dark:hover:border-blue-500'
@@ -876,9 +948,9 @@ export function UploadTrack({
                       onChange={(e) => handleFileChange(e, 'audioFile')}
                       className="hidden"
                       id="audioFile"
-                      disabled={mode === "edit"}
+                      disabled={isExistingTrackMode}
                     />
-                    <label htmlFor="audioFile" className="cursor-pointer">
+                    <label htmlFor="audioFile" className="flex cursor-pointer flex-col items-center gap-1">
                       <span className="text-blue-600 hover:text-blue-700 font-medium">Choose audio file</span>
                       <p className="text-sm text-[color:var(--muted)] text-[color:var(--muted)] mt-1">WAV or MP3 format (High quality required)</p>
                     </label>
@@ -887,32 +959,57 @@ export function UploadTrack({
                   {errors.audioFile && <p className="text-red-500 text-sm mt-1">{errors.audioFile}</p>}
                 </div>
 
-                <div>
+                <div className="min-w-0">
                   <label className="block text-sm font-medium text-[color:var(--text)] text-[color:var(--muted)] mb-2">
                     Upload Cover Art
                   </label>
                   <div
                     data-field-wrapper="coverArt"
                     tabIndex={-1}
-                    className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+                    className={`min-h-[190px] border-2 border-dashed rounded-lg p-6 text-center transition-colors flex flex-col items-center justify-center ${
                       errors.coverArt
                         ? 'border-red-300 bg-red-50 dark:bg-red-900/20'
                         : 'border-[color:var(--border)] hover:border-blue-400 border-[color:var(--border)] dark:hover:border-blue-500'
                     }`}
                   >
                     <Image className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                    {coverArtPreviewUrl ? (
+                      <div className="mb-3 flex flex-col items-center gap-2">
+                        <img
+                          src={coverArtPreviewUrl}
+                          alt="Cover art thumbnail"
+                          className="h-20 w-20 rounded-xl object-cover border border-[color:var(--border)] shadow-sm"
+                        />
+                      </div>
+                    ) : null}
                     <input
                       type="file"
                       accept=".jpg,.jpeg,.png,image/jpeg,image/png"
                       onChange={(e) => handleFileChange(e, 'coverArt')}
                       className="hidden"
                       id="coverArt"
+                      disabled={isReadOnly}
                     />
-                    <label htmlFor="coverArt" className="cursor-pointer">
-                      <span className="text-blue-600 hover:text-blue-700 font-medium">Choose cover art</span>
-                      <p className="text-sm text-[color:var(--muted)] text-[color:var(--muted)] mt-1">JPEG or PNG (3000x3000 pixels required)</p>
-                    </label>
-                    {formData.coverArt && <p className="text-sm text-green-600 mt-2">✓ {formData.coverArt.name}</p>}
+                    {isReadOnly ? (
+                      <div className="space-y-1">
+                        <p className="font-medium text-[color:var(--text)]">Cover art preview</p>
+                        <p className="text-sm text-[color:var(--muted)]">
+                          Approved or rejected track me photo change nahi ki ja sakti.
+                        </p>
+                      </div>
+                    ) : (
+                      <label htmlFor="coverArt" className="flex cursor-pointer flex-col items-center gap-1">
+                        <span className="text-blue-600 hover:text-blue-700 font-medium">Choose cover art</span>
+                        <p className="text-sm text-[color:var(--muted)] mt-1">
+                          JPEG or PNG (3000x3000 pixels required)
+                        </p>
+                      </label>
+                    )}
+                    {formData.coverArt ? (
+                      <p className="text-sm text-green-600 mt-2">Selected: {formData.coverArt.name}</p>
+                    ) : coverArtPreviewUrl ? (
+                      <p className="text-sm text-[color:var(--muted)] mt-2">Existing cover art loaded</p>
+                    ) : null}
                   </div>
                   {errors.coverArt && <p className="text-red-500 text-sm mt-1">{errors.coverArt}</p>}
                 </div>
@@ -920,94 +1017,7 @@ export function UploadTrack({
             </section>
 
             {/* Stores */}
-            <section className="mt-6">
-              <h2 className="text-lg font-semibold text-[color:var(--text)] mb-4">
-                Select Stores
-              </h2>
-
-              <div className="relative w-full overflow-hidden bg-[color:var(--panel)] rounded-xl p-4 sm:p-6">
-                <p className="text-sm text-[color:var(--muted)] mb-3">
-                  Choose where this track will be delivered.
-                </p>
-
-                <div className="relative overflow-hidden rounded">
-                  <motion.div
-                    className="flex w-max items-center gap-1 mb-1"
-                    animate={{ x: ['0%', '-50%'] }}
-                    transition={{ duration: 55, repeat: Infinity, ease: 'linear' }}
-                  >
-                    {[...storeOptions, ...storeOptions].map((logo, index) => {
-                      const isSelected = formData.stores.includes(logo.name);
-                      return (
-                        <motion.button
-                          key={`row1-${index}`}
-                          type="button"
-                          onClick={() => handleStoreToggle(logo.name)}
-                          className={`flex-shrink-0 group focus:outline-none ${isSelected ? 'scale-105' : ''}`}
-                          whileHover={{ scale: 1.08, rotate: 3, transition: { duration: 0.2 } }}
-                        >
-                          <img
-                            src={logo.image}
-                            alt={logo.name}
-                            className={`w-16 h-16 sm:w-20 sm:h-20 object-contain transition-all duration-300 ${isSelected ? 'opacity-100 scale-105' : 'opacity-85 group-hover:opacity-100'}`}
-                            loading="lazy"
-                            onError={(e) => {
-                              e.currentTarget.style.display = 'none';
-                              const fallback = e.currentTarget.nextElementSibling;
-                              if (fallback) fallback.style.display = 'flex';
-                            }}
-                          />
-                          <span className="hidden w-16 h-16 sm:w-20 sm:h-20 items-center justify-center text-slate-700 dark:text-white font-bold text-xs sm:text-sm">
-                            {logo.short}
-                          </span>
-                        </motion.button>
-                      );
-                    })}
-                  </motion.div>
-
-                  <motion.div
-                    className="flex w-max items-center gap-1"
-                    animate={{ x: ['-50%', '0%'] }}
-                    transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
-                  >
-                    {[...storeOptions.slice().reverse(), ...storeOptions.slice().reverse()].map((logo, index) => {
-                      const isSelected = formData.stores.includes(logo.name);
-                      return (
-                        <motion.button
-                          key={`row2-${index}`}
-                          type="button"
-                          onClick={() => handleStoreToggle(logo.name)}
-                          className={`flex-shrink-0 group focus:outline-none ${isSelected ? 'scale-105' : ''}`}
-                          whileHover={{ scale: 1.08, rotate: -3, transition: { duration: 0.2 } }}
-                        >
-                          <img
-                            src={logo.image}
-                            alt={logo.name}
-                            className={`w-16 h-16 sm:w-20 sm:h-20 object-contain transition-all duration-300 ${isSelected ? 'opacity-100 scale-105' : 'opacity-85 group-hover:opacity-100'}`}
-                            loading="lazy"
-                            onError={(e) => {
-                              e.currentTarget.style.display = 'none';
-                              const fallback = e.currentTarget.nextElementSibling;
-                              if (fallback) fallback.style.display = 'flex';
-                            }}
-                          />
-                          <span className="hidden w-16 h-16 sm:w-20 sm:h-20 items-center justify-center text-slate-700 dark:text-white font-bold text-xs sm:text-sm">
-                            {logo.short}
-                          </span>
-                        </motion.button>
-                      );
-                    })}
-                  </motion.div>
-
-                  <div className="absolute top-0 left-0 w-16 sm:w-24 h-full bg-gradient-to-r from-[color:var(--panel)] to-transparent pointer-events-none"></div>
-                  <div className="absolute top-0 right-0 w-16 sm:w-24 h-full bg-gradient-to-l from-[color:var(--panel)] to-transparent pointer-events-none"></div>
-                </div>
-
-                <p className="mt-3 text-xs text-[color:var(--muted)]">
-                  Selected: {formData.stores.length > 0 ? formData.stores.join(', ') : 'No store selected'}
-                </p>
-              </div>
-            </section>
+         
 
             {/* Additional Options */}
             <section className="mt-6">
@@ -1016,9 +1026,6 @@ export function UploadTrack({
               </h2>
 
               <div className="space-y-3">
-                <label className="flex items-center justify-between w-full bg-[color:var(--panel)] border border-[color:var(--border)] rounded-lg px-5 py-3 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-       
-
                 <label className="flex items-center justify-between w-full bg-[color:var(--panel)] border border-[color:var(--border)] rounded-lg px-5 py-3 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
                   <div className="flex flex-col">
                     <span className="text-base font-semibold text-[color:var(--text)]">ISRC Generation</span>
@@ -1033,7 +1040,9 @@ export function UploadTrack({
                     className="h-5 w-5 accent-black dark:accent-white border-[color:var(--border)] rounded"
                   />
                 </label>
-                           <div className="flex flex-col">
+
+                <label className="flex items-center justify-between w-full bg-[color:var(--panel)] border border-[color:var(--border)] rounded-lg px-5 py-3 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                  <div className="flex flex-col">
                     <span className="text-base font-semibold text-[color:var(--text)]">YouTube Content ID</span>
                     <span className="text-xs text-[color:var(--muted)]">Enable YouTube Content ID matching</span>
                   </div>
@@ -1110,8 +1119,15 @@ export function UploadTrack({
   )}
 </section>
 
-            {/* Submit */}
-            <div className="text-center pb-6">
+            </fieldset>
+
+            <div
+              className={
+                !isReadOnly
+                  ? "sticky bottom-0 z-20 -mx-6 mt-8 border-t border-[color:var(--border)] bg-[color:var(--panel)]/95 px-6 py-4 backdrop-blur-xl"
+                  : "pb-6"
+              }
+            >
               {errors.submit && (
                 <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
                   <div className="flex items-center">
@@ -1121,28 +1137,37 @@ export function UploadTrack({
                 </div>
               )}
 
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className={`px-8 py-3 rounded-md font-semibold text-[color:var(--text)] transition-all duration-200 ${
-                  isSubmitting
-                    ? 'bg-gray-400 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:scale-105 active:scale-95'
-                }`}
-              >
-                {isSubmitting ? (
-                  <div className="flex items-center gap-2">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                    Uploading & Saving All Data...
-                  </div>
-                ) : (
-                  'Submit Track & Save Data'
-                )}
-              </button>
+              {isReadOnly ? (
+                <p className="text-sm text-[color:var(--muted)] text-center">
+                  Approved releases can be reviewed here, but they can no longer be edited by the user.
+                </p>
+              ) : (
+                <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-xs text-[color:var(--muted)]">
+                    All form data is automatically saved and will be available in Form Data Manager
+                  </p>
 
-              <p className="text-xs text-[color:var(--muted)] text-[color:var(--muted)] mt-2">
-                All form data is automatically saved and will be available in Form Data Manager
-              </p>
+                  <button
+                    type="submit"
+                    form={formId}
+                    disabled={isSubmitting}
+                    className={`w-full sm:w-auto sm:min-w-[220px] px-8 py-3 rounded-md font-semibold text-white transition-all duration-200 ${
+                      isSubmitting
+                        ? 'bg-gray-500 cursor-not-allowed'
+                        : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:scale-[1.02] active:scale-95'
+                    }`}
+                  >
+                    {isSubmitting ? (
+                      <div className="flex items-center justify-center gap-2">
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        {submittingButtonLabel}
+                      </div>
+                    ) : (
+                      submitButtonLabel
+                    )}
+                  </button>
+                </div>
+              )}
             </div>
           </form>
         </div>

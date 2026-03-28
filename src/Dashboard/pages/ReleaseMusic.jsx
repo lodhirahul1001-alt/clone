@@ -1,14 +1,13 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { fetchTracksApi } from "../../apis/TrackApis";
 import { UploadTrack } from "../components/UploadTrack";
-import { Edit2, Search } from "lucide-react";
-import Marquee from "../../components/Marquee";
+import { Edit2, Eye, Search } from "lucide-react";
 
 
 const statusOptions = [
   { value: "all", label: "All Status" },
   { value: "pending", label: "Pending" },
-  { value: "live", label: "Live" },
+  { value: "approve", label: "Approve" },
   { value: "suspend", label: "Suspend" },
   { value: "reject", label: "Reject" },
   { value: "hold", label: "Hold" },
@@ -108,6 +107,33 @@ const ReleaseMusic = () => {
 
     return candidates.find((value) => typeof value === "string" && value.trim());
   };
+
+  const getTrackStatusValue = (track) => {
+    const rawStatus = String(track?.status || track?.stage || "")
+      .trim()
+      .toLowerCase();
+
+    if (["approve", "approved", "active", "live"].includes(rawStatus)) {
+      return "approve";
+    }
+    if (["reject", "rejected"].includes(rawStatus)) {
+      return "reject";
+    }
+    if (["hold", "on hold"].includes(rawStatus)) {
+      return "hold";
+    }
+    if (["suspend", "suspended"].includes(rawStatus)) {
+      return "suspend";
+    }
+    return "pending";
+  };
+
+  const getTrackStatusLabel = (track) => {
+    const status = getTrackStatusValue(track);
+    return status.charAt(0).toUpperCase() + status.slice(1);
+  };
+
+  const canEditTrack = (track) => getTrackStatusValue(track) === "pending";
 
   return (
     <div className="dash-page space-y-4 w-full overflow-x-hidden">
@@ -259,7 +285,9 @@ const ReleaseMusic = () => {
 
         <td className="px-4 py-3">
           <div className="flex flex-col gap-1">
-            <span>{getStoreLabel(track)}</span>
+            {getStoreLabel(track) !== "-" ? (
+              <span>{getStoreLabel(track)}</span>
+            ) : null}
             <button
               type="button"
               onClick={() =>
@@ -274,7 +302,7 @@ const ReleaseMusic = () => {
 
         <td className="px-4 py-3">
           <span className="px-2 capitalize py-1 rounded-lg dash-badge">
-            {track.stage || track.status || "pending"}
+            {getTrackStatusLabel(track)}
           </span>
         </td>
 
@@ -285,8 +313,10 @@ const ReleaseMusic = () => {
               setShowUploadModal(true);
             }}
             className="p-2 border rounded-lg"
+            title={canEditTrack(track) ? "Edit track details" : "View track details"}
+            aria-label={canEditTrack(track) ? "Edit track details" : "View track details"}
           >
-            <Edit2 size={16} />
+            {canEditTrack(track) ? <Edit2 size={16} /> : <Eye size={16} />}
           </button>
         </td>
       </tr>
@@ -305,7 +335,7 @@ const ReleaseMusic = () => {
             aria-label="Close store preview"
           />
 
-          <div className="relative w-full max-w-3xl dash-card overflow-hidden">
+          <div className="relative w-full max-w-6xl dash-card overflow-hidden">
             <div className="flex justify-between items-center p-4 border-b" style={{ borderColor: "var(--dash-border)" }}>
               <h2 className="text-base font-semibold">Store Preview</h2>
               <button
@@ -317,9 +347,17 @@ const ReleaseMusic = () => {
               </button>
             </div>
 
-            <div className="p-4 flex justify-center">
-              <div className="w-full rounded-lg overflow-hidden">
-                <Marquee />
+            <div className="p-4 md:p-6">
+              <div
+                className="w-full rounded-2xl border bg-white p-3 md:p-5 overflow-auto"
+                style={{ borderColor: "var(--dash-border)" }}
+              >
+                <img
+                  src={previewImage}
+                  alt="45+ store logos"
+                  className="mx-auto block w-full h-auto rounded-xl"
+                  loading="lazy"
+                />
               </div>
             </div>
           </div>
@@ -330,7 +368,8 @@ const ReleaseMusic = () => {
       {showUploadModal && (
         <UploadTrack
           view="modal"
-          mode={editTrack ? "edit" : "create"}
+          mode={editTrack ? (canEditTrack(editTrack) ? "edit" : "view") : "create"}
+          readOnly={Boolean(editTrack) && !canEditTrack(editTrack)}
           initialTrack={editTrack}
           onClose={() => {
             setShowUploadModal(false);

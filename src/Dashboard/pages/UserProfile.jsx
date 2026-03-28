@@ -11,6 +11,7 @@ import {
   changePasswordApi,
   uploadProfilePictureApi,
 } from "../../apis/UserApis";
+import { getGmailValidationError, normalizeEmail } from "../../utils/emailValidation";
 
 export default function UserProfile() {
   const [profileLoading, setProfileLoading] = useState(true);
@@ -36,6 +37,7 @@ const [saveError, setSaveError] = useState("");
   const passwordFormStorage = useFormStorage('user-password-change'); // moved here
 
   const [userInfo, setUserInfo] = useState({});
+  const [originalEmail, setOriginalEmail] = useState("");
 
   const [bankDetails, setBankDetails] = useState({
     accountHolderName: 'Pintu Kumar',
@@ -62,6 +64,7 @@ const [saveError, setSaveError] = useState("");
         const res = await getProfileApi(); // GET /user/profile
         const u = res?.user;
         if (u) {
+          const normalizedEmail = normalizeEmail(u.email || "");
           let firstName = u.firstName || "";
           let lastName = u.lastName || "";
           if ((!firstName || !lastName) && u.fullName) {
@@ -74,7 +77,7 @@ const [saveError, setSaveError] = useState("");
             ...prev,
             firstName,
             lastName,
-            email: u.email || "",
+            email: normalizedEmail,
             phone: u.phone || "",
             dateOfBirth: u.dateOfBirth
               ? u.dateOfBirth.substring(0, 10)
@@ -85,6 +88,7 @@ const [saveError, setSaveError] = useState("");
             pincode: u.pincode || "",
             profilePhoto: u.dp || prev.profilePhoto,
           }));
+          setOriginalEmail(normalizedEmail);
   
           if (u.bankDetails) {
             setBankDetails((prev) => ({
@@ -170,10 +174,22 @@ const [saveError, setSaveError] = useState("");
   
     try {
       if (section === "personal") {
+        const normalizedEmail = normalizeEmail(userInfo.email);
+        const isEmailChanged = normalizedEmail !== originalEmail;
+
+        if (isEmailChanged) {
+          const emailError = getGmailValidationError(normalizedEmail);
+          if (emailError) {
+            setSaveStatus("error");
+            setSaveError(emailError);
+            return;
+          }
+        }
+
         const payload = {
           firstName: userInfo.firstName?.trim(),
           lastName: userInfo.lastName?.trim(),
-          email: userInfo.email?.trim(),
+          email: normalizedEmail,
           phone: userInfo.phone?.trim(),
           dateOfBirth: userInfo.dateOfBirth,
           address: userInfo.address?.trim(),
@@ -183,6 +199,8 @@ const [saveError, setSaveError] = useState("");
         };
   
         const res = await updatePersonalProfileApi(payload);
+        setOriginalEmail(normalizedEmail);
+        setUserInfo((prev) => ({ ...prev, email: normalizedEmail }));
         // optionally sync state with server response
         if (res?.user) {
           // same logic as fetchProfile, but short
