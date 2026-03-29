@@ -14,9 +14,9 @@ const logos = [
   { src: "https://gallery.vision/wp-content/themes/Gallery-Vision/assets/images/tidal-b.webp", name: "Tidal" },
 ];
 
-export default function Marquee() {
+export default function Marquee({ compact = false, className = "" }) {
  return (
-  <section className="relative w-full py-10">
+  <section className={`relative w-full ${compact ? "py-3 sm:py-4" : "py-10"} ${className}`.trim()}>
     {/* Full-width glass strip */}
     <div className="relative w-full overflow-hidden">
       {/* Strong background strip */}

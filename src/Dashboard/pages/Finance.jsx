@@ -18,21 +18,64 @@ import {
   getFinanceSummaryApi,
   getFinanceTransactionsApi,
   getMyWithdrawalsApi,
+  getProfileApi,
 } from "../../apis/UserApis";
 import { buildFinanceSnapshot, formatInr } from "../../utils/finance";
+
+const EMPTY_BANK_DETAILS = {
+  accountNumber: '',
+  ifscCode: '',
+  accountHolderName: '',
+  bankName: '',
+  branchName: '',
+};
+
+const normalizeBankDetails = (bankDetails = {}) => ({
+  accountNumber: typeof bankDetails?.accountNumber === 'string' ? bankDetails.accountNumber.trim() : '',
+  ifscCode: typeof bankDetails?.ifscCode === 'string' ? bankDetails.ifscCode.trim().toUpperCase() : '',
+  accountHolderName: typeof bankDetails?.accountHolderName === 'string' ? bankDetails.accountHolderName.trim() : '',
+  bankName: typeof bankDetails?.bankName === 'string' ? bankDetails.bankName.trim() : '',
+  branchName: typeof bankDetails?.branchName === 'string' ? bankDetails.branchName.trim() : '',
+});
+
+const hasUsableBankDetails = (bankDetails = {}) =>
+  Boolean(bankDetails?.accountNumber && bankDetails?.ifscCode && bankDetails?.accountHolderName);
+
+const createWithdrawalState = (bankDetails = EMPTY_BANK_DETAILS) => {
+  const normalized = normalizeBankDetails(bankDetails);
+  const useSavedAccount = hasUsableBankDetails(normalized);
+
+  return {
+    amount: 0,
+    method: 'bank',
+    bankSource: useSavedAccount ? 'saved' : 'manual',
+    bankDetails: {
+      accountNumber: useSavedAccount ? normalized.accountNumber : '',
+      ifscCode: useSavedAccount ? normalized.ifscCode : '',
+      accountHolderName: useSavedAccount ? normalized.accountHolderName : ''
+    }
+  };
+};
+
+const maskAccountNumber = (value = '') => {
+  const digits = String(value).replace(/\s+/g, '');
+  if (!digits) return '';
+  if (digits.length <= 4) return digits;
+  return `•••• ${digits.slice(-4)}`;
+};
+
+const maskAccountNumberAscii = (value = '') => {
+  const digits = String(value).replace(/\s+/g, '');
+  if (!digits) return '';
+  if (digits.length <= 4) return digits;
+  return `**** ${digits.slice(-4)}`;
+};
 
 export default function Finance() {
   const [activeTab, setActiveTab] = useState('overview');
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
-  const [withdrawalRequest, setWithdrawalRequest] = useState({
-    amount: 0,
-    method: 'bank',
-    bankDetails: {
-      accountNumber: '',
-      ifscCode: '',
-      accountHolderName: ''
-    }
-  });
+  const [withdrawalRequest, setWithdrawalRequest] = useState(() => createWithdrawalState());
+  const [savedBankDetails, setSavedBankDetails] = useState(EMPTY_BANK_DETAILS);
 
   const [loading, setLoading] = useState(false);
   const [summary, setSummary] = useState({});
@@ -52,6 +95,44 @@ export default function Finance() {
   const maxWithdrawal = Number(financeSnapshot?.maxWithdrawal || 0);
   const withdrawalLimit = Math.max(0, Math.min(requestableBalance, maxWithdrawal || requestableBalance));
   const mergedTransactions = financeSnapshot?.mergedTransactions || [];
+  const savedBankAvailable = hasUsableBankDetails(savedBankDetails);
+
+  const fetchSavedBankDetails = async () => {
+    try {
+      const res = await getProfileApi();
+      const normalizedBankDetails = normalizeBankDetails(res?.user?.bankDetails || {});
+      const hasSavedAccount = hasUsableBankDetails(normalizedBankDetails);
+      setSavedBankDetails(normalizedBankDetails);
+
+      setWithdrawalRequest((prev) => {
+        const hasManualDraft =
+          prev.bankSource === 'manual' &&
+          Boolean(prev.bankDetails?.accountHolderName || prev.bankDetails?.accountNumber || prev.bankDetails?.ifscCode);
+
+        if (hasManualDraft) {
+          return prev;
+        }
+
+        return {
+          ...prev,
+          bankSource: hasSavedAccount ? 'saved' : 'manual',
+          bankDetails: hasSavedAccount
+            ? {
+                accountNumber: normalizedBankDetails.accountNumber,
+                ifscCode: normalizedBankDetails.ifscCode,
+                accountHolderName: normalizedBankDetails.accountHolderName,
+              }
+            : {
+                accountNumber: '',
+                ifscCode: '',
+                accountHolderName: '',
+              }
+        };
+      });
+    } catch (_error) {
+      // Bank details are optional, so finance screen should keep working even if profile fetch fails.
+    }
+  };
 
   const fetchFinance = async () => {
     try {
@@ -74,6 +155,7 @@ export default function Finance() {
 
   useEffect(() => {
     fetchFinance();
+    fetchSavedBankDetails();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -137,25 +219,181 @@ export default function Finance() {
   };
 
   const resetWithdrawalForm = () => {
-    setWithdrawalRequest({
-      amount: 0,
-      method: 'bank',
-      bankDetails: {
-        accountNumber: '',
-        ifscCode: '',
-        accountHolderName: ''
-      }
-    });
+    setWithdrawalRequest(createWithdrawalState(savedBankDetails));
   };
 
   const updateBankDetails = (field, value) => {
     setWithdrawalRequest((prev) => ({
       ...prev,
+      bankSource: 'manual',
       bankDetails: {
         ...prev.bankDetails,
         [field]: value
       }
     }));
+  };
+
+  const applySavedBankDetails = () => {
+    if (!savedBankAvailable) return;
+
+    setWithdrawalRequest((prev) => ({
+      ...prev,
+      bankSource: 'saved',
+      bankDetails: {
+        accountNumber: savedBankDetails.accountNumber,
+        ifscCode: savedBankDetails.ifscCode,
+        accountHolderName: savedBankDetails.accountHolderName,
+      }
+    }));
+  };
+
+  const useManualBankDetails = () => {
+    setWithdrawalRequest((prev) => ({
+      ...prev,
+      bankSource: 'manual',
+      bankDetails: {
+        accountNumber: prev.bankDetails.accountNumber || savedBankDetails.accountNumber || '',
+        ifscCode: prev.bankDetails.ifscCode || savedBankDetails.ifscCode || '',
+        accountHolderName: prev.bankDetails.accountHolderName || savedBankDetails.accountHolderName || '',
+      }
+    }));
+  };
+
+  const renderBankDetailsSection = ({ compact = false } = {}) => {
+    const sectionClass = compact
+      ? 'space-y-3 p-3 rounded-xl border border-[color:var(--border)] bg-black/[0.025] dark:bg-white/[0.03]'
+      : 'space-y-4 p-4 rounded-lg border border-[color:var(--border)] bg-black/[0.025] dark:bg-white/[0.03]';
+    const labelClass = compact
+      ? 'block text-xs font-medium text-[color:var(--muted)] mb-1'
+      : 'block text-sm font-medium text-[color:var(--muted)] mb-1';
+    const inputClass = compact
+      ? 'input-ui w-full px-2 py-1.5 text-sm'
+      : 'input-ui w-full px-3 py-2';
+    const toggleButtonClass = (active) =>
+      `${compact ? 'px-3 py-1.5 text-xs' : 'px-3 py-2 text-sm'} rounded-lg border transition-colors ${
+        active
+          ? 'border-emerald-500 bg-emerald-500 text-white shadow-lg shadow-emerald-500/15'
+          : 'border-[color:var(--border)] text-[color:var(--muted)] hover:text-[color:var(--text)] hover:bg-black/5 dark:hover:bg-white/5'
+      }`;
+
+    return (
+      <div className={sectionClass}>
+        <h3 className="text-sm font-medium text-[color:var(--muted)] flex items-center gap-2">
+          <Building2 className="w-4 h-4" />
+          Bank Details
+        </h3>
+
+        {savedBankAvailable ? (
+          <>
+            <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-3">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-emerald-600 dark:text-emerald-300">
+                    Default Account
+                  </p>
+                  <p className="mt-1 text-sm font-semibold text-[color:var(--text)]">
+                    {savedBankDetails.accountHolderName}
+                  </p>
+                  <p className="mt-1 text-xs text-[color:var(--muted)] break-words">
+                    {savedBankDetails.bankName ? `${savedBankDetails.bankName} • ` : ''}
+                    {maskAccountNumberAscii(savedBankDetails.accountNumber)} • {savedBankDetails.ifscCode}
+                  </p>
+                  {savedBankDetails.branchName ? (
+                    <p className="mt-1 text-xs text-[color:var(--muted)] break-words">
+                      {savedBankDetails.branchName}
+                    </p>
+                  ) : null}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={applySavedBankDetails}
+                  className={toggleButtonClass(withdrawalRequest.bankSource === 'saved')}
+                >
+                  {withdrawalRequest.bankSource === 'saved' ? 'Selected' : 'Use Default'}
+                </button>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={applySavedBankDetails}
+                className={toggleButtonClass(withdrawalRequest.bankSource === 'saved')}
+              >
+                Default Account
+              </button>
+              <button
+                type="button"
+                onClick={useManualBankDetails}
+                className={toggleButtonClass(withdrawalRequest.bankSource === 'manual')}
+              >
+                Enter Manually
+              </button>
+            </div>
+          </>
+        ) : (
+          <div className="rounded-xl border border-dashed border-[color:var(--border)] px-3 py-2 text-xs text-[color:var(--muted)]">
+            No default bank account was found in your profile. Enter bank details manually below.
+          </div>
+        )}
+
+        {(withdrawalRequest.bankSource === 'manual' || !savedBankAvailable) ? (
+          <>
+            <div>
+              <label className={labelClass}>
+                {compact ? 'Account Holder Name' : <><User className="w-4 h-4 inline mr-1" />Account Holder Name</>} <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                value={withdrawalRequest.bankDetails.accountHolderName}
+                onChange={(e) => updateBankDetails('accountHolderName', e.target.value)}
+                className={inputClass}
+                placeholder={compact ? 'Full name as per bank' : 'Enter full name as per bank records'}
+                required
+              />
+            </div>
+
+            <div>
+              <label className={labelClass}>
+                {compact ? 'Account Number' : <><Hash className="w-4 h-4 inline mr-1" />Account Number</>} <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                value={withdrawalRequest.bankDetails.accountNumber}
+                onChange={(e) => updateBankDetails('accountNumber', e.target.value)}
+                className={inputClass}
+                placeholder={compact ? 'Bank account number' : 'Enter bank account number'}
+                required
+              />
+            </div>
+
+            <div>
+              <label className={labelClass}>
+                {compact ? 'IFSC Code' : <><Building2 className="w-4 h-4 inline mr-1" />IFSC Code</>} <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                value={withdrawalRequest.bankDetails.ifscCode}
+                onChange={(e) => updateBankDetails('ifscCode', e.target.value.toUpperCase())}
+                className={inputClass}
+                placeholder={compact ? 'IFSC code (e.g., SBIN0001234)' : 'Enter IFSC code (e.g., SBIN0001234)'}
+                pattern="[A-Z]{4}0[A-Z0-9]{6}"
+                maxLength={11}
+                required
+              />
+              <p className="text-xs text-[color:var(--muted)] mt-1">
+                11-character IFSC code (e.g., SBIN0001234)
+              </p>
+            </div>
+          </>
+        ) : (
+          <div className="rounded-xl border border-[color:var(--border)] bg-black/[0.03] dark:bg-white/[0.02] px-3 py-2 text-xs text-[color:var(--muted)]">
+            Withdrawal will be sent to your saved default bank account. Switch to manual entry if you want to use another account.
+          </div>
+        )}
+      </div>
+    );
   };
 
   const getTransactionIcon = (type) => {
@@ -408,62 +646,7 @@ export default function Finance() {
 
               {/* Bank Details Section */}
               {withdrawalRequest.method === 'bank' && (
-                <div className="space-y-4 p-4 rounded-lg border border-[color:var(--border)] bg-black/[0.025] dark:bg-white/[0.03]">
-                  <h3 className="text-sm font-medium text-[color:var(--muted)] flex items-center gap-2">
-                    <Building2 className="w-4 h-4" />
-                    Bank Account Details
-                  </h3>
-
-                  <div>
-                    <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
-                      <User className="w-4 h-4 inline mr-1" />
-                      Account Holder Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={withdrawalRequest.bankDetails.accountHolderName}
-                      onChange={(e) => updateBankDetails('accountHolderName', e.target.value)}
-                      className="input-ui w-full px-3 py-2"
-                      placeholder="Enter full name as per bank records"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
-                      <Hash className="w-4 h-4 inline mr-1" />
-                      Account Number <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={withdrawalRequest.bankDetails.accountNumber}
-                      onChange={(e) => updateBankDetails('accountNumber', e.target.value)}
-                      className="input-ui w-full px-3 py-2"
-                      placeholder="Enter bank account number"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
-                      <Building2 className="w-4 h-4 inline mr-1" />
-                      IFSC Code <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={withdrawalRequest.bankDetails.ifscCode}
-                      onChange={(e) => updateBankDetails('ifscCode', e.target.value.toUpperCase())}
-                      className="input-ui w-full px-3 py-2"
-                      placeholder="Enter IFSC code (e.g., SBIN0001234)"
-                      pattern="[A-Z]{4}0[A-Z0-9]{6}"
-                      maxLength={11}
-                      required
-                    />
-                    <p className="text-xs text-[color:var(--muted)] mt-1">
-                      11-character IFSC code (e.g., SBIN0001234)
-                    </p>
-                  </div>
-                </div>
+                renderBankDetailsSection()
               )}
 
               {/* PayPal/Stripe removed — backend supports only bank transfers */}
@@ -549,56 +732,7 @@ export default function Finance() {
 
               {/* Bank Details in Modal */}
               {withdrawalRequest.method === 'bank' && (
-                <div className="space-y-3 p-3 rounded-xl border border-[color:var(--border)] bg-black/[0.025] dark:bg-white/[0.03]">
-                  <h3 className="text-sm font-medium text-[color:var(--muted)] flex items-center gap-2">
-                    <Building2 className="w-4 h-4" />
-                    Bank Details
-                  </h3>
-
-                  <div>
-                    <label className="block text-xs font-medium text-[color:var(--muted)] mb-1">
-                      Account Holder Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={withdrawalRequest.bankDetails.accountHolderName}
-                      onChange={(e) => updateBankDetails('accountHolderName', e.target.value)}
-                      className="input-ui w-full px-2 py-1.5 text-sm"
-                      placeholder="Full name as per bank"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-medium text-[color:var(--muted)] mb-1">
-                      Account Number <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={withdrawalRequest.bankDetails.accountNumber}
-                      onChange={(e) => updateBankDetails('accountNumber', e.target.value)}
-                      className="input-ui w-full px-2 py-1.5 text-sm"
-                      placeholder="Bank account number"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-medium text-[color:var(--muted)] mb-1">
-                      IFSC Code <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={withdrawalRequest.bankDetails.ifscCode}
-                      onChange={(e) => updateBankDetails('ifscCode', e.target.value.toUpperCase())}
-                      className="input-ui w-full px-2 py-1.5 text-sm"
-                      placeholder="IFSC code (e.g., SBIN0001234)"
-                      pattern="[A-Z]{4}0[A-Z0-9]{6}"
-                      maxLength={11}
-                      required
-                    />
-                  </div>
-                </div>
+                renderBankDetailsSection({ compact: true })
               )}
 
               {/* PayPal/Stripe removed — backend supports only bank transfers */}

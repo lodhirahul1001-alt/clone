@@ -652,52 +652,91 @@ html.dark .dash-select-themed option{
 
 /* UploadTrack - Stores section fixed sizing (responsive) */
 .upload-track-stores-panel{
-  min-height: 250px;
+  min-height: auto;
+}
+
+.upload-track-stores-marquee-box{
+  width: 100%;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid rgba(148,163,184,.16);
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+  padding: 12px;
 }
 
 .upload-track-stores-track{
-  height: 170px;
+  min-height: 124px;
+  display: grid;
+  gap: 8px;
+}
+
+.upload-track-stores-summary{
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  border-radius: 999px;
+  border: 1px solid rgba(148,163,184,.18);
+  background: rgba(255,255,255,.05);
+  padding: 8px 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .upload-track-stores-row{
-  min-height: 80px;
+  min-height: 56px;
 }
 
 .upload-track-store-btn{
-  width: 64px;
-  height: 64px;
+  width: 60px;
+  height: 60px;
+  padding: 6px;
+  border: 1px solid transparent;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .upload-track-store-logo{
-  width: 56px;
-  height: 56px;
+  width: 48px;
+  height: 48px;
   object-fit: contain;
 }
 
 @media (min-width: 640px){
   .upload-track-stores-panel{
-    min-height: 280px;
+    min-height: auto;
+  }
+
+  .upload-track-stores-marquee-box{
+    padding: 16px;
   }
 
   .upload-track-stores-track{
-    height: 190px;
+    min-height: 148px;
+    gap: 10px;
   }
 
   .upload-track-stores-row{
-    min-height: 96px;
+    min-height: 68px;
   }
 
   .upload-track-store-btn{
-    width: 80px;
-    height: 80px;
+    width: 72px;
+    height: 72px;
+    padding: 8px;
   }
 
   .upload-track-store-logo{
-    width: 64px;
-    height: 64px;
+    width: 56px;
+    height: 56px;
+  }
+}
+
+@media (max-width: 639px){
+  .upload-track-stores-summary{
+    width: 100%;
+    white-space: normal;
   }
 }
 

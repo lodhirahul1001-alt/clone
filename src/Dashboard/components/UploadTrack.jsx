@@ -16,10 +16,24 @@ export function UploadTrack({
   view = "modal",          // "modal" | "page"
   mode = "create",         // "create" | "edit"
   initialTrack = null,      // track object from backend when editing
+  readOnly = false,
   onSuccess,                // callback to refresh list
 }) {
   const navigate = useNavigate();
   const isModal = view === "modal";
+  const isReadOnly = readOnly || mode === "view";
+  const isEditMode = mode === "edit";
+  const showPlatformsMarquee = !isReadOnly;
+  const headerTitle = isReadOnly
+    ? "Track Details"
+    : isEditMode
+      ? "Edit Track"
+      : "Upload New Track";
+  const headerDescription = isReadOnly
+    ? "Approved tracks are locked. You can review your submitted details below."
+    : isEditMode
+      ? "Update your pending track details before review."
+      : "Distribute your music to all major platforms - All data automatically saved";
 
   // Safe close handler (fixes cases where close/cancel did nothing)
   const handleClose = () => {
@@ -109,7 +123,7 @@ export function UploadTrack({
 // (removed duplicate navigate/exit handler)
 
   useEffect(() => {
-    if (mode === "edit" && initialTrack) {
+    if (mode !== "create" && initialTrack) {
       setFormData((prev) => ({
         ...prev,
         title: initialTrack.title || "",
@@ -142,6 +156,7 @@ export function UploadTrack({
             : [],
         audioFile: null, // cannot edit
         coverArt: null,
+        agreeToTerms: Boolean(initialTrack.agreeToTerms),
       }));
       setServerPublicId(initialTrack.publicId || "");
     }
@@ -174,15 +189,17 @@ export function UploadTrack({
 
   // Load saved data on mount
   useEffect(() => {
+    if (mode !== "create") return;
     const savedData = getAutoFillData();
     if (savedData && Object.keys(savedData).length > 0) {
       setFormData((prev) => ({ ...prev, ...savedData }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [mode]);
 
   // Auto-save when form changes
   useEffect(() => {
+    if (isReadOnly) return undefined;
     const timeoutId = setTimeout(() => {
       if (hasUnsavedChanges) {
         setIsSaving(true);
@@ -196,9 +213,10 @@ export function UploadTrack({
     }, 1000);
 
     return () => clearTimeout(timeoutId);
-  }, [formData, hasUnsavedChanges, saveFormData]);
+  }, [formData, hasUnsavedChanges, isReadOnly, saveFormData]);
 
   const handleInputChange = (e) => {
+    if (isReadOnly) return;
     const { name, value, type, checked } = e.target;
 
     setFormData((prev) => ({
@@ -214,6 +232,7 @@ export function UploadTrack({
   };
 
   const handleFileChange = (e, fileType) => {
+    if (isReadOnly) return;
     const file = e.target.files?.[0] || null;
     setFormData((prev) => ({ ...prev, [fileType]: file }));
     setHasUnsavedChanges(true);
@@ -282,6 +301,7 @@ export function UploadTrack({
   ];
 
   const handleStoreToggle = (storeName) => {
+    if (isReadOnly) return;
     setFormData((prev) => {
       const exists = prev.stores.includes(storeName);
       return {
@@ -293,6 +313,14 @@ export function UploadTrack({
     });
     setHasUnsavedChanges(true);
   };
+
+  const selectedStoresCount = formData.stores.length;
+  const selectedStoresPreview =
+    selectedStoresCount === 0
+      ? "No store selected"
+      : selectedStoresCount <= 3
+        ? formData.stores.join(", ")
+        : `${formData.stores.slice(0, 3).join(", ")} +${selectedStoresCount - 3} more`;
 
   // const handleAutoFill = (autoFillData) => {
   //   setFormData((prev) => ({ ...prev, ...autoFillData }));
@@ -347,6 +375,10 @@ export function UploadTrack({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (isReadOnly) {
+      return;
+    }
 
     const validation = validateForm();
 
@@ -457,25 +489,24 @@ export function UploadTrack({
   }
 
   return (
-    <div className={isModal ? "fixed inset-0 z-50" : ""}>
+    <div className={isModal ? "fixed inset-0 z-50 overflow-y-auto" : ""}>
       {isModal ? (
         <div
-          className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm"
           onClick={handleClose}
           aria-hidden="true"
         />
       ) : null}
 
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className={
-          (isModal ? "relative h-[100dvh] w-full overflow-y-auto " : "w-full overflow-x-hidden ") +
-          (isModal
-            ? "dash-card rounded-none w-full max-w-none mx-0 my-0"
-            : "dash-card rounded-2xl w-full max-w-6xl mx-auto my-6")
-        }
-        style={isModal ? { maxWidth: "100%", margin: 0, borderRadius: 0, height: "100dvh" } : undefined}
-      >
+      <div className={isModal ? "relative z-10 flex min-h-full items-start justify-center p-3 sm:p-6" : ""}>
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className={
+            (isModal
+              ? "dash-card relative w-full max-w-6xl overflow-x-hidden overflow-y-auto rounded-2xl sm:rounded-3xl max-h-[calc(100dvh-1.5rem)] sm:max-h-[calc(100dvh-3rem)] "
+              : "dash-card rounded-2xl w-full max-w-none my-0 overflow-x-hidden ")
+          }
+        >
         
         {/* Header */}
         <div
@@ -491,64 +522,42 @@ export function UploadTrack({
             
             <Music className="w-8 h-8 text-blue-600" />
             <div>
-              <h1 className="text-2xl font-bold  text-[color:var(--text)]">Upload New Track</h1>
+              <h1 className="text-2xl font-bold  text-[color:var(--text)]">{headerTitle}</h1>
               <p className="text-[color:var(--muted)] text-[color:var(--muted)]">
-                Distribute your music to all major platforms - All data automatically saved
+                {headerDescription}
               </p>
+              {serverPublicId ? (
+                <p className="text-xs mt-1 text-[color:var(--muted)]">
+                  Track ID: {serverPublicId}
+                </p>
+              ) : null}
             </div>
           </div>
           
           <div className="flex items-center gap-4">
-            {/* <FormSaveIndicator
-              isSaving={isSaving}
-              lastSaved={lastSaved}
-              hasUnsavedChanges={hasUnsavedChanges}
-            />
-            <AutoFillButton onAutoFill={handleAutoFill} formType="upload-track" /> */}
-            {/* <button
-              onClick={onClose}
-              className="text-[color:var(--muted)] hover:text-[color:var(--text)] text-[color:var(--muted)] dark:hover:text-gray-200 p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 dark:hover:bg-white/5 transition-colors"
-            >
-              <X className="w-6 h-6" />
-            </button> */}
+            {isModal ? (
+              <button
+                type="button"
+                onClick={handleClose}
+                className="text-[color:var(--muted)] hover:text-[color:var(--text)] p-2 rounded-lg border border-[color:var(--border)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+              >
+                <X className="w-5 h-5 sm:w-6 sm:h-6" />
+              </button>
+            ) : null}
           </div>
         </div>
-        
-      {isModal && (
-      <button
-  type="button"
-  onClick={handleClose}
-  className="
-    fixed right-5
-     sm:right-6  
-    z-[60]
-    p-2 sm:p-3
-    rounded-full
-    bg-transparent/90 dark:bg-gray-800
-    text-[color:var(--muted)] text-[color:var(--text)]
-    border border-[color:var(--border)] border-[color:var(--border)]
-    shadow-lg
-    hover:bg-black/5 dark:hover:bg-white/5 dark:hover:bg-white/5
-    hover:text-gray-900 dark:hover:text-[color:var(--text)]
-    hover:scale-105 active:scale-95
-    transition-transform transition-colors
-  "
->
-  <X className="w-5 h-5 sm:w-6 sm:h-6" />
-</button>
-      )}
-
 
         {/* Platforms marquee (same as marketing site) */}
-        <div className="px-4 sm:px-6 pt-2">
-          <div className=" ">
-            <Marquee />
+        {showPlatformsMarquee ? (
+          <div className="px-4 sm:px-6 pt-1">
+            <Marquee compact={isModal} />
           </div>
-        </div>
+        ) : null}
 
         {/* Form */}
 <div className="p-6 pt-2 sm:pt-02">
           <form onSubmit={handleSubmit} className="space-y-8 dash-form">
+            <fieldset disabled={isReadOnly} className={isReadOnly ? "space-y-8 opacity-95" : "space-y-8"}>
             {/* Track Details */}
             <section>
               <h2 className="text-xl font-semibold mb-4 pb-2" style={{ borderBottom: "1px solid var(--border)" }}>
@@ -920,147 +929,58 @@ export function UploadTrack({
             </section>
 
             {/* Stores */}
-            <section className="mt-6">
-              <h2 className="text-lg font-semibold text-[color:var(--text)] mb-4">
-                Select Stores
-              </h2>
-
-              <div className="relative w-full overflow-hidden bg-[color:var(--panel)] rounded-xl p-4 sm:p-6">
-                <p className="text-sm text-[color:var(--muted)] mb-3">
-                  Choose where this track will be delivered.
-                </p>
-
-                <div className="relative overflow-hidden rounded">
-                  <motion.div
-                    className="flex w-max items-center gap-1 mb-1"
-                    animate={{ x: ['0%', '-50%'] }}
-                    transition={{ duration: 55, repeat: Infinity, ease: 'linear' }}
-                  >
-                    {[...storeOptions, ...storeOptions].map((logo, index) => {
-                      const isSelected = formData.stores.includes(logo.name);
-                      return (
-                        <motion.button
-                          key={`row1-${index}`}
-                          type="button"
-                          onClick={() => handleStoreToggle(logo.name)}
-                          className={`flex-shrink-0 group focus:outline-none ${isSelected ? 'scale-105' : ''}`}
-                          whileHover={{ scale: 1.08, rotate: 3, transition: { duration: 0.2 } }}
-                        >
-                          <img
-                            src={logo.image}
-                            alt={logo.name}
-                            className={`upload-track-store-logo w-16 h-16 sm:w-20 sm:h-20 object-contain transition-all duration-300 ${isSelected ? 'opacity-100 scale-105' : 'opacity-85 group-hover:opacity-100'}`}
-                            loading="lazy"
-                            onError={(e) => {
-                              e.currentTarget.style.display = 'none';
-                              const fallback = e.currentTarget.nextElementSibling;
-                              if (fallback) fallback.style.display = 'flex';
-                            }}
-                          />
-                          <span className="hidden w-16 h-16 sm:w-20 sm:h-20 items-center justify-center text-slate-700 dark:text-white font-bold text-xs sm:text-sm">
-                            {logo.short}
-                          </span>
-                        </motion.button>
-                      );
-                    })}
-                  </motion.div>
-
-                  <motion.div
-                    className="upload-track-stores-row flex w-max items-center gap-2 h-28 sm:h-32"
-                    animate={{ x: ['-50%', '0%'] }}
-                    transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
-                  >
-                    {[...storeOptions.slice().reverse(), ...storeOptions.slice().reverse()].map((logo, index) => {
-                      const isSelected = formData.stores.includes(logo.name);
-                      return (
-                        <motion.button
-                          key={`row2-${index}`}
-                          type="button"
-                          onClick={() => handleStoreToggle(logo.name)}
-                          className={`flex-shrink-0 group focus:outline-none ${isSelected ? 'scale-105' : ''}`}
-                          whileHover={{ scale: 1.08, rotate: -3, transition: { duration: 0.2 } }}
-                        >
-                          <img
-                            src={logo.image}
-                            alt={logo.name}
-                            className={`upload-track-store-logo w-16 h-16 sm:w-20 sm:h-20 object-contain transition-all duration-300 ${isSelected ? 'opacity-100 scale-105' : 'opacity-85 group-hover:opacity-100'}`}
-                            loading="lazy"
-                            onError={(e) => {
-                              e.currentTarget.style.display = 'none';
-                              const fallback = e.currentTarget.nextElementSibling;
-                              if (fallback) fallback.style.display = 'flex';
-                            }}
-                          />
-                          <span className="hidden w-16 h-16 sm:w-20 sm:h-20 items-center justify-center text-slate-700 dark:text-white font-bold text-xs sm:text-sm">
-                            {logo.short}
-                          </span>
-                        </motion.button>
-                      );
-                    })}
-                  </motion.div>
-
-                  <div className="absolute top-0 left-0 w-16 sm:w-24 h-full bg-gradient-to-r from-[color:var(--panel)] to-transparent pointer-events-none"></div>
-                  <div className="absolute top-0 right-0 w-16 sm:w-24 h-full bg-gradient-to-l from-[color:var(--panel)] to-transparent pointer-events-none"></div>
-                </div>
-
-                <p className="mt-3 text-xs text-[color:var(--muted)]">
-                  Selected: {formData.stores.length > 0 ? formData.stores.join(', ') : 'No store selected'}
-                </p>
-              </div>
-            </section>
+            {/*  */}
+            
 
             {/* Additional Options */}
             <section className="mt-6">
-              <h2 className="text-lg flex font-semibold text-[color:var(--text)] mb-4">
+              <h2 className="text-lg font-semibold text-[color:var(--text)] mb-4">
                 Additional Options
               </h2>
 
-              <div className="space-y-3">
-                <label className="flex items-center justify-between w-full bg-[color:var(--panel)] border border-[color:var(--border)] rounded-lg px-5 py-3 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-       
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-3">
+                {[
+                  {
+                    name: "isrcGeneration",
+                    title: "ISRC Generation",
+                    description: "Generate ISRC automatically",
+                  },
+                  {
+                    name: "youTubecontentID",
+                    title: "YouTube Content ID",
+                    description: "Enable YouTube Content ID matching",
+                  },
+                  {
+                    name: "crbtCut",
+                    title: "CRBT Cut",
+                    description: "Enable CRBT/Caller tune cut",
+                  },
+                ].map((option) => (
+                  <label
+                    key={option.name}
+                    className="group flex min-h-[92px] items-start justify-between gap-4 rounded-xl border border-[color:var(--border)] bg-[color:var(--panel)] px-5 py-4 transition-colors hover:bg-black/5 dark:hover:bg-white/5"
+                  >
+                    <div className="min-w-0">
+                      <div className="text-base font-semibold text-[color:var(--text)]">
+                        {option.title}
+                      </div>
+                      <div className="mt-1 text-xs leading-5 text-[color:var(--muted)]">
+                        {option.description}
+                      </div>
+                    </div>
 
-                <label className="flex items-center justify-between w-full bg-[color:var(--panel)] border border-[color:var(--border)] rounded-lg px-5 py-3 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-                  <div className="flex flex-col">
-                    <span className="text-base font-semibold text-[color:var(--text)]">ISRC Generation</span>
-                    <span className="text-xs text-[color:var(--muted)]">Generate ISRC automatically</span>
-                  </div>
-
-                  <input
-                    type="checkbox"
-                    name="isrcGeneration"
-                    checked={formData.isrcGeneration}
-                    onChange={handleInputChange}
-                    className="h-5 w-5 accent-black dark:accent-white border-[color:var(--border)] rounded"
-                  />
-                </label>
-                           <div className="flex flex-col">
-                    <span className="text-base font-semibold text-[color:var(--text)]">YouTube Content ID</span>
-                    <span className="text-xs text-[color:var(--muted)]">Enable YouTube Content ID matching</span>
-                  </div>
-
-                  <input
-                    type="checkbox"
-                    name="youTubecontentID"
-                    checked={formData.youTubecontentID}
-                    onChange={handleInputChange}
-                    className="h-5 w-5 accent-black dark:accent-white border-[color:var(--border)] rounded"
-                  />
-                </label>
-
-                <label className="flex items-center justify-between w-full bg-[color:var(--panel)] border border-[color:var(--border)] rounded-lg px-5 py-3 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-                  <div className="flex flex-col">
-                    <span className="text-base font-semibold text-[color:var(--text)]">CRBT Cut</span>
-                    <span className="text-xs text-[color:var(--muted)]">Enable CRBT/Caller tune cut</span>
-                  </div>
-
-                  <input
-                    type="checkbox"
-                    name="crbtCut"
-                    checked={formData.crbtCut}
-                    onChange={handleInputChange}
-                    className="h-5 w-5 accent-black dark:accent-white border-[color:var(--border)] rounded"
-                  />
-                </label>
+                    <div className="shrink-0 pt-1">
+                      <input
+                        type="checkbox"
+                        name={option.name}
+                        checked={Boolean(formData[option.name])}
+                        onChange={handleInputChange}
+                        className="peer sr-only"
+                      />
+                      <span className="relative flex h-6 w-11 items-center rounded-full border border-[color:var(--border)] bg-black/10 transition-colors after:absolute after:left-1 after:h-4 after:w-4 after:rounded-full after:bg-white after:transition-transform after:content-[''] peer-checked:bg-emerald-500/90 peer-checked:border-emerald-400/60 peer-checked:after:translate-x-5 dark:bg-white/10" />
+                    </div>
+                  </label>
+                ))}
               </div>
             </section>
 
@@ -1110,6 +1030,8 @@ export function UploadTrack({
   )}
 </section>
 
+            </fieldset>
+
             {/* Submit */}
             <div className="text-center pb-6">
               {errors.submit && (
@@ -1121,30 +1043,42 @@ export function UploadTrack({
                 </div>
               )}
 
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className={`px-8 py-3 rounded-md font-semibold text-[color:var(--text)] transition-all duration-200 ${
-                  isSubmitting
-                    ? 'bg-gray-400 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:scale-105 active:scale-95'
-                }`}
-              >
-                {isSubmitting ? (
-                  <div className="flex items-center gap-2">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                    Uploading & Saving All Data...
-                  </div>
-                ) : (
-                  'Submit Track & Save Data'
-                )}
-              </button>
+              {isReadOnly ? (
+                <div className="max-w-2xl mx-auto rounded-xl border border-[color:var(--border)] bg-black/[0.03] dark:bg-white/[0.03] px-5 py-4 text-left">
+                  <div className="font-semibold text-[color:var(--text)]">View Only</div>
+                  <p className="mt-1 text-sm text-[color:var(--muted)]">
+                    This track has already been approved, so the submitted form is locked for editing. You can review the old details here for verification.
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className={`px-8 py-3 rounded-md font-semibold text-[color:var(--text)] transition-all duration-200 ${
+                      isSubmitting
+                        ? 'bg-gray-400 cursor-not-allowed'
+                        : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:scale-105 active:scale-95'
+                    }`}
+                  >
+                    {isSubmitting ? (
+                      <div className="flex items-center gap-2">
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        Uploading & Saving All Data...
+                      </div>
+                    ) : (
+                      'Submit Track & Save Data'
+                    )}
+                  </button>
 
-              <p className="text-xs text-[color:var(--muted)] text-[color:var(--muted)] mt-2">
-                All form data is automatically saved and will be available in Form Data Manager
-              </p>
+                  <p className="text-xs text-[color:var(--muted)] text-[color:var(--muted)] mt-2">
+                    All form data is automatically saved and will be available in Form Data Manager
+                  </p>
+                </>
+              )}
             </div>
           </form>
+        </div>
         </div>
       </div>
     </div>
