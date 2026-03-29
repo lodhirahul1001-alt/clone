@@ -12,7 +12,7 @@ import {
 import { Link } from "react-router";
 import {
   Wallet,
-  Receipt,
+  ReceiptIndianRupee,
   Clock,
   Trophy,
   Music2,
@@ -168,7 +168,7 @@ export default function PrivateDashboard() {
         <h2 className="text-2xl font-bold">{summary.totalPayout}</h2>
         <p className="text-xs opacity-80">Successfully paid</p>
       </div>
-      <Receipt className="w-8 h-8 opacity-90" />
+      <ReceiptIndianRupee className="w-8 h-8 opacity-90" />
     </div>
   </div>
 

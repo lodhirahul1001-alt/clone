@@ -17,6 +17,7 @@ import {
   Users,
   Tags,
   DollarSign,
+  IndianRupee,
   User as UserIcon,
   Bell,
   LayoutDashboard,
@@ -106,7 +107,7 @@ const menuItems = [
   { name: "My Artists", path: "/cms/my-artists", icon: Users },
 
   // ✅ ADDED
-  { name: "Finance", path: "/cms/finance", icon: DollarSign },
+  { name: "Finance", path: "/cms/finance", icon: IndianRupee },
 
   { name: "User Profile", path: "/cms/user-profile", icon: UserIcon },
 

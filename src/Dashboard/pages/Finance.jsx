@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import toast from "react-hot-toast";
-import { DollarSign, TrendingUp, TrendingDown, Download, CreditCard, AlertCircle, Building2, User, Hash } from 'lucide-react';
+import { IndianRupee, TrendingUp, TrendingDown, Download, CreditCard, AlertCircle, Building2, User, Hash } from 'lucide-react';
 
 import {
   createWithdrawalRequestApi,
@@ -154,7 +154,7 @@ export default function Finance() {
       case 'withdrawal':
         return <TrendingDown className="w-4 h-4 text-red-500" />;
       default:
-        return <DollarSign className="w-4 h-4 text-gray-500" />;
+        return <IndianRupee className="w-4 h-4 text-gray-500" />;
     }
   };
 
@@ -219,7 +219,7 @@ export default function Finance() {
                   </p>
                 </div>
                 <div className="p-3 rounded-full bg-green-100 dark:bg-green-900/40 border border-green-200 dark:border-green-500/20">
-                  <DollarSign className="w-6 h-6 text-green-600 dark:text-green-400" />
+                  <IndianRupee className="w-6 h-6 text-green-600 dark:text-green-400" />
                 </div>
               </div>
             </div>
@@ -338,7 +338,7 @@ export default function Finance() {
             <form onSubmit={handleWithdrawal} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
-                  Amount (USD) <span className="text-red-500">*</span>
+                  Amount (INR) <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="number"
@@ -478,7 +478,7 @@ export default function Finance() {
             <form onSubmit={handleWithdrawal} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-[color:var(--muted)] mb-1">
-                  Amount (USD) <span className="text-red-500">*</span>
+                  Amount (INR) <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="number"
