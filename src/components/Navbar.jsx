@@ -62,7 +62,7 @@ export default function Navbar() {
           <Link to="/" className="flex items-center gap-2">
             <div className="brand-logo-shell h-9 w-9 rounded-full grid place-items-center">
               <img
-                src="/newlogo.jpeg"
+                src="/newlogo1.png"
                 alt="Silent Music Group logo"
                 className="brand-logo-img h-7 w-7 object-contain"
               />

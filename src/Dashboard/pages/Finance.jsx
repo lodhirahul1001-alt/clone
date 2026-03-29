@@ -96,7 +96,7 @@ export default function Finance() {
     e.preventDefault();
 
     if (withdrawalRequest.amount > maxWithdrawal) {
-      alert(`Maximum withdrawal amount is $${maxWithdrawal}`);
+      alert(`Maximum withdrawal amount is ₹${maxWithdrawal}`);
       return;
     }
 
@@ -215,7 +215,7 @@ export default function Finance() {
                 <div>
                   <p className="text-sm text-[color:var(--muted)]">Current Balance</p>
                   <p className="text-2xl font-bold text-green-600 dark:text-green-400">
-                    ${currentBalance.toFixed(2)}
+                    ₹{currentBalance.toFixed(2)}
                   </p>
                 </div>
                 <div className="p-3 rounded-full bg-green-100 dark:bg-green-900/40 border border-green-200 dark:border-green-500/20">
@@ -229,7 +229,7 @@ export default function Finance() {
                 <div>
                   <p className="text-sm text-[color:var(--muted)]">Pending Earnings</p>
                   <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
-                    ${pendingEarnings.toFixed(2)}
+                    ₹{pendingEarnings.toFixed(2)}
                   </p>
                 </div>
                 <div className="p-3 rounded-full bg-yellow-100 dark:bg-yellow-900/40 border border-yellow-200 dark:border-yellow-500/20">
@@ -243,7 +243,7 @@ export default function Finance() {
                 <div>
                   <p className="text-sm text-[color:var(--muted)]">Max Withdrawal</p>
                   <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                    ${maxWithdrawal.toFixed(2)}
+                    ₹{maxWithdrawal.toFixed(2)}
                   </p>
                 </div>
                 <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900/40 border border-blue-200 dark:border-blue-500/20">
@@ -260,7 +260,7 @@ export default function Finance() {
               <div>
                 <h3 className="font-medium text-amber-900 dark:text-amber-200">Withdrawal Limit</h3>
                 <p className="mt-1 text-sm text-amber-800 dark:text-amber-300">
-                  Maximum withdrawal amount is limited to ${maxWithdrawal} per transaction for security purposes.
+                  Maximum withdrawal amount is limited to ₹{maxWithdrawal} per transaction for security purposes.
                 </p>
               </div>
             </div>
@@ -310,7 +310,7 @@ export default function Finance() {
                             : 'text-red-600 dark:text-red-400'
                         }`}
                       >
-                        {transaction.amount > 0 ? '+' : ''}${Math.abs(transaction.amount).toFixed(2)}
+                        {transaction.amount > 0 ? '+' : ''}₹{Math.abs(transaction.amount).toFixed(2)}
                       </span>
                     </td>
                     <td className="p-4 text-[color:var(--muted)]">
@@ -352,11 +352,11 @@ export default function Finance() {
                     })
                   }
                   className="input-ui w-full px-3 py-2"
-                  placeholder={`Max: $${maxWithdrawal}`}
+                  placeholder={`Max: ₹${maxWithdrawal}`}
                   required
                 />
                 <p className="text-xs text-[color:var(--muted)] mt-1">
-                  Maximum withdrawal: ${maxWithdrawal} | Available balance: ${currentBalance}
+                  Maximum withdrawal: ₹{maxWithdrawal} | Available balance: ₹{currentBalance}
                 </p>
               </div>
 
@@ -492,11 +492,11 @@ export default function Finance() {
                     })
                   }
                   className="input-ui w-full px-3 py-2"
-                  placeholder={`Max: $${maxWithdrawal}`}
+                  placeholder={`Max: ₹${maxWithdrawal}`}
                   required
                 />
                 <p className="text-xs text-[color:var(--muted)] mt-1">
-                  Available: ${currentBalance} | Max: ${maxWithdrawal}
+                  Available: ₹{currentBalance} | Max: ₹{maxWithdrawal}
                 </p>
               </div>
 

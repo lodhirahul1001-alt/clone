@@ -12,7 +12,7 @@ export default function Footer() {
                 <div className="h-10 w-10 rounded-full grid place-items-center">
                    <div className="brand-logo-shell h-9 w-9 rounded-full grid place-items-center">
               <img
-                src="/newlogo.jpeg"
+                src="/newlogo1.png"
                 alt="Silent Music Group logo"
                 className="brand-logo-img h-7 w-7 object-contain"
               />

@@ -280,7 +280,7 @@ const ReleaseMusic = () => {
           {track.cat || track.productionYear || "-"}
         </td>
         <td className="px-4 py-3">
-          {track.isrc || track.upcEan || "-"}
+          {track.isrcUpcCode || track.isrc || track.upcEan || "-"}
         </td>
 
         <td className="px-4 py-3">
