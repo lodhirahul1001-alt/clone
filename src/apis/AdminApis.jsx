@@ -111,7 +111,20 @@ export const adminRejectPaymentApi = async (paymentId, payload = {}) => {
 // GET /api/admin/users/:userId/transactions
 export const adminGetUserTransactionsApi = async (userId, params = {}) => {
   const res = await AxiosIntance.get(`/admin/users/${userId}/transactions`, { params });
-  return res.data;
+  const payload = res.data?.data || res.data || {};
+  const list =
+    payload?.items ||
+    payload?.transactions ||
+    payload?.data ||
+    res.data?.items ||
+    res.data?.transactions ||
+    [];
+
+  return {
+    ...payload,
+    items: Array.isArray(list) ? list : [],
+    transactions: Array.isArray(list) ? list : [],
+  };
 };
 
 // PATCH /api/admin/users/:userId/wallet
@@ -124,7 +137,20 @@ export const adminUpdateUserWalletApi = async (userId, payload) => {
 // GET /api/admin/withdrawals?search=&status=&limit=&page=
 export const adminGetWithdrawalsApi = async (params = {}) => {
   const res = await AxiosIntance.get("/admin/withdrawals", { params });
-  return res.data;
+  const payload = res.data?.data || res.data || {};
+  const list =
+    payload?.items ||
+    payload?.withdrawals ||
+    payload?.data ||
+    res.data?.items ||
+    res.data?.withdrawals ||
+    [];
+
+  return {
+    ...payload,
+    items: Array.isArray(list) ? list : [],
+    withdrawals: Array.isArray(list) ? list : [],
+  };
 };
 
 // PATCH /api/admin/withdrawals/:withdrawalId/approve

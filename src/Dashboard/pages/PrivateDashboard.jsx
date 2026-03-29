@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   AreaChart,
@@ -14,12 +14,18 @@ import {
   Wallet,
   ReceiptIndianRupee,
   Clock,
-  Trophy,
+  IndianRupee,
   Music2,
   BadgeCheck,
   Video,
   Award,
 } from "lucide-react";
+import {
+  getFinanceSummaryApi,
+  getFinanceTransactionsApi,
+  getMyWithdrawalsApi,
+} from "../../apis/UserApis";
+import { buildFinanceSnapshot, formatInr } from "../../utils/finance";
 
 function StatCard({ icon: Icon, title, value, sub }) {
   return (
@@ -63,21 +69,102 @@ function GradientCard({ title, value, icon: Icon, variant = "a" }) {
 export default function PrivateDashboard() {
   const { user } = useSelector((state) => state.auth);
   const userName = user?.fullName || user?.name || user?.email?.split("@")[0] || "User";
+  const [financeSummary, setFinanceSummary] = useState({});
+  const [financeTransactions, setFinanceTransactions] = useState([]);
+  const [financeWithdrawals, setFinanceWithdrawals] = useState([]);
 
-  // Demo numbers (wire with real API later)
+  const finance = useMemo(
+    () => buildFinanceSnapshot({
+      summary: financeSummary,
+      transactions: financeTransactions,
+      withdrawals: financeWithdrawals,
+    }),
+    [financeSummary, financeTransactions, financeWithdrawals]
+  );
+
   const summary = useMemo(
     () => ({
-      totalEarnings: "INR 0.00",
-      totalPayout: "INR 0.00",
-      pendingPayout: "INR 0.00",
-      topPlatform: "YouTube",
+      totalEarnings: formatInr(finance.totalEarnings),
+      availableBalance: formatInr(finance.availableBalance),
+      withdrawnAmount: formatInr(finance.withdrawnAmount),
+      pendingWithdrawals: formatInr(finance.pendingWithdrawalAmount),
+      pendingWithdrawalCount: finance.pendingWithdrawalCount,
       musicCreated: 0,
       musicReleased: 0,
       videosCreated: 0,
       videosReleased: 0,
     }),
-    []
+    [finance]
   );
+
+  useEffect(() => {
+    let ignore = false;
+
+    const loadFinance = async () => {
+      try {
+        const [summaryData, txData, withdrawalData] = await Promise.all([
+          getFinanceSummaryApi(),
+          getFinanceTransactionsApi({ limit: 100 }),
+          getMyWithdrawalsApi({ limit: 100 }),
+        ]);
+
+        if (ignore) return;
+
+        setFinanceSummary(summaryData || {});
+        setFinanceTransactions(txData?.transactions || txData?.items || []);
+        setFinanceWithdrawals(withdrawalData?.withdrawals || withdrawalData?.items || []);
+      } catch {
+        if (ignore) return;
+        setFinanceSummary({});
+        setFinanceTransactions([]);
+        setFinanceWithdrawals([]);
+      }
+    };
+
+    loadFinance();
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let ignore = false;
+
+    const loadFinance = async () => {
+      try {
+        const [summaryData, txData, withdrawalData] = await Promise.all([
+          getFinanceSummaryApi(),
+          getFinanceTransactionsApi({ limit: 100 }),
+          getMyWithdrawalsApi({ limit: 100 }),
+        ]);
+
+        if (ignore) return;
+
+        setFinanceSummary(summaryData || {});
+        setFinanceTransactions(txData?.transactions || txData?.items || []);
+        setFinanceWithdrawals(withdrawalData?.withdrawals || withdrawalData?.items || []);
+      } catch {
+        // keep current values on background refresh failures
+      }
+    };
+
+    const intervalId = window.setInterval(loadFinance, 20000);
+    const handleFocus = () => loadFinance();
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") loadFinance();
+    };
+
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    return () => {
+      ignore = true;
+      window.clearInterval(intervalId);
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
+  }, []);
 
   const earningData = useMemo(
     () => [
@@ -154,7 +241,7 @@ export default function PrivateDashboard() {
       <div>
         <p className="text-sm opacity-90">Total Earnings</p>
         <h2 className="text-2xl font-bold">{summary.totalEarnings}</h2>
-        <p className="text-xs opacity-80">Across all platforms</p>
+        <p className="text-xs opacity-80">Lifetime earnings credited by admin</p>
       </div>
       <Wallet className="w-8 h-8 opacity-90" />
     </div>
@@ -164,11 +251,11 @@ export default function PrivateDashboard() {
   <div className="rounded-2xl p-5 text-slate-100 bg-gradient-to-br from-blue-500 via-cyan-300 to-emerald-500 shadow-lg">
     <div className="flex justify-between items-center">
       <div>
-        <p className="text-sm opacity-90">Total Payout</p>
-        <h2 className="text-2xl font-bold">{summary.totalPayout}</h2>
-        <p className="text-xs opacity-80">Successfully paid</p>
+        <p className="text-sm opacity-90">Available Balance</p>
+        <h2 className="text-2xl font-bold">{summary.availableBalance}</h2>
+        <p className="text-xs opacity-80">Ready for withdrawal</p>
       </div>
-      <ReceiptIndianRupee className="w-8 h-8 opacity-90" />
+      <IndianRupee className="w-8 h-8 opacity-90" />
     </div>
   </div>
 
@@ -176,11 +263,11 @@ export default function PrivateDashboard() {
   <div className="rounded-2xl p-5 text-slate-100 bg-gradient-to-br from-purple-500 via-fuchsia-400 to-pink-400 shadow-lg">
     <div className="flex justify-between items-center">
       <div>
-        <p className="text-sm opacity-90">Pending Payout</p>
-        <h2 className="text-2xl font-bold">{summary.pendingPayout}</h2>
-        <p className="text-xs opacity-80">In review</p>
+        <p className="text-sm opacity-90">Withdrawn Amount</p>
+        <h2 className="text-2xl font-bold">{summary.withdrawnAmount}</h2>
+        <p className="text-xs opacity-80">Already paid to you</p>
       </div>
-      <Clock className="w-8 h-8 opacity-90" />
+      <ReceiptIndianRupee className="w-8 h-8 opacity-90" />
     </div>
   </div>
 
@@ -188,11 +275,11 @@ export default function PrivateDashboard() {
   <div className="rounded-2xl p-5 text-slate-100 bg-gradient-to-br from-orange-500 via-amber-300 to-lime-400 shadow-lg">
     <div className="flex justify-between items-center">
       <div>
-        <p className="text-sm opacity-90">Top in 3 months</p>
-        <h2 className="text-2xl font-bold">{summary.topPlatform}</h2>
-        <p className="text-xs opacity-80">Best performing DSP</p>
+        <p className="text-sm opacity-90">Pending Requests</p>
+        <h2 className="text-2xl font-bold">{summary.pendingWithdrawals}</h2>
+        <p className="text-xs opacity-80">{summary.pendingWithdrawalCount} open withdrawal request(s)</p>
       </div>
-      <Trophy className="w-8 h-8 opacity-90" />
+      <Clock className="w-8 h-8 opacity-90" />
     </div>
   </div>
 

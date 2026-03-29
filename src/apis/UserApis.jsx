@@ -1,4 +1,5 @@
 import { AxiosIntance } from "../config/Axios.Intance";
+import { buildFinanceSnapshot, firstFiniteNumber } from "../utils/finance";
 
 // GET /api/user
 export const getAllUsersApi = async () => {
@@ -74,43 +75,37 @@ export const uploadProfilePictureApi = async (file) => {
 // GET /api/finance/summary
 export const getFinanceSummaryApi = async () => {
   const res = await AxiosIntance.get("/finance/summary");
-  const data = res.data || {};
-  const totals = data?.totals || {};
-
-  // Normalize to the frontend contract used by Finance.jsx
-  const balance =
-    data?.balance ??
-    data?.walletBalance ??
-    totals?.availableBalance ??
-    0;
-
-  const pendingEarnings =
-    data?.pendingEarnings ??
-    totals?.pendingWithdrawals ??
-    0;
-
-  const maxWithdrawal =
-    data?.maxWithdrawal ??
-    balance ??
-    0;
+  const payload = res.data?.data || res.data || {};
+  const normalized = buildFinanceSnapshot({ summary: payload });
 
   return {
-    ...data,
-    totals,
-    balance,
-    walletBalance: balance,
-    pendingEarnings,
-    maxWithdrawal,
+    ...payload,
+    totals: payload?.totals || {},
+    balance: normalized.availableBalance,
+    walletBalance: normalized.availableBalance,
+    availableBalance: normalized.availableBalance,
+    totalEarnings: normalized.totalEarnings,
+    withdrawnAmount: normalized.withdrawnAmount,
+    pendingWithdrawals: normalized.pendingWithdrawalAmount,
+    requestableBalance: normalized.requestableBalance,
+    pendingEarnings: firstFiniteNumber(payload?.pendingEarnings, payload?.totals?.pendingEarnings, 0) ?? 0,
+    maxWithdrawal: normalized.maxWithdrawal,
   };
 };
 
 // GET /api/finance/transactions
 export const getFinanceTransactionsApi = async (params = {}) => {
   const res = await AxiosIntance.get("/finance/transactions", { params });
-  const data = res.data || {};
-  const list = data?.items || data?.transactions || data?.data || [];
+  const payload = res.data?.data || res.data || {};
+  const list =
+    payload?.items ||
+    payload?.transactions ||
+    payload?.data ||
+    res.data?.items ||
+    res.data?.transactions ||
+    [];
   return {
-    ...data,
+    ...payload,
     items: Array.isArray(list) ? list : [],
     transactions: Array.isArray(list) ? list : [],
   };
@@ -119,10 +114,16 @@ export const getFinanceTransactionsApi = async (params = {}) => {
 // GET /api/finance/withdrawals
 export const getMyWithdrawalsApi = async (params = {}) => {
   const res = await AxiosIntance.get("/finance/withdrawals", { params });
-  const data = res.data || {};
-  const list = data?.items || data?.withdrawals || data?.data || [];
+  const payload = res.data?.data || res.data || {};
+  const list =
+    payload?.items ||
+    payload?.withdrawals ||
+    payload?.data ||
+    res.data?.items ||
+    res.data?.withdrawals ||
+    [];
   return {
-    ...data,
+    ...payload,
     items: Array.isArray(list) ? list : [],
     withdrawals: Array.isArray(list) ? list : [],
   };

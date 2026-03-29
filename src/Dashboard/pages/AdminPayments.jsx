@@ -1,12 +1,12 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import {
   CheckCircle2,
   Clock,
   CreditCard,
-  DollarSign,
   FileImage,
   Filter,
+  IndianRupee,
   RefreshCw,
   Search,
   Send,
@@ -22,10 +22,13 @@ import {
   adminUpdateUserWalletApi,
   adminGetUserTransactionsApi,
 } from "../../apis/AdminApis";
+import { formatInr, getFinanceEntryType } from "../../utils/finance";
 
-function money(v) {
-  const n = Number(v || 0);
-  return Number.isFinite(n) ? n.toFixed(2) : "0.00";
+function normalizeStatus(status) {
+  const s = String(status || "pending").toLowerCase();
+  if (s === "completed" || s === "success") return "paid";
+  if (s === "failed" || s === "cancelled" || s === "canceled") return "rejected";
+  return s;
 }
 
 function fmtDate(v) {
@@ -39,7 +42,7 @@ function fmtDate(v) {
 }
 
 function badge(status) {
-  const s = String(status || "pending");
+  const s = normalizeStatus(status);
   if (s === "paid") return "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200";
   if (s === "approved") return "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200";
   if (s === "rejected") return "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200";
@@ -47,7 +50,7 @@ function badge(status) {
 }
 
 function toTitle(s = "") {
-  const v = String(s);
+  const v = normalizeStatus(s);
   return v ? v.charAt(0).toUpperCase() + v.slice(1) : "";
 }
 
@@ -59,6 +62,14 @@ function safeBankLine(w) {
   return [name, acc, ifsc].filter(Boolean).join(" · ") || "-";
 }
 
+const WITHDRAWAL_STATUS_FILTERS = [
+  { value: "all", label: "All" },
+  { value: "pending", label: "Pending" },
+  { value: "approved", label: "Approved" },
+  { value: "rejected", label: "Rejected" },
+  { value: "paid", label: "Paid" },
+];
+
 export default function AdminPayments() {
   const [tab, setTab] = useState("withdrawals"); // withdrawals | earnings
 
@@ -68,7 +79,6 @@ export default function AdminPayments() {
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("pending");
   const [savingId, setSavingId] = useState("");
-  const lastFetchKeyRef = useRef("");
 
   // payout modal
   const [payOpen, setPayOpen] = useState(false);
@@ -93,18 +103,13 @@ export default function AdminPayments() {
   const [txLoading, setTxLoading] = useState(false);
 
   const fetchWithdrawals = async () => {
-    const key = `${status}|${q}`;
-    lastFetchKeyRef.current = key;
-
     try {
       setLoading(true);
       const data = await adminGetWithdrawalsApi({
-        limit: 100,
-        status: status === "all" ? undefined : status,
-        search: q?.trim() || "",
+        limit: 200,
       });
       const list = data?.items || data?.withdrawals || [];
-      if (lastFetchKeyRef.current === key) setWithdrawals(Array.isArray(list) ? list : []);
+      setWithdrawals(Array.isArray(list) ? list : []);
     } catch (e) {
       toast.error(e?.response?.data?.msg || "Failed to load withdrawals");
     } finally {
@@ -121,11 +126,19 @@ export default function AdminPayments() {
   const filteredWithdrawals = useMemo(() => {
     const list = Array.isArray(withdrawals) ? withdrawals : [];
     const qq = q.trim().toLowerCase();
-    if (!qq) return list;
+    const normalizedSelectedStatus = normalizeStatus(status || "all");
+
     return list.filter((w) => {
+      const currentStatus = normalizeStatus(w?.status);
+      if (normalizedSelectedStatus !== "all" && currentStatus !== normalizedSelectedStatus) {
+        return false;
+      }
+
+      if (!qq) return true;
+
       const blob = [
         w?._id,
-        w?.status,
+        currentStatus,
         w?.user?.fullName,
         w?.user?.email,
         w?.amount,
@@ -133,6 +146,7 @@ export default function AdminPayments() {
         w?.bankDetails?.accountNumber,
         w?.bankDetails?.ifscCode,
         w?.adminPayout?.transactionId,
+        w?.adminPayout?.paidAmount,
         w?.adminPayout?.note,
         w?.adminPayout?.remark,
       ]
@@ -145,15 +159,29 @@ export default function AdminPayments() {
 
   const stats = useMemo(() => {
     const list = Array.isArray(withdrawals) ? withdrawals : [];
-    const pending = list.filter((w) => w?.status === "pending").length;
-    const approved = list.filter((w) => w?.status === "approved").length;
-    const rejected = list.filter((w) => w?.status === "rejected").length;
-    const paid = list.filter((w) => w?.status === "paid").length;
+    const pending = list.filter((w) => normalizeStatus(w?.status) === "pending").length;
+    const approved = list.filter((w) => normalizeStatus(w?.status) === "approved").length;
+    const rejected = list.filter((w) => normalizeStatus(w?.status) === "rejected").length;
+    const paid = list.filter((w) => normalizeStatus(w?.status) === "paid").length;
     const pendingAmt = list
-      .filter((w) => w?.status === "pending" || w?.status === "approved")
+      .filter((w) => {
+        const currentStatus = normalizeStatus(w?.status);
+        return currentStatus === "pending" || currentStatus === "approved";
+      })
       .reduce((a, b) => a + Number(b?.amount || 0), 0);
     return { pending, approved, rejected, paid, pendingAmt };
   }, [withdrawals]);
+
+  const statusCounts = useMemo(
+    () => ({
+      all: Array.isArray(withdrawals) ? withdrawals.length : 0,
+      pending: stats.pending,
+      approved: stats.approved,
+      rejected: stats.rejected,
+      paid: stats.paid,
+    }),
+    [stats, withdrawals]
+  );
 
   const approve = async (row) => {
     if (!row?._id) return;
@@ -263,7 +291,7 @@ export default function AdminPayments() {
       setTxLoading(true);
       const data = await adminGetUserTransactionsApi(uid);
       const items = data?.items || data?.transactions || [];
-      const onlyEarnings = (Array.isArray(items) ? items : []).filter((t) => t?.type === "earning");
+      const onlyEarnings = (Array.isArray(items) ? items : []).filter((t) => getFinanceEntryType(t) === "earning");
       setUserTx(onlyEarnings);
     } catch {
       setUserTx([]);
@@ -313,7 +341,7 @@ export default function AdminPayments() {
         <div>
           <h1 className="text-xl font-semibold">Admin · Payment Dashboard</h1>
           <p className="text-sm capitalize" style={{ color: "var(--muted)" }}>
-            Manually credit earnings and process withdrawal requests (pending / reject / approve / paid).
+            Credit earnings manually, then review withdrawal requests through pending, approved, rejected, and paid stages.
           </p>
         </div>
 
@@ -368,14 +396,14 @@ export default function AdminPayments() {
                 Pending Amount
               </div>
               <div className="mt-2 text-2xl font-semibold flex items-center gap-3">
-                <DollarSign className="h-5 w-5 shrink-0" /> {money(stats.pendingAmt)}
+                <IndianRupee className="h-5 w-5 shrink-0" /> {formatInr(stats.pendingAmt)}
               </div>
             </div>
           </div>
 
           <div className="dash-card p-5 rounded-2xl">
             <div className="flex items-center justify-between gap-4 flex-wrap">
-              <div className="flex items-center gap-3 flex-wrap w-full xl:w-auto">
+              <div className="flex flex-col gap-3 w-full">
                 <div className="relative flex-1 min-w-[240px]">
                   <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: "var(--muted)" }} />
                   <input
@@ -386,30 +414,43 @@ export default function AdminPayments() {
                   />
                 </div>
 
-                <div className="relative min-w-[160px]">
-                  <Filter className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: "var(--muted)" }} />
-                  <select
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value)}
-                    className="dash-input dash-select-themed w-full min-h-[44px] pl-10 pr-10 leading-none"
-                  >
-                    <option className="drop-down" value="all">All</option>
-                    <option className="drop-down" value="pending">Pending</option>
-                    <option className="drop-down" value="approved">Approved</option>
-                    <option className="drop-down" value="rejected">Rejected</option>
-                    <option className="drop-down" value="paid">Paid</option>
-                  </select>
-                </div>
+                <div className="flex items-center gap-3 flex-wrap">
+                  <div className="flex items-center gap-2 text-sm" style={{ color: "var(--muted)" }}>
+                    <Filter className="h-4 w-4" />
+                    <span>Status</span>
+                  </div>
 
-                <button
-                  type="button"
-                  className="dash-btn"
-                  onClick={fetchWithdrawals}
-                  disabled={loading}
-                >
-                  <RefreshCw className={"h-4 w-4 " + (loading ? "animate-spin" : "")} />
-                  Refresh
-                </button>
+                  <div className="flex flex-wrap gap-2">
+                    {WITHDRAWAL_STATUS_FILTERS.map((item) => {
+                      const active = status === item.value;
+                      return (
+                        <button
+                          key={item.value}
+                          type="button"
+                          onClick={() => setStatus(item.value)}
+                          className={
+                            "px-3 py-2 rounded-xl border text-sm font-medium transition " +
+                            (active
+                              ? "bg-gradient-to-r from-[var(--accent-1)] to-[var(--accent-2)] text-white border-transparent shadow-lg shadow-fuchsia-500/15"
+                              : "border-[color:var(--border)] text-[color:var(--muted)] hover:text-[color:var(--text)] hover:bg-black/5 dark:hover:bg-white/5")
+                          }
+                        >
+                          {item.label} ({statusCounts[item.value] || 0})
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <button
+                    type="button"
+                    className="dash-btn"
+                    onClick={fetchWithdrawals}
+                    disabled={loading}
+                  >
+                    <RefreshCw className={"h-4 w-4 " + (loading ? "animate-spin" : "")} />
+                    Refresh
+                  </button>
+                </div>
               </div>
 
               <div className="text-xs" style={{ color: "var(--muted)" }}>
@@ -443,65 +484,69 @@ export default function AdminPayments() {
                       </td>
                     </tr>
                   ) : (
-                    filteredWithdrawals.map((w) => (
-                      <tr key={w._id} style={{ borderTop: "1px solid var(--dash-border)" }}>
-                        <td className="p-2 whitespace-nowrap">
-                          <div className="font-medium">{w?.user?.fullName || "-"}</div>
-                          <div className="text-xs" style={{ color: "var(--muted)" }}>
-                            {w?.user?.email || "-"}
-                          </div>
-                        </td>
-                        <td className="p-2 whitespace-nowrap">$ {money(w.amount)}</td>
-                        <td className="p-2 min-w-[240px]">
-                          <div className="truncate" title={safeBankLine(w)}>
-                            {safeBankLine(w)}
-                          </div>
-                          {w?.adminPayout?.transactionId ? (
-                            <div className="text-xs mt-1" style={{ color: "var(--muted)" }}>
-                              Txn: {w.adminPayout.transactionId}
+                    filteredWithdrawals.map((w) => {
+                      const currentStatus = normalizeStatus(w?.status);
+
+                      return (
+                        <tr key={w._id} style={{ borderTop: "1px solid var(--dash-border)" }}>
+                          <td className="p-2 whitespace-nowrap">
+                            <div className="font-medium">{w?.user?.fullName || "-"}</div>
+                            <div className="text-xs" style={{ color: "var(--muted)" }}>
+                              {w?.user?.email || "-"}
                             </div>
-                          ) : null}
-                        </td>
-                        <td className="p-2 whitespace-nowrap">{fmtDate(w.createdAt)}</td>
-                        <td className="p-2 whitespace-nowrap">
-                          <span className={`px-2 py-1 rounded-lg text-xs font-medium ${badge(w.status)}`}>
-                            {toTitle(w.status || "pending")}
-                          </span>
-                        </td>
-                        <td className="p-2 whitespace-nowrap">
-                          <div className="flex items-center gap-2">
-                            <button
-                              type="button"
-                              className="dash-btn"
-                              disabled={savingId === w._id || w.status === "paid"}
-                              onClick={() => approve(w)}
-                              title="Approve"
-                            >
-                              <CheckCircle2 className="h-4 w-4" />
-                            </button>
-                            <button
-                              type="button"
-                              className="dash-btn"
-                              disabled={savingId === w._id || w.status === "paid"}
-                              onClick={() => reject(w)}
-                              title="Reject"
-                            >
-                              <XCircle className="h-4 w-4" />
-                            </button>
-                            <button
-                              type="button"
-                              className="dash-btn dash-btn-primary"
-                              disabled={savingId === w._id || w.status === "paid"}
-                              onClick={() => openPay(w)}
-                              title="Mark as Paid"
-                            >
-                              <Send className="h-4 w-4" />
-                              Pay
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
+                          </td>
+                          <td className="p-2 whitespace-nowrap">{formatInr(w.amount)}</td>
+                          <td className="p-2 min-w-[240px]">
+                            <div className="truncate" title={safeBankLine(w)}>
+                              {safeBankLine(w)}
+                            </div>
+                            {w?.adminPayout?.transactionId ? (
+                              <div className="text-xs mt-1" style={{ color: "var(--muted)" }}>
+                                Txn: {w.adminPayout.transactionId}
+                              </div>
+                            ) : null}
+                          </td>
+                          <td className="p-2 whitespace-nowrap">{fmtDate(w.createdAt)}</td>
+                          <td className="p-2 whitespace-nowrap">
+                            <span className={`px-2 py-1 rounded-lg text-xs font-medium ${badge(w.status)}`}>
+                              {toTitle(w.status || "pending")}
+                            </span>
+                          </td>
+                          <td className="p-2 whitespace-nowrap">
+                            <div className="flex items-center gap-2">
+                              <button
+                                type="button"
+                                className="dash-btn"
+                                disabled={savingId === w._id || currentStatus !== "pending"}
+                                onClick={() => approve(w)}
+                                title="Approve"
+                              >
+                                <CheckCircle2 className="h-4 w-4" />
+                              </button>
+                              <button
+                                type="button"
+                                className="dash-btn"
+                                disabled={savingId === w._id || currentStatus === "paid" || currentStatus === "rejected"}
+                                onClick={() => reject(w)}
+                                title="Reject"
+                              >
+                                <XCircle className="h-4 w-4" />
+                              </button>
+                              <button
+                                type="button"
+                                className="dash-btn dash-btn-primary"
+                                disabled={savingId === w._id || currentStatus !== "approved"}
+                                onClick={() => openPay(w)}
+                                title="Mark as Paid"
+                              >
+                                <Send className="h-4 w-4" />
+                                Pay
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
                   )}
                 </tbody>
               </table>
@@ -516,7 +561,7 @@ export default function AdminPayments() {
                   <div>
                     <div className="text-lg font-semibold">Release Payment</div>
                     <div className="text-xs mt-1" style={{ color: "var(--muted)" }}>
-                      {payRow?.user?.fullName || "User"} · $ {money(payRow?.amount)}
+                      {payRow?.user?.fullName || "User"} · {formatInr(payRow?.amount)}
                     </div>
                   </div>
                   <button
@@ -630,10 +675,10 @@ export default function AdminPayments() {
             <div className="flex items-center justify-between gap-3 flex-wrap">
               <div>
                 <div className="text-lg font-semibold flex items-center gap-2">
-                  <DollarSign className="h-5 w-5" /> Credit User Earnings
+                  <IndianRupee className="h-5 w-5" /> Credit User Earnings
                 </div>
                 <div className="text-xs mt-1" style={{ color: "var(--muted)" }}>
-                  Add earnings manually (e.g., based on track streams). User balance updates instantly.
+                  Add earnings manually. This should increase total earnings and available balance without creating a withdrawal.
                 </div>
               </div>
               <button
@@ -681,7 +726,7 @@ export default function AdminPayments() {
 
               <div>
                 <label className="text-xs" style={{ color: "var(--muted)" }}>
-                  Amount (USD)
+                  Amount (INR)
                 </label>
                 <input
                   className="dash-input w-full"
@@ -764,9 +809,9 @@ export default function AdminPayments() {
                     </tr>
                   ) : (
                     userTx.slice(0, 30).map((t) => (
-                      <tr key={t.id} style={{ borderTop: "1px solid var(--dash-border)" }}>
+                      <tr key={t._id || t.id} style={{ borderTop: "1px solid var(--dash-border)" }}>
                         <td className="p-2 whitespace-nowrap">{fmtDate(t.date)}</td>
-                        <td className="p-2 whitespace-nowrap">$ {money(t.amount)}</td>
+                        <td className="p-2 whitespace-nowrap">+{formatInr(Math.abs(t.amount || 0))}</td>
                         <td className="p-2 min-w-[260px]">
                           <div className="truncate" title={t.description || ""}>
                             {t.description || "Earning credited"}
@@ -774,7 +819,7 @@ export default function AdminPayments() {
                         </td>
                         <td className="p-2 whitespace-nowrap">
                           <span className="px-2 py-1 rounded-lg text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200">
-                            completed
+                            credited
                           </span>
                         </td>
                       </tr>

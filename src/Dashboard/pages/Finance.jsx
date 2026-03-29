@@ -1,6 +1,17 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import toast from "react-hot-toast";
-import { IndianRupee, TrendingUp, TrendingDown, Download, CreditCard, AlertCircle, Building2, User, Hash } from 'lucide-react';
+import {
+  IndianRupee,
+  TrendingUp,
+  TrendingDown,
+  Download,
+  CreditCard,
+  AlertCircle,
+  Building2,
+  User,
+  Hash,
+  ReceiptIndianRupee,
+} from 'lucide-react';
 
 import {
   createWithdrawalRequestApi,
@@ -8,6 +19,7 @@ import {
   getFinanceTransactionsApi,
   getMyWithdrawalsApi,
 } from "../../apis/UserApis";
+import { buildFinanceSnapshot, formatInr } from "../../utils/finance";
 
 export default function Finance() {
   const [activeTab, setActiveTab] = useState('overview');
@@ -23,62 +35,35 @@ export default function Finance() {
   });
 
   const [loading, setLoading] = useState(false);
-  const [summary, setSummary] = useState({
-    balance: 0,
-    maxWithdrawal: 0,
-    pendingEarnings: 0,
-  });
+  const [summary, setSummary] = useState({});
   const [transactions, setTransactions] = useState([]);
   const [withdrawals, setWithdrawals] = useState([]);
 
-  const currentBalance = Number(summary?.balance || 0);
-  const maxWithdrawal = Number(summary?.maxWithdrawal || 0);
-  const pendingEarnings = Number(summary?.pendingEarnings || 0);
+  const financeSnapshot = useMemo(
+    () => buildFinanceSnapshot({ summary, transactions, withdrawals }),
+    [summary, transactions, withdrawals]
+  );
 
-  const mergedTransactions = useMemo(() => {
-    const t = Array.isArray(transactions) ? transactions : [];
-    const w = Array.isArray(withdrawals)
-      ? withdrawals.map((x) => ({
-          ...x,
-          type: "withdrawal",
-          description:
-            x.description || x.method
-              ? `${x.method || "Withdrawal"} withdrawal`
-              : "Withdrawal",
-          date: x.createdAt || x.date,
-          // withdrawals should appear as negative amounts in the table
-          amount: -Math.abs(Number(x.amount || 0)),
-          status: x.status,
-        }))
-      : [];
-    return [...t, ...w].sort((a, b) => {
-      const da = new Date(a.date || a.createdAt || 0).getTime();
-      const db = new Date(b.date || b.createdAt || 0).getTime();
-      return db - da;
-    });
-  }, [transactions, withdrawals]);
+  const totalEarnings = Number(financeSnapshot?.totalEarnings || 0);
+  const availableBalance = Number(financeSnapshot?.availableBalance || 0);
+  const withdrawnAmount = Number(financeSnapshot?.withdrawnAmount || 0);
+  const pendingWithdrawalAmount = Number(financeSnapshot?.pendingWithdrawalAmount || 0);
+  const requestableBalance = Number(financeSnapshot?.requestableBalance || 0);
+  const maxWithdrawal = Number(financeSnapshot?.maxWithdrawal || 0);
+  const withdrawalLimit = Math.max(0, Math.min(requestableBalance, maxWithdrawal || requestableBalance));
+  const mergedTransactions = financeSnapshot?.mergedTransactions || [];
 
   const fetchFinance = async () => {
     try {
       setLoading(true);
       const [s, tx, wd] = await Promise.all([
         getFinanceSummaryApi(),
-        getFinanceTransactionsApi({ limit: 50 }),
-        getMyWithdrawalsApi({ limit: 50 }),
+        getFinanceTransactionsApi({ limit: 200 }),
+        getMyWithdrawalsApi({ limit: 200 }),
       ]);
-      setSummary({
-        balance: s?.balance ?? s?.walletBalance ?? 0,
-        maxWithdrawal: s?.maxWithdrawal ?? 0,
-        pendingEarnings: s?.pendingEarnings ?? 0,
-      });
-      // Some backends return combined transactions; we keep earnings here and
-      // render withdrawals from the dedicated withdrawals list to avoid duplicates.
+      setSummary(s || {});
       const txList = tx?.transactions || tx?.items || [];
-      setTransactions(
-        Array.isArray(txList)
-          ? txList.filter((t) => String(t?.type || "earning") !== "withdrawal")
-          : []
-      );
+      setTransactions(Array.isArray(txList) ? txList : []);
       setWithdrawals(wd?.withdrawals || wd?.items || []);
     } catch (e) {
       toast.error(e?.response?.data?.msg || "Finance data not available");
@@ -92,16 +77,43 @@ export default function Finance() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    const refreshFinance = () => {
+      fetchFinance();
+    };
+
+    const intervalId = window.setInterval(refreshFinance, 20000);
+    const handleFocus = () => refreshFinance();
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") refreshFinance();
+    };
+
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    return () => {
+      window.clearInterval(intervalId);
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleWithdrawal = async (e) => {
     e.preventDefault();
 
-    if (withdrawalRequest.amount > maxWithdrawal) {
-      alert(`Maximum withdrawal amount is ₹${maxWithdrawal}`);
+    if (!withdrawalRequest.amount || withdrawalRequest.amount <= 0) {
+      alert('Enter a valid withdrawal amount');
       return;
     }
 
-    if (withdrawalRequest.amount > currentBalance) {
-      alert('Insufficient balance');
+    if (withdrawalRequest.amount > availableBalance) {
+      alert(`Available balance is ${formatInr(availableBalance)}`);
+      return;
+    }
+
+    if (withdrawalRequest.amount > withdrawalLimit) {
+      alert(`You can request up to ${formatInr(withdrawalLimit)} right now`);
       return;
     }
 
@@ -150,6 +162,7 @@ export default function Finance() {
     switch (type) {
       case 'earning':
       case 'royalty':
+      case 'credit':
         return <TrendingUp className="w-4 h-4 text-green-500" />;
       case 'withdrawal':
         return <TrendingDown className="w-4 h-4 text-red-500" />;
@@ -213,9 +226,9 @@ export default function Finance() {
             <div className="dash-card p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-[color:var(--muted)]">Current Balance</p>
+                  <p className="text-sm text-[color:var(--muted)]">Available Balance</p>
                   <p className="text-2xl font-bold text-green-600 dark:text-green-400">
-                    ₹{currentBalance.toFixed(2)}
+                    {formatInr(availableBalance)}
                   </p>
                 </div>
                 <div className="p-3 rounded-full bg-green-100 dark:bg-green-900/40 border border-green-200 dark:border-green-500/20">
@@ -227,9 +240,9 @@ export default function Finance() {
             <div className="dash-card p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-[color:var(--muted)]">Pending Earnings</p>
+                  <p className="text-sm text-[color:var(--muted)]">Total Earnings</p>
                   <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
-                    ₹{pendingEarnings.toFixed(2)}
+                    {formatInr(totalEarnings)}
                   </p>
                 </div>
                 <div className="p-3 rounded-full bg-yellow-100 dark:bg-yellow-900/40 border border-yellow-200 dark:border-yellow-500/20">
@@ -241,13 +254,13 @@ export default function Finance() {
             <div className="dash-card p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-[color:var(--muted)]">Max Withdrawal</p>
+                  <p className="text-sm text-[color:var(--muted)]">Withdrawn Amount</p>
                   <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                    ₹{maxWithdrawal.toFixed(2)}
+                    {formatInr(withdrawnAmount)}
                   </p>
                 </div>
                 <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900/40 border border-blue-200 dark:border-blue-500/20">
-                  <CreditCard className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                  <ReceiptIndianRupee className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                 </div>
               </div>
             </div>
@@ -258,9 +271,12 @@ export default function Finance() {
             <div className="flex items-start gap-3">
               <AlertCircle className="mt-0.5 h-5 w-5 text-amber-700 dark:text-amber-400" />
               <div>
-                <h3 className="font-medium text-amber-900 dark:text-amber-200">Withdrawal Limit</h3>
+                <h3 className="font-medium text-amber-900 dark:text-amber-200">Withdrawal Flow</h3>
                 <p className="mt-1 text-sm text-amber-800 dark:text-amber-300">
-                  Maximum withdrawal amount is limited to ₹{maxWithdrawal} per transaction for security purposes.
+                  Available balance stays unchanged until a withdrawal is marked as paid. Only paid withdrawals move value from available balance to withdrawn amount.
+                </p>
+                <p className="mt-2 text-sm text-amber-800 dark:text-amber-300">
+                  Open requests: {formatInr(pendingWithdrawalAmount)}. You can request up to {formatInr(withdrawalLimit)} right now.
                 </p>
               </div>
             </div>
@@ -290,39 +306,47 @@ export default function Finance() {
                 </tr>
               </thead>
               <tbody>
-                {(mergedTransactions || []).map((transaction) => (
-                  <tr
-                    key={transaction._id || transaction.id}
-                    className="border-b border-[color:var(--border)] hover:bg-black/[0.025] dark:hover:bg-white/[0.03]"
-                  >
-                    <td className="p-4">
-                      <div className="flex items-center gap-2">
-                        {getTransactionIcon(transaction.type)}
-                        <span className="capitalize text-[color:var(--text)]">{transaction.type}</span>
-                      </div>
-                    </td>
-                    <td className="p-4 text-[color:var(--text)]">{transaction.description}</td>
-                    <td className="p-4">
-                      <span
-                        className={`font-medium ${
-                          transaction.amount > 0
-                            ? 'text-green-600 dark:text-green-400'
-                            : 'text-red-600 dark:text-red-400'
-                        }`}
-                      >
-                        {transaction.amount > 0 ? '+' : ''}₹{Math.abs(transaction.amount).toFixed(2)}
-                      </span>
-                    </td>
-                    <td className="p-4 text-[color:var(--muted)]">
-                      {transaction.date ? new Date(transaction.date).toLocaleString() : "-"}
-                    </td>
-                    <td className="p-4">
-                      <span className={`px-2 py-1 rounded text-xs capitalize font-medium ${getStatusColor(transaction.status)}`}>
-                        {transaction.status}
-                      </span>
+                {mergedTransactions.length === 0 ? (
+                  <tr>
+                    <td className="p-4 text-[color:var(--muted)]" colSpan={5}>
+                      No earnings or withdrawal transactions found.
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  mergedTransactions.map((transaction) => (
+                    <tr
+                      key={transaction._id || transaction.id}
+                      className="border-b border-[color:var(--border)] hover:bg-black/[0.025] dark:hover:bg-white/[0.03]"
+                    >
+                      <td className="p-4">
+                        <div className="flex items-center gap-2">
+                          {getTransactionIcon(transaction.type)}
+                          <span className="capitalize text-[color:var(--text)]">{transaction.type}</span>
+                        </div>
+                      </td>
+                      <td className="p-4 text-[color:var(--text)]">{transaction.description}</td>
+                      <td className="p-4">
+                        <span
+                          className={`font-medium ${
+                            transaction.amount > 0
+                              ? 'text-green-600 dark:text-green-400'
+                              : 'text-red-600 dark:text-red-400'
+                          }`}
+                        >
+                          {transaction.amount > 0 ? '+' : '-'}{formatInr(Math.abs(transaction.amount))}
+                        </span>
+                      </td>
+                      <td className="p-4 text-[color:var(--muted)]">
+                        {transaction.date ? new Date(transaction.date).toLocaleString() : "-"}
+                      </td>
+                      <td className="p-4">
+                        <span className={`px-2 py-1 rounded text-xs capitalize font-medium ${getStatusColor(transaction.status)}`}>
+                          {transaction.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
@@ -343,7 +367,7 @@ export default function Finance() {
                 <input
                   type="number"
                   step="0.01"
-                  max={maxWithdrawal}
+                  max={withdrawalLimit || undefined}
                   value={withdrawalRequest.amount || ''}
                   onChange={(e) =>
                     setWithdrawalRequest({
@@ -352,11 +376,14 @@ export default function Finance() {
                     })
                   }
                   className="input-ui w-full px-3 py-2"
-                  placeholder={`Max: ₹${maxWithdrawal}`}
+                  placeholder={`Max: ${formatInr(withdrawalLimit)}`}
                   required
                 />
                 <p className="text-xs text-[color:var(--muted)] mt-1">
-                  Maximum withdrawal: ₹{maxWithdrawal} | Available balance: ₹{currentBalance}
+                  Total earnings: {formatInr(totalEarnings)} | Available balance: {formatInr(availableBalance)}
+                </p>
+                <p className="text-xs text-[color:var(--muted)] mt-1">
+                  Withdrawn: {formatInr(withdrawnAmount)} | Pending requests: {formatInr(pendingWithdrawalAmount)}
                 </p>
               </div>
 
@@ -451,6 +478,7 @@ export default function Finance() {
                 </button>
                 <button
                   type="submit"
+                  disabled={withdrawalLimit <= 0}
                   className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg shadow-emerald-500/20"
                 >
                   Submit Request
@@ -483,7 +511,7 @@ export default function Finance() {
                 <input
                   type="number"
                   step="0.01"
-                  max={maxWithdrawal}
+                  max={withdrawalLimit || undefined}
                   value={withdrawalRequest.amount || ''}
                   onChange={(e) =>
                     setWithdrawalRequest({
@@ -492,11 +520,11 @@ export default function Finance() {
                     })
                   }
                   className="input-ui w-full px-3 py-2"
-                  placeholder={`Max: ₹${maxWithdrawal}`}
+                  placeholder={`Max: ${formatInr(withdrawalLimit)}`}
                   required
                 />
                 <p className="text-xs text-[color:var(--muted)] mt-1">
-                  Available: ₹{currentBalance} | Max: ₹{maxWithdrawal}
+                  Available: {formatInr(availableBalance)} | Pending: {formatInr(pendingWithdrawalAmount)}
                 </p>
               </div>
 
@@ -585,6 +613,7 @@ export default function Finance() {
                 </button>
                 <button
                   type="submit"
+                  disabled={withdrawalLimit <= 0}
                   className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all duration-200 shadow-lg shadow-emerald-500/20"
                 >
                   Submit
