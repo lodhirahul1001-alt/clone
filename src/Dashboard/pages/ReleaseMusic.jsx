@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { fetchTracksApi } from "../../apis/TrackApis";
 import { UploadTrack } from "../components/UploadTrack";
 import { Edit2, Eye, Search } from "lucide-react";
+import { getTrackStatusLabel, getTrackStatusValue } from "../../utils/tracks";
 
 
 const statusOptions = [
@@ -106,31 +107,6 @@ const ReleaseMusic = () => {
     ];
 
     return candidates.find((value) => typeof value === "string" && value.trim());
-  };
-
-  const getTrackStatusValue = (track) => {
-    const rawStatus = String(track?.status || track?.stage || "")
-      .trim()
-      .toLowerCase();
-
-    if (["approve", "approved", "active", "live"].includes(rawStatus)) {
-      return "approve";
-    }
-    if (["reject", "rejected"].includes(rawStatus)) {
-      return "reject";
-    }
-    if (["hold", "on hold"].includes(rawStatus)) {
-      return "hold";
-    }
-    if (["suspend", "suspended"].includes(rawStatus)) {
-      return "suspend";
-    }
-    return "pending";
-  };
-
-  const getTrackStatusLabel = (track) => {
-    const status = getTrackStatusValue(track);
-    return status.charAt(0).toUpperCase() + status.slice(1);
   };
 
   const canEditTrack = (track) => getTrackStatusValue(track) === "pending";

@@ -25,7 +25,14 @@ import {
   getFinanceTransactionsApi,
   getMyWithdrawalsApi,
 } from "../../apis/UserApis";
+import { fetchTracksApi } from "../../apis/TrackApis";
 import { buildFinanceSnapshot, formatInr } from "../../utils/finance";
+import {
+  getTracksFromResponse,
+  getTrackTotalItems,
+  getTrackTotalPages,
+  isReleasedTrack,
+} from "../../utils/tracks";
 
 function StatCard({ icon: Icon, title, value, sub }) {
   return (
@@ -72,6 +79,10 @@ export default function PrivateDashboard() {
   const [financeSummary, setFinanceSummary] = useState({});
   const [financeTransactions, setFinanceTransactions] = useState([]);
   const [financeWithdrawals, setFinanceWithdrawals] = useState([]);
+  const [trackSummary, setTrackSummary] = useState({
+    musicCreated: 0,
+    musicReleased: 0,
+  });
 
   const finance = useMemo(
     () => buildFinanceSnapshot({
@@ -89,12 +100,12 @@ export default function PrivateDashboard() {
       withdrawnAmount: formatInr(finance.withdrawnAmount),
       pendingWithdrawals: formatInr(finance.pendingWithdrawalAmount),
       pendingWithdrawalCount: finance.pendingWithdrawalCount,
-      musicCreated: 0,
-      musicReleased: 0,
+      musicCreated: trackSummary.musicCreated,
+      musicReleased: trackSummary.musicReleased,
       videosCreated: 0,
       videosReleased: 0,
     }),
-    [finance]
+    [finance, trackSummary]
   );
 
   useEffect(() => {
@@ -125,6 +136,136 @@ export default function PrivateDashboard() {
 
     return () => {
       ignore = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let ignore = false;
+
+    const loadTrackSummary = async () => {
+      try {
+        const pageSize = 200;
+        const firstPage = await fetchTracksApi({
+          page: 1,
+          limit: pageSize,
+          status: "all",
+          sortBy: "createdAt",
+          sortOrder: "desc",
+        });
+
+        if (ignore) return;
+
+        const totalPages = getTrackTotalPages(firstPage);
+        const totalItems = getTrackTotalItems(firstPage);
+        let allTracks = getTracksFromResponse(firstPage);
+
+        if (totalPages > 1) {
+          const remainingPages = Array.from({ length: totalPages - 1 }, (_, index) => index + 2);
+          const responses = await Promise.all(
+            remainingPages.map((page) =>
+              fetchTracksApi({
+                page,
+                limit: pageSize,
+                status: "all",
+                sortBy: "createdAt",
+                sortOrder: "desc",
+              })
+            )
+          );
+
+          if (ignore) return;
+
+          allTracks = [
+            ...allTracks,
+            ...responses.flatMap((response) => getTracksFromResponse(response)),
+          ];
+        }
+
+        setTrackSummary({
+          musicCreated: totalItems ?? allTracks.length,
+          musicReleased: allTracks.filter((track) => isReleasedTrack(track)).length,
+        });
+      } catch {
+        if (ignore) return;
+        setTrackSummary({
+          musicCreated: 0,
+          musicReleased: 0,
+        });
+      }
+    };
+
+    loadTrackSummary();
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let ignore = false;
+
+    const loadTrackSummary = async () => {
+      try {
+        const pageSize = 200;
+        const firstPage = await fetchTracksApi({
+          page: 1,
+          limit: pageSize,
+          status: "all",
+          sortBy: "createdAt",
+          sortOrder: "desc",
+        });
+
+        if (ignore) return;
+
+        const totalPages = getTrackTotalPages(firstPage);
+        const totalItems = getTrackTotalItems(firstPage);
+        let allTracks = getTracksFromResponse(firstPage);
+
+        if (totalPages > 1) {
+          const remainingPages = Array.from({ length: totalPages - 1 }, (_, index) => index + 2);
+          const responses = await Promise.all(
+            remainingPages.map((page) =>
+              fetchTracksApi({
+                page,
+                limit: pageSize,
+                status: "all",
+                sortBy: "createdAt",
+                sortOrder: "desc",
+              })
+            )
+          );
+
+          if (ignore) return;
+
+          allTracks = [
+            ...allTracks,
+            ...responses.flatMap((response) => getTracksFromResponse(response)),
+          ];
+        }
+
+        setTrackSummary({
+          musicCreated: totalItems ?? allTracks.length,
+          musicReleased: allTracks.filter((track) => isReleasedTrack(track)).length,
+        });
+      } catch {
+        // keep current values on background refresh failures
+      }
+    };
+
+    const intervalId = window.setInterval(loadTrackSummary, 20000);
+    const handleFocus = () => loadTrackSummary();
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") loadTrackSummary();
+    };
+
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    return () => {
+      ignore = true;
+      window.clearInterval(intervalId);
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, []);
 
