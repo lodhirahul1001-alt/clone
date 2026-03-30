@@ -3,34 +3,62 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router";
 import { fetchRegisterApi } from "../features/actions/AuthAction";
-import { Mail, User, Lock, Eye, EyeOff } from "lucide-react";
+import { Mail, User, Lock, Eye, EyeOff, CircleAlert } from "lucide-react";
 import { getGmailValidationError, normalizeEmail } from "../utils/emailValidation";
+import { getAuthErrorFeedback } from "../utils/authError";
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
+  const [serverError, setServerError] = useState("");
+  const [serverErrorFields, setServerErrorFields] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
+    setFocus,
     watch,
     formState: { errors, isSubmitting },
   } = useForm();
+  const clearServerFeedback = () => {
+    setServerError("");
+    setServerErrorFields([]);
+  };
+  const fullNameField = register("fullName", { required: "Full name is required" });
+  const emailField = register("email", {
+    required: "Email is required",
+    setValueAs: normalizeEmail,
+    validate: (value) => getGmailValidationError(value) || true,
+  });
   const passwordField = register("password", {
     required: "Password is required",
     minLength: { value: 6, message: "Min 6 characters" },
   });
   const passwordValue = watch("password", "");
+  const fullNameHasError = Boolean(errors.fullName);
+  const emailHasError = Boolean(errors.email || serverErrorFields.includes("email"));
+  const passwordHasError = Boolean(errors.password || serverErrorFields.includes("password"));
 
   const onSubmit = async (data) => {
+    clearServerFeedback();
+
     try {
       const res = await dispatch(fetchRegisterApi(data));
-      if (res?.success) navigate("/login");
-      else alert("Signup failed");
-    } catch (e) {
-      console.error(e);
-      alert("Signup failed");
+      if (res?.success) {
+        navigate("/login");
+        return;
+      }
+
+      setServerError("Signup failed. Please try again.");
+    } catch (error) {
+      console.error(error);
+      const feedback = getAuthErrorFeedback(error, "signup");
+      setServerError(feedback.message);
+      setServerErrorFields(feedback.fields);
+      if (feedback.focusField) {
+        setFocus(feedback.focusField);
+      }
     }
   };
 
@@ -50,9 +78,15 @@ export default function Signup() {
               <div className="relative">
                 <User className="theme-icon-muted pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2" />
                 <input
-                  className="input-ui pl-11"
+                  className={`input-ui pl-11 ${
+                    fullNameHasError ? "border-red-400 bg-red-50/80 dark:bg-red-500/10" : ""
+                  }`}
                   placeholder="Full name"
-                  {...register("fullName", { required: "Full name is required" })}
+                  {...fullNameField}
+                  onChange={(e) => {
+                    clearServerFeedback();
+                    fullNameField.onChange(e);
+                  }}
                 />
               </div>
               {errors.fullName && <p className="mt-1 text-sm text-red-400">{errors.fullName.message}</p>}
@@ -62,13 +96,16 @@ export default function Signup() {
               <div className="relative">
                 <Mail className="theme-icon-muted pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2" />
                 <input
-                  className="input-ui pl-11"
+                  className={`input-ui pl-11 ${
+                    emailHasError ? "border-red-400 bg-red-50/80 dark:bg-red-500/10" : ""
+                  }`}
                   placeholder="Email"
                   type="email"
-                  {...register("email", {
-                    setValueAs: normalizeEmail,
-                    validate: (value) => getGmailValidationError(value) || true,
-                  })}
+                  {...emailField}
+                  onChange={(e) => {
+                    clearServerFeedback();
+                    emailField.onChange(e);
+                  }}
                 />
               </div>
               {errors.email && <p className="mt-1 text-sm text-red-400">{errors.email.message}</p>}
@@ -78,13 +115,18 @@ export default function Signup() {
               <div className="relative">
                 <Lock className="theme-icon-muted pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2" />
                 <input
-                  className="input-ui pl-11 pr-12"
+                  className={`input-ui pl-11 pr-12 ${
+                    passwordHasError ? "border-red-400 bg-red-50/80 dark:bg-red-500/10" : ""
+                  }`}
                   placeholder="Password"
                   type={showPassword ? "text" : "password"}
                   autoComplete="new-password"
                   {...passwordField}
                   value={passwordValue}
-                  onChange={passwordField.onChange}
+                  onChange={(e) => {
+                    clearServerFeedback();
+                    passwordField.onChange(e);
+                  }}
                 />
                 <button
                   type="button"
@@ -102,6 +144,15 @@ export default function Signup() {
               </div>
               {errors.password && <p className="mt-1 text-sm text-red-400">{errors.password.message}</p>}
             </div>
+
+            {serverError ? (
+              <div className="md:col-span-2 rounded-xl border border-red-200 bg-red-50/90 px-4 py-3 text-sm text-red-600 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300">
+                <div className="flex items-start gap-2">
+                  <CircleAlert className="mt-0.5 h-4 w-4 shrink-0" />
+                  <span>{serverError}</span>
+                </div>
+              </div>
+            ) : null}
 
             <div className="md:col-span-2">
               <button className="btn-primary w-full" disabled={isSubmitting} type="submit">

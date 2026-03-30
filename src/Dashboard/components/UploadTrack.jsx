@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Upload, Music, Image, Check, AlertCircle, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Marquee from '../../components/Marquee';
@@ -20,6 +20,7 @@ export function UploadTrack({
   onSuccess,                // callback to refresh list
 }) {
   const navigate = useNavigate();
+  const formRef = useRef(null);
   const isModal = view === "modal";
   const isReadOnly = readOnly || mode === "view";
   const isEditMode = mode === "edit";
@@ -245,8 +246,9 @@ export function UploadTrack({
   const scrollToField = (fieldName) => {
     if (typeof document === 'undefined' || !fieldName) return;
 
-    const wrapper = document.querySelector(`[data-field-wrapper="${fieldName}"]`);
-    const control = document.querySelector(`[name="${fieldName}"]`);
+    const formElement = formRef.current;
+    const wrapper = formElement?.querySelector?.(`[data-field-wrapper="${fieldName}"]`) || null;
+    const control = formElement?.querySelector?.(`[name="${fieldName}"]`) || null;
     const scrollTarget = wrapper || control;
     const focusTarget =
       control && control.offsetParent !== null
@@ -556,7 +558,7 @@ export function UploadTrack({
 
         {/* Form */}
 <div className="p-6 pt-2 sm:pt-02">
-          <form onSubmit={handleSubmit} className="space-y-8 dash-form">
+          <form ref={formRef} onSubmit={handleSubmit} noValidate className="space-y-8 dash-form">
             <fieldset disabled={isReadOnly} className={isReadOnly ? "space-y-8 opacity-95" : "space-y-8"}>
             {/* Track Details */}
             <section>
@@ -881,6 +883,7 @@ export function UploadTrack({
                     <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                     <input
                       type="file"
+                      name="audioFile"
                       accept=".wav,.mp3,audio/wav,audio/mpeg"
                       onChange={(e) => handleFileChange(e, 'audioFile')}
                       className="hidden"
@@ -912,6 +915,7 @@ export function UploadTrack({
                     <Image className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                     <input
                       type="file"
+                      name="coverArt"
                       accept=".jpg,.jpeg,.png,image/jpeg,image/png"
                       onChange={(e) => handleFileChange(e, 'coverArt')}
                       className="hidden"

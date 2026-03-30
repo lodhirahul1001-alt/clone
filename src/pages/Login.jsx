@@ -2,31 +2,58 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router";
 import { loginUserApi } from "../features/actions/AuthAction";
-import { Eye, EyeOff, Lock, User } from "lucide-react";
+import { CircleAlert, Eye, EyeOff, Lock, User } from "lucide-react";
 import { useState } from "react";
+import { getGmailValidationError, normalizeEmail } from "../utils/emailValidation";
+import { getAuthErrorFeedback } from "../utils/authError";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const [serverError, setServerError] = useState("");
+  const [serverErrorFields, setServerErrorFields] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
+    setFocus,
     watch,
     formState: { errors, isSubmitting },
   } = useForm();
+  const clearServerFeedback = () => {
+    setServerError("");
+    setServerErrorFields([]);
+  };
+  const emailField = register("email", {
+    required: "Email is required",
+    setValueAs: normalizeEmail,
+    validate: (value) => getGmailValidationError(value) || true,
+  });
   const passwordField = register("password", { required: "Password is required" });
   const passwordValue = watch("password", "");
+  const emailHasError = Boolean(errors.email || serverErrorFields.includes("email"));
+  const passwordHasError = Boolean(errors.password || serverErrorFields.includes("password"));
 
   const onSubmit = async (data) => {
+    clearServerFeedback();
+
     try {
       const res = await dispatch(loginUserApi(data));
-      if (res?.success) navigate("/user-dashboard");
-      else alert("Invalid credentials");
-    } catch (e) {
-      console.error(e);
-      alert("Login failed");
+      if (res?.success) {
+        navigate("/user-dashboard");
+        return;
+      }
+
+      setServerError("Login failed. Please try again.");
+    } catch (error) {
+      console.error(error);
+      const feedback = getAuthErrorFeedback(error, "login");
+      setServerError(feedback.message);
+      setServerErrorFields(feedback.fields);
+      if (feedback.focusField) {
+        setFocus(feedback.focusField);
+      }
     }
   };
 
@@ -62,10 +89,16 @@ export default function Login() {
                 <div className="relative">
                   <User className="theme-icon-muted pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2" />
                   <input
-                    className="input-ui pl-11"
+                    className={`input-ui pl-11 ${
+                      emailHasError ? "border-red-400 bg-red-50/80 dark:bg-red-500/10" : ""
+                    }`}
                     placeholder="Email"
                     type="email"
-                    {...register("email", { required: "Email is required" })}
+                    {...emailField}
+                    onChange={(e) => {
+                      clearServerFeedback();
+                      emailField.onChange(e);
+                    }}
                   />
                 </div>
                 {errors.email && (
@@ -77,13 +110,18 @@ export default function Login() {
                 <div className="relative">
                   <Lock className="theme-icon-muted pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2" />
                   <input
-                    className="input-ui pl-11 pr-12"
+                    className={`input-ui pl-11 pr-12 ${
+                      passwordHasError ? "border-red-400 bg-red-50/80 dark:bg-red-500/10" : ""
+                    }`}
                     placeholder="Password"
                     type={showPassword ? "text" : "password"}
                     autoComplete="current-password"
                     {...passwordField}
                     value={passwordValue}
-                    onChange={passwordField.onChange}
+                    onChange={(e) => {
+                      clearServerFeedback();
+                      passwordField.onChange(e);
+                    }}
                   />
                   <button
                     type="button"
@@ -102,6 +140,15 @@ export default function Login() {
                   <p className="mt-1 text-sm text-red-400">{errors.password.message}</p>
                 )}
               </div>
+
+              {serverError ? (
+                <div className="rounded-xl border border-red-200 bg-red-50/90 px-4 py-3 text-sm text-red-600 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300">
+                  <div className="flex items-start gap-2">
+                    <CircleAlert className="mt-0.5 h-4 w-4 shrink-0" />
+                    <span>{serverError}</span>
+                  </div>
+                </div>
+              ) : null}
 
               <button className="btn-primary w-full" disabled={isSubmitting} type="submit">
                 {isSubmitting ? "Signing in..." : "Submit"}
