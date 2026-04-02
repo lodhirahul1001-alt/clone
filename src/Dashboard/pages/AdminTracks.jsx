@@ -5,8 +5,13 @@ import {
   adminUpdateTrackMetaApi,
   adminUpdateTrackStatusApi,
 } from "../../apis/AdminApis";
+import {
+  getTrackStatusLabel,
+  getTrackStatusValue,
+  getTracksFromResponse,
+} from "../../utils/tracks";
 
-const statusOptions = ["pending", "approve", "reject"];
+const statusOptions = ["pending", "approve", "hold", "suspend", "reject"];
 const toTitle = (s = "") => s.charAt(0).toUpperCase() + s.slice(1);
 
 export default function AdminTracks() {
@@ -19,8 +24,8 @@ export default function AdminTracks() {
   const fetchTracks = async () => {
     try {
       setLoading(true);
-      const data = await adminGetTracksApi({ search: query, status: statusFilter, limit: 50 });
-      setTracks(data?.tracks || []);
+      const data = await adminGetTracksApi({ search: query, limit: 200 });
+      setTracks(getTracksFromResponse(data));
     } catch (e) {
       toast.error(e?.response?.data?.msg || "Failed to load tracks");
     } finally {
@@ -35,15 +40,21 @@ export default function AdminTracks() {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return tracks;
-    return tracks.filter((t) =>
-      [t.title, t.primaryArtist, t.publicId, t.label, t?.user?.email]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase()
-        .includes(q)
-    );
-  }, [query, tracks]);
+    return tracks.filter((t) => {
+      const matchesSearch =
+        !q ||
+        [t.title, t.primaryArtist, t.publicId, t.label, t?.user?.email]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase()
+          .includes(q);
+
+      const matchesStatus =
+        statusFilter === "all" || getTrackStatusValue(t) === statusFilter;
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [query, statusFilter, tracks]);
 
   const updateStatus = async (trackId, status) => {
     try {
@@ -180,12 +191,14 @@ export default function AdminTracks() {
                     />
                   </td>
                   <td className="p-2 whitespace-nowrap">
-                    <span className="px-2 py-1 rounded-lg dash-badge">{toTitle(t.status || "pending")}</span>
+                    <span className="px-2 py-1 rounded-lg dash-badge">
+                      {getTrackStatusLabel(t)}
+                    </span>
                   </td>
                   <td className="p-2 whitespace-nowrap">
                     <div className="flex items-center  capitalize gap-2">
                       <select
-                        value={t.status || "pending"}
+                        value={getTrackStatusValue(t)}
                         onChange={(e) => updateStatus(t._id, e.target.value)}
                         className="dash-input"
                       >

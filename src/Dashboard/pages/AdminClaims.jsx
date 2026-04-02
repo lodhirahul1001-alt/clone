@@ -3,8 +3,14 @@ import toast from "react-hot-toast";
 import { AxiosIntance } from "../../config/Axios.Intance";
 import { adminGetClaimsApi, adminUpdateClaimStatusApi } from "../../apis/AdminApis";
 
-const statusOptions = ["Pending", "Approved", "Rejected"];
+const statusOptions = ["pending", "approved", "rejected"];
 const toTitle = (s = "") => s.charAt(0).toUpperCase() + s.slice(1);
+const normalizeClaimStatus = (status = "") => {
+  const value = String(status || "pending").trim().toLowerCase();
+  if (value === "approved" || value === "approve") return "approved";
+  if (value === "rejected" || value === "reject") return "rejected";
+  return "pending";
+};
 
 export default function AdminClaims() {
   const [loading, setLoading] = useState(false);
@@ -15,8 +21,14 @@ export default function AdminClaims() {
   const fetchItems = async () => {
     try {
       setLoading(true);
-      const data = await adminGetClaimsApi({ search: query, status: statusFilter, limit: 50 });
-      setItems(data?.claims || []);
+      const data = await adminGetClaimsApi({ search: query, limit: 50 });
+      const claims = data?.claims || data?.items || [];
+      setItems(
+        claims.map((claim) => ({
+          ...claim,
+          status: normalizeClaimStatus(claim?.status),
+        }))
+      );
     } catch (e) {
       toast.error(e?.response?.data?.msg || "Failed to load claims");
     } finally {
@@ -28,17 +40,24 @@ export default function AdminClaims() {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return items;
     return items.filter((c) =>
-      [c.claimUrl, c.releaseTitle, c.releasePublicId, c.isrc, c?.user?.email]
-        .filter(Boolean).join(" ").toLowerCase().includes(q)
+      (statusFilter === "all" || normalizeClaimStatus(c.status) === statusFilter) &&
+      (!q ||
+        [c.claimUrl, c.releaseTitle, c.releasePublicId, c.isrc, c?.user?.email]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase()
+          .includes(q))
     );
-  }, [items, query]);
+  }, [items, query, statusFilter]);
 
   const updateStatus = async (id, status) => {
+    const nextStatus = normalizeClaimStatus(status);
     try {
-      await adminUpdateClaimStatusApi(id, { status });
-      setItems((prev) => prev.map((x) => (x._id === id ? { ...x, status } : x)));
+      await adminUpdateClaimStatusApi(id, { status: nextStatus });
+      setItems((prev) =>
+        prev.map((x) => (x._id === id ? { ...x, status: nextStatus } : x))
+      );
       toast.success("Claim updated");
     } catch (e) {
       toast.error(e?.response?.data?.msg || "Failed to update");
@@ -99,7 +118,7 @@ export default function AdminClaims() {
                   <td className="p-2">{c.releaseTitle || '-'}</td>
                   <td className="p-2">{c.isrc || '-'}</td>
                   <td className="p-2 max-w-[280px] truncate"><a className="underline" href={c.claimUrl} target="_blank" rel="noreferrer">{c.claimUrl}</a></td>
-                  <td className="p-2"><select className="dash-input" value={c.status || 'Pending'} onChange={(e)=>updateStatus(c._id, e.target.value)}>{statusOptions.map((s)=><option key={s} value={s}>{toTitle(s)}</option>)}</select></td>
+                  <td className="p-2"><select className="dash-input" value={normalizeClaimStatus(c.status)} onChange={(e)=>updateStatus(c._id, e.target.value)}>{statusOptions.map((s)=><option key={s} value={s}>{toTitle(s)}</option>)}</select></td>
                   <td className="p-2"><button className="dash-btn" type="button" onClick={()=>deleteClaim(c._id)}>Delete</button></td>
                 </tr>
               ))
