@@ -133,25 +133,28 @@ const ReleaseMusic = () => {
       </div>
 
       {/* Filters */}
-      <div className="dash-card p-4 flex flex-col lg:flex-row gap-3">
+      <div className="dash-card p-4 flex flex-col lg:flex-row items-stretch gap-3">
         <form
           onSubmit={(e) => {
             e.preventDefault();
             setPagination((p) => ({ ...p, page: 1 }));
             loadTracks();
           }}
-          className="flex gap-2 flex-1"
+          className="flex flex-1 flex-col gap-2 sm:flex-row"
         >
-          <div className="relative flex-1">
-            <Search size={16} className="absolute left-3 top-2.5 text-gray-400" />
+          <div className="relative flex-1 min-w-[240px]">
+            <Search
+              size={16}
+              className="pointer-events-none absolute left-1 pl-50 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
+            />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search tracks"
-              className="dash-input w-full pl-9 pr-3 py-2 text-sm"
+              className="dash-input w-full min-h-[44px]  pl-9 text-sm leading-none"
             />
           </div>
-          <button className="btn-primary text-sm">
+          <button className="btn-primary min-h-[44px] px-5 text-sm">
             Search
           </button>
         </form>
@@ -159,7 +162,7 @@ const ReleaseMusic = () => {
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="dash-input px-3 py-2 text-sm"
+          className="dash-input min-h-[44px] px-3 text-sm"
         >
           {statusOptions.map((o) => (
             <option key={o.value} value={o.value}>
@@ -171,7 +174,7 @@ const ReleaseMusic = () => {
         <select
           value={sort}
           onChange={(e) => setSort(e.target.value)}
-          className="dash-input px-3 py-2 text-sm"
+          className="dash-input min-h-[44px] px-3 text-sm"
         >
           {sortOptions.map((o) => (
             <option key={o.value} value={o.value}>
